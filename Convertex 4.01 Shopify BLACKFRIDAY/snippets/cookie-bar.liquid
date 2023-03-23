@@ -1,0 +1,32 @@
+{% if settings.cookie_bar_enable %}
+
+    {% assign lang      = settings.cookie_bar_lang %}
+    {% assign remember  = settings.cookie_bar_remember %}
+
+    {% if settings.cookie_bar_no_geoip %}
+        {% assign no_geoip = '&noGeoIp=1' %}
+    {% endif %}
+
+    {% if settings.cookie_bar_show_details_btn == false %}
+        {% assign hide_details_btn = '&hideDetailsBtn=1' %}
+    {% endif %}
+
+    {% if settings.cookie_bar_show_policy_link %}
+        {% assign show_policy_link = '&showPolicyLink=1&privacyPage=%2Fpolicies%2Fprivacy-policy' %}
+    {% endif %}
+
+    <script
+        defer
+        type="text/javascript" 
+        src="https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js?forceLang={{ lang }}&tracking=0&thirdparty=1&always=1{{ no_geoip }}{{ hide_details_btn }}{{ show_policy_link }}&remember={{ remember }}"
+    ></script>
+
+    {% if settings.cookie_bar_z_index != "9999" %}
+        <style>
+            #cookie-bar {
+                z-index: {{ settings.cookie_bar_z_index }} !important;
+            }
+        </style>
+    {% endif %}
+
+{% endif %}

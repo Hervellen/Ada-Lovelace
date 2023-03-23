@@ -1,0 +1,140 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<div
+        id="image-with-text-{{ section.id }}"
+        class="image-with-text {{ pt }} {{ pb }} {{ mt }} {{ mb }} {{ section.settings.bg_color }} {% unless section.settings.animate_class == blank %}animate__animated{% endunless %}"
+        data-animate="{{ section.settings.animate_class }}">
+
+        <div class="align-items-center text-center {{ section.settings.img_alignment }}">
+                {% if section.settings.img != blank %}
+                    {% assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height %}
+
+                    <a {% if section.settings.img_url != blank %} href="{{ section.settings.img_url }}" {% endif %} class="btn mt-5 mb-1 {{ section.settings.btn_color }} {{ section.settings.btn_size }}">
+                        <img
+                                class="img-fluid mb-4 mb-md-0 {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                                data-src="{{ section.settings.img.src | img_url: img_size, crop: 'center' }}"
+                                alt="{{ section.settings.image.alt | escape }}"
+                                width="{{ section.settings.img_width }}"
+                                height="{{ section.settings.img_height }}"
+                                loading="lazy">
+                    </a>
+                {% else %}
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg bg-light mb-4 mb-md-0 rounded' }}
+                {% endif %}
+        </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "Imagem em destaque",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Cor do background",
+            "default": "bg-white text-body",
+            "options": [
+                { "group": "Light", "value": "bg-white text-body", "label": "White" },
+                { "group": "Light", "value": "bg-light text-body", "label": "Light" },
+                { "group": "Dark", "value": "bg-dark text-white", "label": "Dark" },
+                { "group": "Dark", "value": "bg-primary text-white", "label": "Primary" },
+                { "group": "Dark", "value": "bg-secondary text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-dark-gradient text-white", "label": "Dark" },
+                { "group": "Gradient", "value": "bg-primary-gradient text-white", "label": "Primary" },
+                { "group": "Gradient", "value": "bg-secondary-gradient text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-custom-gradient text-white", "label": "Custom" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Configurações de imagem"
+        },
+        {
+            "type": "image_picker",
+            "id": "img",
+            "label": "Imagem"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "720"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "405"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": false
+        },
+        {
+            "type": "url",
+            "id": "img_url",
+            "label": "Link",
+            "info": "O cliente será redirecionado quando clicar na imagem."
+        },
+
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+
+    ],
+    "presets": [
+        {
+            "name": "Imagem em destaque",
+            "category": "imagem"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,77 @@
+<div 
+    class="modal fade" 
+    id="account-modal" 
+    tabindex="-1" 
+    aria-labelledby="account-modal-label" 
+    aria-hidden="true">
+    <div 
+        class="modal-dialog modal-dialog-scrollable animate__animated"
+        data-animate-enter="{{ settings.modal_animation_enter }}"
+        data-animate-exit="{{ settings.modal_animation_exit }}"
+        data-animate-speed="{{ settings.modal_animation_speed }}">
+        <div class="modal-content">
+            
+            <div class="modal-header py-3">
+                <h5 class="modal-title" id="search-modal-label">
+                    {{ 'customer.login.modal_title' | t }}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'general.close' | t }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                {% form 'customer_login', id: 'customer_login_modal' %}
+                    <div class="form-group">
+                        <input
+                            type="email"
+                            name="customer[email]"
+                            class="form-control"
+                            spellcheck="false"
+                            autocomplete="off"
+                            autocapitalize="off"
+                            autofocus
+                            required
+                            placeholder="{{ 'customer.login.email' | t }}"
+                            aria-label="{{ 'customer.login.email' | t }}">
+                    </div>
+
+                    {% if form.password_needed %}
+                        <div class="form-group">
+                            <input
+                                type="password"
+                                name="customer[password]"
+                                class="form-control"
+                                spellcheck="false"
+                                autocomplete="off"
+                                autocapitalize="off"
+                                required
+                                placeholder="{{ 'customer.login.password' | t }}"
+                                aria-label="{{ 'customer.login.password' | t }}">
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-block" value="{{ 'customer.login.sign_in' | t }}">
+                    </div>
+
+                    <ul class="nav justify-content-center">
+                        {% if form.password_needed %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ routes.account_login_url }}#recover" role="button">
+                                    {{ 'customer.login.forgot_password' | t }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ routes.account_register_url }}">{{ 'customer.login.create_account' | t }}</a>
+                        </li>
+                    </ul>
+
+                {% endform %}
+            </div>
+
+        </div>
+    </div>
+</div>

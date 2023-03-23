@@ -1,0 +1,157 @@
+{% if section.settings.enable_section %}
+  
+  {%liquid
+    assign time_limit = section.settings.time_limit
+  %}
+
+  <section class="countdown-container-main" id="countdown-container-main">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'richtext' -%}
+          <div class="text-timer" style="font-size: {{ section.settings.size_text }}">{{block.settings.text_timer }}</div>
+        {%- when 'text' -%}
+          <div class="countdown-container">
+            {% if time_limit != blank %}
+              <div class="countdown-el days-c">
+                <p style="font-size: {{ section.settings.size_timer }}" class="big-text" id="days">0</p>
+                <span style="font-size: {{ section.settings.size_timer_text }}">DIAS</span>
+            </div>
+            <div class="kb-countdown-item kb-countdown-date-item kb-countdown-divider-item kb-countdown-divider-item-hours" style="display:flex; flex-direction:column; font-size: 25px;"><span class="kb-countdown-number">:</span><span class="kb-countdown-label">&nbsp;</span></div>
+          {% endif %}
+          <div class="countdown-el hours-c">
+            <p style="font-size: {{ section.settings.size_timer }}" class="big-text" id="hours">0</p>
+            <span style="font-size: {{ section.settings.size_timer_text }}">HRS</span>
+          </div>
+          <div class="countdown-el mins-c">
+            <p style="font-size: {{ section.settings.size_timer }}" class="big-text" id="mins">0</p>
+            <span style="font-size: {{ section.settings.size_timer_text }}">MIN</span>
+          </div>
+          <div class="kb-countdown-item kb-countdown-date-item kb-countdown-divider-item kb-countdown-divider-item-hours" style="display:flex; flex-direction:column;font-size: 25px;"><span class="kb-countdown-number">:</span><span class="kb-countdown-label">&nbsp;</span></div>
+          <div class="countdown-el seconds-c">
+            <p style="font-size: {{ section.settings.size_timer }}" class="big-text" id="seconds">0</p>
+            <span style="font-size: {{ section.settings.size_timer_text }}">SEG</span>
+        </div>
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+
+  </section>
+
+
+  <script>
+    const container = document.getElementById("countdown-container-main");
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minsEl = document.getElementById("mins");
+    const secondsEl = document.getElementById("seconds");
+
+    const configTimeLimit = "{{ time_limit }}"
+
+    let newYears
+    if (configTimeLimit)
+      newYears = configTimeLimit;
+    else
+      newYears = "11/15/2050";
+
+    function countdown() {
+        const newYearsDate = new Date(newYears);
+        const currentDate = new Date();
+
+        const totalSeconds = (newYearsDate - currentDate) / 1000;
+
+        const days = Math.floor(totalSeconds / 3600 / 24)
+        const hours = Math.floor(totalSeconds / 3600) % 24;
+        const mins = Math.floor(totalSeconds / 60) % 60;
+        const seconds = Math.floor(totalSeconds) % 60;
+        if (days < 0 || hours < 0 || mins < 0 || seconds < 0 ){
+          container.style.display = 'none';  
+        }else{
+          if (daysEl){
+            daysEl.innerHTML = days
+          }
+          hoursEl.innerHTML = formatTime(hours);
+          minsEl.innerHTML = formatTime(mins);
+          secondsEl.innerHTML = formatTime(seconds);
+        }
+        
+    }
+
+    function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
+    }
+
+    // initial call
+    countdown();
+
+    setInterval(countdown, 1000);
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Timer de escassez",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Configurações gerais"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_section",
+      "label": "Habilitar seção",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "time_limit",
+      "label": "Data final",
+      "info": "Insira a data no formato em inglês mês/dia/ano. Ex: 11/26/2021"
+    },
+    {
+      "type": "text",
+      "id": "size_text",
+      "label": "Tamanho do texto",
+      "default": "14px",
+      "info": "Insira o tamanho em px."
+    },
+    {
+      "type": "text",
+      "id": "size_timer",
+      "label": "Tamanho do timer",
+      "default": "18px",
+      "info": "Insira o tamanho em px."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Timer",
+      "limit": 1
+    },
+    {
+      "type": "richtext",
+      "name": "Texto",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text_timer",
+          "default": "<p>A Black Friday 2021 está chegando.<br><strong>26 DE NOVEMBRO</strong><br>Falta pouco para o dia mais desejado do ano.</p>",
+          "label": "Texto"
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "text"
+      },
+      {
+        "type": "richtext"
+      }
+    ]
+  }
+
+}
+{% endschema %}

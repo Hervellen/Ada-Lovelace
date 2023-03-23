@@ -1,0 +1,437 @@
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<!-- ----- BANNER MOBILE --------- -->
+<div class="d-sm-block d-md-none {% if section.settings.container %}container{% endif %}">
+
+    <div
+        id="{{ 'caroussel-' | append: section.id }}"
+        class="
+            carousel slide
+            {{ section.settings.transition_effect }}
+            {{ section.settings.bg_color }}
+            {% if section.settings.backdrop %}carousel-backdrop{% endif %}
+            {{ mt }} {{ mb }}
+        "
+        data-ride="carousel"
+        data-pause="hover"
+        data-interval="{% if section.settings.autoplay %}{{ section.settings.interval | times: 1000 }}{% else %}false{% endif %}"
+        aria-roledescription="carousel">
+
+        {% if section.settings.indicators %}
+            <ol class="carousel-indicators mb-3">
+                {% for block in section.blocks %}
+                    <li
+                        data-target="#{{ 'caroussel-' | append: section.id }}"
+                        data-slide-to="{{ forloop.index0 }}"
+                        class="{% if forloop.first == true %} active {% endif %}">
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+
+        <div id="{{ 'carousel-inner' | append: section.id }}" class="carousel-inner">
+            {% for block in section.blocks %}
+                <div
+                    class="carousel-item animate__animated {{ section.settings.transition_speed }} {% if forloop.first == true %} active {% endif %}"
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label="{{ forloop.index}} {{ 'general.from' | t }} {{ section.blocks.size }}">
+
+                    {% if block.settings.imagemb != blank %}
+
+                        {% assign image_aspect_ratio = 1 %}
+
+                        {% assign img_size_800 = image_aspect_ratio | times: 800 | round | prepend: '800x'  %}
+                        {% assign img_size_1600 = image_aspect_ratio | times: 1600 | round | prepend: '1600x'  %}
+
+                            <a href="{{ block.settings.button_url }}">
+                         <img
+                            class="carousel-img d-block w-100 h-auto"
+                            {% if section.settings.lazyload and forloop.index > 1 %}
+                                src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                                srcset="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                            {% else %}
+                                src="{{ block.settings.imagemb | img_url: img_size_1600, crop: 'center' }}"
+                                srcset="{{ block.settings.imagemb | img_url: img_size_800, crop: 'center' }} 800w, {{ block.settings.imagemb | img_url: img_size_1600, crop: 'center' }} 1600w"
+                            {% endif %}
+                            data-src="{{ block.settings.imagemb | img_url: img_size_1600, crop: 'center' }}"
+                            data-srcset="{{ block.settings.imagemb | img_url: img_size_800, crop: 'center' }} 800w, {{ block.settings.imagemb | img_url: img_size_1600, crop: 'center' }} 1600w"
+                            alt="{{ block.settings.imagemb.alt }}"
+                            width="1600"
+                            height="{{ image_aspect_ratio | times: 1600 | round }}"
+                            style="{{ 20 | prepend: 'min-height: ' | append: 'px' }}; object-fit: cover"
+                            data-speed="1">
+                        </a>
+
+                    {% else %}
+                        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg d-block h-100 bg-secondary' }}
+                    {% endif %}
+
+                    {% if block.settings.caption_title != blank or block.settings.caption_description != blank or block.settings.button_url != blank %}
+                        <div class="carousel-caption">
+                            {% unless block.settings.caption_title == blank %}
+                                <h3 class="{{ block.settings.caption_title_heading }}">
+                                    {{ block.settings.caption_title }}
+                                </h3>
+                            {% endunless %}
+                            {% unless block.settings.caption_description == blank %}
+                                <div class="rte lead opacity-90 text-white mb-0">
+                                    {{ block.settings.caption_description }}
+                                </div>
+                            {% endunless %}
+
+                        </div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if section.settings.controls %}
+            <a
+                class="carousel-control-prev"
+                href="#{{ 'carousel-' | append: section.id }}"
+                role="button"
+                data-slide="prev"
+                aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ 'general.accessibility.previous' | t }}</span>
+            </a>
+            <a
+                class="carousel-control-next"
+                href="#{{ 'carousel-' | append: section.id }}"
+                role="button" data-slide="next"
+                aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ 'general.accessibility.next' | t }}</span>
+            </a>
+        {% endif %}
+
+        {% if section.settings.autoplay and section.settings.autoplay_progress_bar %}
+            <div class="carousel-autoplay-progress-bar {{ section.settings.autoplay_progress_bar_color | escape }}"></div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- ----- BANNER DESKTOP --------- -->
+
+<div class="d-none d-sm-none d-md-block d-lg-block {% if section.settings.container %}container{% endif %} ">
+
+    <div
+        id="{{ 'carousel-' | append: section.id }}"
+        class="
+            carousel slide
+            {{ section.settings.transition_effect }}
+            {{ section.settings.bg_color }}
+            {% if section.settings.backdrop %}carousel-backdrop{% endif %}
+            {{ mt }} {{ mb }}
+        "
+        data-ride="carousel"
+        data-pause="hover"
+        data-interval="{% if section.settings.autoplay %}{{ section.settings.interval | times: 1000 }}{% else %}false{% endif %}"
+        aria-roledescription="carousel">
+
+        {% if section.settings.indicators %}
+            <ol class="carousel-indicators mb-3">
+                {% for block in section.blocks %}
+                    <li
+                        data-target="#{{ 'carousel-' | append: section.id }}"
+                        data-slide-to="{{ forloop.index0 }}"
+                        class="{% if forloop.first == true %} active {% endif %}">
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+
+        <div id="{{ 'carousel-inner' | append: section.id }}" class="carousel-inner">
+            {% for block in section.blocks %}
+                <div
+                    class="carousel-item animate__animated {{ section.settings.transition_speed }} {% if forloop.first == true %} active {% endif %}"
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label="{{ forloop.index}} {{ 'general.from' | t }} {{ section.blocks.size }}">
+
+                    {% if block.settings.image != blank %}
+
+                        {% assign image_aspect_ratio = 1 %}
+
+                        {% assign img_size_800 = image_aspect_ratio | times: 800 | round | prepend: '800x'  %}
+                        {% assign img_size_1600 = image_aspect_ratio | times: 1600 | round | prepend: '1600x'  %}
+
+                            <a href="{{ block.settings.button_url }}">
+                         <img
+                            class="carousel-img d-block w-100 h-auto"
+                            {% if section.settings.lazyload and forloop.index > 1 %}
+                                src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                                srcset="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                            {% else %}
+                                src="{{ block.settings.image | img_url: img_size_1600, crop: 'center' }}"
+                                srcset="{{ block.settings.image | img_url: img_size_800, crop: 'center' }} 800w, {{ block.settings.image | img_url: img_size_1600, crop: 'center' }} 1600w"
+                            {% endif %}
+                            data-src="{{ block.settings.image | img_url: img_size_1600, crop: 'center' }}"
+                            data-srcset="{{ block.settings.image | img_url: img_size_800, crop: 'center' }} 800w, {{ block.settings.image | img_url: img_size_1600, crop: 'center' }} 1600w"
+                            alt="{{ block.settings.image.alt }}"
+                            width="1600"
+                            height="{{ image_aspect_ratio | times: 1600 | round }}"
+                            style="{{ 0 | prepend: 'min-height: ' | append: 'px' }}; object-fit: cover"
+                            data-speed="1">
+                        </a>
+
+                    {% else %}
+                        {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                        {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg d-block h-100 bg-secondary' }}
+                    {% endif %}
+
+                    {% if block.settings.caption_title != blank or block.settings.caption_description != blank or block.settings.button_url != blank %}
+                        <div class="carousel-caption">
+                            {% unless block.settings.caption_title == blank %}
+                                <h3 class="{{ block.settings.caption_title_heading }}">
+                                    {{ block.settings.caption_title }}
+                                </h3>
+                            {% endunless %}
+                            {% unless block.settings.caption_description == blank %}
+                                <div class="rte lead opacity-90 text-white mb-0">
+                                    {{ block.settings.caption_description }}
+                                </div>
+                            {% endunless %}
+
+                        </div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if section.settings.controls %}
+            <a
+                class="carousel-control-prev"
+                href="#{{ 'carousel-' | append: section.id }}"
+                role="button"
+                data-slide="prev"
+                aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ 'general.accessibility.previous' | t }}</span>
+            </a>
+            <a
+                class="carousel-control-next"
+                href="#{{ 'carousel-' | append: section.id }}"
+                role="button" data-slide="next"
+                aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">{{ 'general.accessibility.next' | t }}</span>
+            </a>
+        {% endif %}
+
+        {% if section.settings.autoplay and section.settings.autoplay_progress_bar %}
+            <div class="carousel-autoplay-progress-bar {{ section.settings.autoplay_progress_bar_color | escape }}"></div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "Carrossel",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "controls",
+            "default": true,
+            "label": "Mostrar controles",
+            "info": "Botões Anterior / Próximo"
+        },
+        {
+            "type": "checkbox",
+            "id": "indicators",
+            "default": true,
+            "label": "Mostrar indicadores",
+            "info": "Pequenos pontos na parte inferior"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Background cor",
+            "info": "Pode ser visível na mudança do slide.",
+            "default": "bg-custom-gradient",
+            "options": [
+                { "group": "Light", "value": "bg-white", "label": "White" },
+                { "group": "Light", "value": "bg-light", "label": "Light" },
+                { "group": "Dark", "value": "bg-dark", "label": "Dark" },
+                { "group": "Dark", "value": "bg-primary", "label": "Primary" },
+                { "group": "Dark", "value": "bg-secondary", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-dark-gradient", "label": "Dark" },
+                { "group": "Gradient", "value": "bg-primary-gradient", "label": "Primary" },
+                { "group": "Gradient", "value": "bg-secondary-gradient", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-custom-gradient", "label": "Custom" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "backdrop",
+            "label": "Pano de fundo gradiente",
+            "info": "Útil para tornar o texto da legenda mais legível.",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Desativar largura completa",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Autoplay"
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "default": true,
+            "label": "Habilitar Autoplay"
+        },
+        {
+            "type": "range",
+            "id": "interval",
+            "min": 3,
+            "max": 20,
+            "step": 1,
+            "unit": "sec",
+            "label": "Tempo do Autoplay",
+            "default": 6
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay_progress_bar",
+            "label": "Mostrar barra de progresso",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "autoplay_progress_bar_color",
+            "label": "Cor da barra de progresso",
+            "default": "bg-custom-gradient",
+            "options": [
+                { "value": "bg-white", "label": "White" },
+                { "value": "bg-white opacity-50", "label": "White (50% opacity)" },
+                { "value": "bg-primary", "label": "Primary" },
+                { "value": "bg-secondary", "label": "Secondary" },
+                { "value": "bg-success", "label": "Success" },
+                { "value": "bg-danger", "label": "Danger" },
+                { "value": "bg-warning", "label": "Warning" },
+                { "value": "bg-info", "label": "Info" },
+                { "value": "bg-custom-gradient", "label": "Custom Gradient" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Transição"
+        },
+        {
+            "type": "select",
+            "id":  "transition_effect",
+            "label": "Efeito de transição",
+            "default": "carousel-animate-css carousel-jack",
+            "info": "Saiba mais sobre [Animate.css](https://animate.style)",
+            "options": [
+                { "group": "Default", "value": "", "label": "Slide" },
+                { "group": "Default", "value": "carousel-fade", "label": "Fade" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-back", "label": "Back" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-fade-big", "label": "Fade Big" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-slide-left-right", "label": "Slide left/right" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-slide-up-down", "label": "Slide up/down" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-zoom", "label": "Zoom" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-rotate", "label": "Rotate" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-jack", "label": "Jack In The Box" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-roll", "label": "Roll" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-flip-y", "label": "FlipY" }
+            ]
+        },
+        {
+            "type": "select",
+            "id":  "transition_speed",
+            "label": "Velocidade de transição",
+            "default": "animate__normal",
+            "options": [
+                { "value": "animate__slower", "label": "Mais devagar" },
+                { "value": "animate__slow", "label": "Lenta" },
+                { "value": "animate__normal", "label": "Normal" },
+                { "value": "animate__fast", "label": "Rápida" },
+                { "value": "animate__faster",  "label": "Mais rápido" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Imagens"
+        },
+        {
+            "type": "checkbox",
+            "id": "lazyload",
+            "label": "Imagens de carregamento lento",
+            "info": "Aumente a velocidade da página pré-carregando apenas a primeira imagem.",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image",
+            "name": "Imagem",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "info": "Sugestão (1920x528).",
+                    "label": "Imagem Desktop"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "imagemb",
+                    "info": "Sugestão (1080x1380).",
+                    "label": "Imagem Mobile"
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "URL",
+                    "info": "Deixe em branco para desativar"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Carrossel",
+            "category": "imagem",
+            "blocks": [
+
+            ]
+        }
+    ]
+}
+{% endschema %}

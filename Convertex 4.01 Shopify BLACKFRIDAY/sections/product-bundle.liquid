@@ -1,0 +1,324 @@
+{% for collection in product.collections %}
+    {% if collection.handle contains 'compre-junto' %}
+        {% assign bundle = collection %}
+    {% endif %}
+{% endfor %}
+
+{% if section.settings.enable_section and bundle.products.size > 1 %}
+    {% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+    {% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+    {% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+    {% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+    {% assign row_      =  section.settings.row_mobile | prepend: 'row-cols-' %}
+    {% assign row_md    =  section.settings.row_tablet | prepend: 'row-cols-md-' %}
+    {% assign row_lg    =  section.settings.row_desktop | prepend: 'row-cols-lg-' %}
+
+    {% assign bundle_price = 0 %}
+
+    <section
+        id="product-bundle-{{ section.id }}"
+        class="product-bundle overflow-hidden  {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+        data-enable-discounts="{{ section.settings.enable_discounts}}"
+        data-discount-percentage="{{ section.settings.discount_percentage }}"
+        data-discount-min-products="{{ section.settings.discount_min_products }}"
+        data-bundle-handle="{{ bundle.handle }}">
+        <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+            <!-- Title -->
+            <h2 class="title mb-1 {{ section.settings.title_alignment }} {{ section.settings.title_size }}">
+                {{ section.settings.title }}
+            </h2>
+
+            <!-- Description -->
+            {% if section.settings.description != blank %}
+                <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }}">
+                    {{ section.settings.description }}
+                </div>
+            {% endif %}
+
+            <!-- Product list -->
+            <ul
+                id="bundle-product-list-{{ section.id }}"
+                class="bundle-product-list product-list animated-list list-unstyled mx-n2 my-n4 row justify-content-center {{ row_ }} {{ row_md }} {{ row_lg }}">
+
+                {% for product in bundle.products %}
+                    {% render 'product-list-item' with product: product, index: forloop.index, is_bundle: true %}
+                    {% if product.available %}
+                        {% assign current_variant = product.selected_or_first_available_variant %}
+                        {% assign bundle_price = current_variant.price | plus: bundle_price %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <!-- Product bundle footer -->
+            <div
+                class="product-bundle-footer text-center pt-8">
+
+                <p class="product-price lead">
+                    {{ 'product.bundle.total_price' | t }}:
+                    {% if section.settings.enable_discounts %}
+                        {% assign discount = bundle_price | times: section.settings.discount_percentage | divided_by: 100 %}
+                        <s class="price-compare">
+                            <span class="sr-only">
+                                {{ 'product.old_price' | t }}
+                            </span>
+                            {{ bundle_price | money }}
+                        </s>
+                        {% assign bundle_price = bundle_price | minus: discount %}
+                    {% endif %}
+                    <span class="price">
+                        {{ bundle_price | money }}
+                    </span>
+                    {% if section.settings.enable_discounts %}
+                        <small class="d-block text-muted">
+                            {{ 'product.bundle.you_save' | t }}:
+                            {{ discount | money }}
+                        </small>
+                    {% endif %}
+                </p>
+
+                <button
+                    type="button"
+                    class="product-bundle-add-to-cart-btn btn button-buy btn-lg d-flex align-items-center justify-content-center mx-auto mb-2">
+                    <span
+                        class="add-to-cart-btn-spinner spinner-border spinner-border-sm mr-2"
+                        role="status"
+                        aria-hidden="true"
+                        style="display: none;">
+                    </span>
+
+                    <span
+                        class="add-to-cart-btn-text-add add-to-cart-btn-text">
+                        {{ 'product.bundle.buy_products' | t }}
+                    </span>
+
+                    <span
+                        class="add-to-cart-btn-text-loading add-to-cart-btn-text"
+                        style="display: none;">
+                        {{ 'general.loading' | t }}...
+                    </span>
+                </button>
+            </div>
+
+        </div>
+    </section>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Compre junto",
+    "settings": [
+        {
+            "type": "paragraph",
+            "content": "Tenha mais conversão com essa opção."
+        },
+        {
+            "type": "paragraph",
+            "content": "INSTRUÇÕES: Crie coleções com o nome compre-junto-01 (variando os últimos dois dígitos de 01 a 10) com os pacotes. Obs: se for editar o nome da coleção verificar o campo (URL e identificador) que deve contém o nome especificado anteriormente."
+        },
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_section",
+            "label": "Habilitar seção",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Frequentemente comprados juntos"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Escreva algo cativante para esta seção.</p>"
+        },
+
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do título",
+            "default": "h2",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Product settings"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "product_title_heading_size",
+            "label": "Tamanho do título",
+            "default": "h6",
+            "options": [
+                { "value": "h1", "label": "H1" },
+                { "value": "h2", "label": "H2" },
+                { "value": "h3", "label": "H3" },
+                { "value": "h4", "label": "H4" },
+                { "value": "h5", "label": "H5" },
+                { "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_rating",
+            "label": "Mostrar avaliação",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_price",
+            "label": "Mostrar preço",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Configurações de desconto"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_discounts",
+            "label": "Habilitar descontos (NÃO DISPONÍVEL)",
+            "info": "Para usar o desconto, crie para cada um de seus pacotes de produtos um código de desconto exatamente como o identificador de sua coleção. Por exemplo: 'promo'.",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "discount_percentage",
+            "label": "Porcentagem de desconto",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "default": 1
+        },
+        {
+            "type": "text",
+            "id": "discount_min_products",
+            "label": "Produtos mínimos",
+            "info": "Aplicará desconto apenas se este número de produtos (ou mais) for selecionado.",
+            "default": "2"
+        },
+        {
+            "type": "header",
+            "content": "Rows"
+        },
+        {
+            "type": "range",
+            "id": "row_mobile",
+            "label": "Produtos por linha / Mobile ",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "row_tablet",
+            "label": "Produtos por linha / Tablet ",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+            "label": "Produtos por linha / Desktop ",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ]
+}
+{% endschema %}

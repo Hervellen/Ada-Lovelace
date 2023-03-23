@@ -1,0 +1,23 @@
+<article>
+
+    <!-- Header -->
+    <header 
+        id="page-header" 
+        class="page-header text-center mb-7">
+        <div class="container">
+
+            <h3 class="">
+                {{ page.title }}
+            </h3>
+
+        </div>
+    </header>
+
+    <!-- Page content -->
+    <div class="page-content">
+        <div class="container" style="{% unless section.settings.page_max_width == blank %}max-width: {{ section.settings.page_max_width }}px;{% endunless %}">
+            {{ page.content }}
+        </div>
+    </div>
+
+</article>

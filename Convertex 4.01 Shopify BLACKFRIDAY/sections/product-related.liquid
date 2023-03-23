@@ -1,0 +1,384 @@
+{% if section.settings.enable_section %}
+    {% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+    {% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+    {% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+    {% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+    <section
+        id="related-products"
+        class="related-products {% if section.settings.bg_light %}bg-light{% endif %} {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+        data-base-url="{{ routes.product_recommendations_url }}"
+        data-product-id="{{ product.id }}"
+        data-limit="{{ section.settings.limit }}">
+        <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+            {% if recommendations.performed %}
+                {% if recommendations.products_count > 0 %}
+
+                    <!-- Title -->
+                    <h2 class="title mb-1 {{ section.settings.title_alignment }} {{ section.settings.title_size }}">
+                        {{ section.settings.title }}
+                    </h2>
+
+                    <!-- Description -->
+                    {% if section.settings.description != blank %}
+                        <div class="description rte text-muted mb-6 {{ section.settings.title_alignment }}">
+                            {{ section.settings.description }}
+                        </div>
+                    {% endif %}
+
+                    <div
+                        id="splide-{{ section.id }}"
+                        class="splide"
+                        data-splide='{
+                            "type": "slide",
+                            "rewind": {{ section.settings.carousel_rewind }},
+                            "perPage": {{ section.settings.breakpoint_xxl }},
+                            "easing": "{{ section.settings.carousel_easing }}",
+                            "speed": {{ section.settings.carousel_speed }},
+                            "arrows": {{ section.settings.carousel_arrows }},
+                            "pagination": {{ section.settings.carousel_pagination }},
+                            "autoplay": {{ section.settings.carousel_autoplay }},
+                            "interval": {{ section.settings.carousel_interval | times: 1000 }},
+                            "keyboar": "focused",
+                            "breakpoints": {
+                                "576": {
+                                    "perPage": {{ section.settings.breakpoint_xm }}
+                                },
+                                "768": {
+                                    "perPage": {{ section.settings.breakpoint_sm }}
+                                },
+                                "992": {
+                                    "perPage": {{ section.settings.breakpoint_md }}
+                                },
+                                "1200": {
+                                    "perPage": {{ section.settings.breakpoint_lg }}
+                                },
+                                "1400": {
+                                    "perPage": {{ section.settings.breakpoint_xl }}
+                                }
+                            },
+                            "i18n": {
+                                "prev":	"{{ 'general.splide.prev' | t }}",
+                                "next":	"{{ 'general.splide.next' | t }}",
+                                "first": "{{ 'general.splide.first' | t }}",
+                                "last":	"{{ 'general.splide.last' | t }}",
+                                "slideX": "{{ 'general.splide.slideX' | t }} %s",
+                                "pageX": "{{ 'general.splide.pageX' | t }} %s",
+                                "play":	"{{ 'general.splide.play' | t }}",
+                                "pause": "{{ 'general.splide.pause' | t }}"
+                            }
+                        }'>
+
+
+                        <div class="splide__track mb-2">
+                            <ul class="product-list animated-list splide__list list-unstyled my-n4 mx-n2">
+
+                                {% for product in recommendations.products %}
+                                    {% render 'product-list-item' with product: product, index: forloop.index %}
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </section>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Produtos relacionados",
+    "settings": [
+        {
+            "type": "paragraph",
+            "content": "Mostrar a seção de produtos relacionados por meio da API baseada em IA (fica mais inteligente com o tempo) API de recomendações de produtos do Shopify. [Saber mais](https://www.shopify.com/partners/blog/related-products)"
+        },
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_section",
+            "label": "Habilitar seção",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Produtos relacionados"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Escreva algo atraente para esta seção.</p>"
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_light",
+            "label": "Light cor background",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do título",
+            "default": "h2",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "limit",
+            "label": "Contagem de produtos",
+            "default": "15"
+        },
+        {
+            "type": "header",
+            "content": "Configurações de carrossel"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_arrows",
+            "label": "Mostrar controles",
+            "info": "Ícones anterior / seguinte",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_pagination",
+            "label": "Mostrar paginação",
+            "info": "Pequenos pontos na parte inferior",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_rewind",
+            "label": "Retroceder",
+            "info": "Mova para o primeiro slide quando terminar",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Carrossel Autoplay"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_autoplay",
+            "label": "Autoplay",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "carousel_interval",
+            "label": "Tempo do Autoplay",
+            "default": 6,
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "unit": "sec"
+        },
+        {
+            "type": "header",
+            "content": "Transição Carrossel"
+        },
+        {
+            "type": "text",
+            "id": "carousel_easing",
+            "label": "Transition effect",
+            "info": "[Saber mais](https://cubic-bezier.com/#.42,.65,.27,.99)",
+            "default": "cubic-bezier(.42,.65,.27,.99)"
+        },
+        {
+            "type": "text",
+            "id": "carousel_speed",
+            "label": "Velocidade de transição",
+            "default": "400"
+        },
+        {
+            "type": "header",
+            "content": "Configurações do produto"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "product_title_heading_size",
+            "label": "Tamanho do título",
+            "default": "h6",
+            "options": [
+                { "value": "h1", "label": "H1" },
+                { "value": "h2", "label": "H2" },
+                { "value": "h3", "label": "H3" },
+                { "value": "h4", "label": "H4" },
+                { "value": "h5", "label": "H5" },
+                { "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_rating",
+            "label": "Mostrar avaliação",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_price",
+            "label": "Mostrar preço",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Breakpoints",
+            "info": "Ajuste os produtos por slide com base em diferentes resoluções de tela"
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xm",
+            "label": "Produtos por slide /xm",
+            "info": "Largura da tela: <=576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Produtos por slide /sm",
+            "info": "Largura da tela: <=768px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Produtos por slide /md",
+            "info": "Largura da tela: <=992px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Produtos por slide /lg",
+            "info": "Largura da tela: <=1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Produtos por slide /xl",
+            "info": "Largura da tela: <=1400px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Produtos por slide /xxl",
+            "info": "Largura da tela: >1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 5
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ]
+}
+{% endschema %}

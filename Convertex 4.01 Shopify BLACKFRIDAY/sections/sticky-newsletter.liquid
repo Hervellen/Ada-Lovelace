@@ -1,0 +1,239 @@
+
+{% assign show_sticky_newsletter = false %}
+
+{% if section.settings.enable_section %}
+    {% if section.settings.show_only_homepage == false or template.name == 'index' %}
+        {% if template.name != 'product' %}
+            {% assign show_sticky_newsletter = true %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% if show_sticky_newsletter %}
+    <div
+        id="sticky-newsletter-wrapper"
+        class="toast-wrapper {{ section.settings.position }}">
+        <div
+            id="sticky-newsletter"
+            class="toast hide animate__animated"
+            data-autohide="false"
+            data-animate-enter="{{ section.settings.animation_enter }}"
+            data-animate-exit="{{ section.settings.animation_exit }}"
+            data-animate-speed="{{ section.settings.animation_speed }}"
+            data-top-treshold="{{ section.settings.top_treshold }}"
+            data-bottom-treshold="{{ section.settings.bottom_treshold }}"
+            data-show-after-x-days="{{ section.settings.show_after_x_days }}">
+
+            <div class="toast-header py-2">
+                <div class="mr-auto">
+                    <strong class="line-height-normal">
+                        {{ section.settings.title | escape }}
+                    </strong>
+                </div>
+                <button
+                    type="button"
+                    class="sticky-newsletter-handle-close ml-2 mb-1 close"
+                    aria-label="{{ 'general.accessibility.close' | t }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="toast-body">
+                {% unless section.settings.description == blank %}
+                    <div
+                        id="sticky-newsletter-description"
+                        class="description rte text-muted">
+                        {{ section.settings.description }}
+                    </div>
+
+                    <!-- Newsletter form -->
+                    {% form 'customer', id: 'sticky_newsletter_form', class: '' %}
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+
+                        <div class="input-group mb-1">
+                            <input
+                                type="email"
+                                name="contact[email]"
+                                size="30"
+                                class="form-control"
+                                value="{% if customer.email != blank %}{{ customer.email }}{% endif %}"
+                                placeholder="{{ 'general.newsletter.label' | t }}"
+                                aria-label="{{ 'general.newsletter.label' | t }}"
+                                autocorrect="off"
+                                autocapitalize="off">
+                            <div class="input-group-append">
+                                <button
+                                    type="submit"
+                                    name="commit"
+                                    class="btn d-flex align-items-center flex-shrink-0 {{ section.settings.btn_color }} {{ section.settings.btn_size }}">
+                                    {% render 'icon-email', size: 21 %}
+                                    <span class="sr-only">
+                                        {{ 'general.newsletter.submit' | t }}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="sticky-newsletter-close-text"
+                            class="sticky-newsletter-handle-close btn btn-block btn-sm btn-link text-decoration-underline text-secondary">
+                            {{ 'general.newsletter.sticky_close' | t }}
+                        </button>
+
+                    {% endform %}
+
+                {% endunless %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Sticky newsletter",
+    "settings": [
+        {
+            "type": "paragraph",
+            "content": "Exibir um formulário de assinatura de boletim informativo, geralmente oferecendo um código de cupom ao se inscrever."
+        },
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_section",
+            "label": "Ativar seção",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_only_homepage",
+            "label": "Mostrar apenas na página inicial",
+            "info": "Recomendamos que você mostre apenas a página inicial. Nas páginas dos produtos, estará sempre oculto",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "position",
+            "label": "Posição",
+            "default": "bottom-center",
+            "options": [
+                {
+                    "value": "bottom-left",
+                    "label": "Bottom left"
+                },
+                {
+                    "value": "bottom-center",
+                    "label": "Bottom center"
+                },
+                {
+                    "value": "bottom-right",
+                    "label": "Bottom right"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "OBTENHA 10% DE DESCONTO AGORA!"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Pegue imediatamente <strong>10% OFF</strong> em sua primeira compra ao se inscrever em nosso newsletters!</p>"
+        },
+        {
+            "type": "text",
+            "id": "top_treshold",
+            "label": "Limiar superior (px)",
+            "info": "Será mostrado depois de rolar tantos pixels a partir do topo.",
+            "default": "1000"
+        },
+        {
+            "type": "text",
+            "id": "bottom_treshold",
+            "label": "Limiar inferior (px)",
+            "info": "Vai se esconder depois de atingir essa quantidade de pixels da parte inferior",
+            "default": "500"
+        },
+        {
+            "type": "range",
+            "id": "show_after_x_days",
+            "label": "Mostrar novamente após x dias",
+            "info": "Se o usuário fechar o pop-up, aparecerá novamente após esse número de dias. Recomendamos que você defina 3 dias ou mais.",
+            "min": 1,
+            "max": 30,
+            "default": 3
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Cor do botão",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Link" },
+                { "group": "Normal", "value": "btn-light", "label": "Light" },
+                { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primary" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondary" },
+                { "group": "Normal", "value": "btn-success", "label": "Success" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Warning" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Outline", "value": "btn-outline-dark", "label": "Dark Outline" },
+                { "group": "Outline", "value": "btn-outline-primary", "label": "Primary Outline" },
+                { "group": "Outline", "value": "btn-outline-secondary", "label": "Secondary Outline" },
+                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                { "group": "Outline", "value": "btn-outline-danger", "label": "Danger Outline" },
+                { "group": "Outline", "value": "btn-outline-warning", "label": "Warning Outline" },
+                { "group": "Outline", "value": "btn-outline-info", "label": "Info Outline" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "btn_size",
+            "label": "Tamanho do botão",
+            "options": [
+                { "value": "btn-sm", "label": "Pequeno" },
+                { "value": "", "label": "Normal" },
+                { "value": "btn-lg", "label": "Grande" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Animação"
+        },
+        {
+            "type": "text",
+            "id":  "animation_enter",
+            "label": "Animação Entrar",
+            "info": "Copie e cole o nome da animação (entrada) do site Animate.style. Deixe em branco para desativar e usar as transições padrão do Bootstrap. [Saber mais](https://animate.style)",
+            "default": "animate__fadeInUp"
+        },
+        {
+            "type": "text",
+            "id":  "animation_exit",
+            "label": "Saída de animação",
+            "info": "Copie e cole o nome da animação (saída) do site Animate.style. Deixe em branco para desativar e usar as transições padrão do Bootstrap. [Saber mais](https://animate.style)",
+            "default": "animate__fadeOutDown"
+        },
+        {
+            "type": "select",
+            "id":  "animation_speed",
+            "label": "Velocidade da animação",
+            "default": "animate__normal",
+            "options": [
+                { "value": "animate__slower", "label": "Slower" },
+                { "value": "animate__slow", "label": "Slow" },
+                { "value": "animate__normal", "label": "Normal" },
+                { "value": "animate__fast", "label": "Fast" },
+                { "value": "animate__faster",  "label": "Faster" }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,46 @@
+<div class="{% if section.settings.container %} container {% else %} container-fluid {% endif %}">
+    <hr class="mt-{{ section.settings.margin_top }} mb-{{ section.settings.margin_bottom }}">
+</div>
+  
+{% schema %}
+{
+    "name": "Separador",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "presets": [
+      {
+        "name": "Separador",
+          "category": "imagem"
+      }
+    ]
+  }
+  {% endschema %}

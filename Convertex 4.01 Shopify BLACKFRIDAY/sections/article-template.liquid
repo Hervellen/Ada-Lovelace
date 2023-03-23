@@ -1,0 +1,215 @@
+<article>
+
+    <!-- Header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-8">
+        <div class="container">
+
+            <H3 class="">
+                {{ article.title }}
+            </h3>
+
+            <p class="lead text-muted mb-0">
+                {% if section.settings.show_author %}
+                    {{ article.author }}
+                    <span class="opacity-75 mx-1"> | </span>
+                {% endif %}
+                {% if section.settings.show_date %}
+                    {{ article.created_at | time_tag: '%b %d, %Y' }}
+                    <span class="opacity-75 mx-1"> | </span>
+                {% endif %}
+                {% if section.settings.show_comments_count and blog.comments_enabled? %}
+                    {{ 'blog.comments.with_count' | t: count: article.comments_count }}
+                {% endif %}
+            </p>
+
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Article image -->
+        {% if article.image %}
+            {% assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height %}
+            <img
+                class="article-img img-fluid w-100 mb-5 {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                data-src="{{ article.image | img_url: img_size, crop: 'center' }}"
+                alt="{{ article.image.alt | escape }}"
+                width="{{ section.settings.img_width }}"
+                height="{{ section.settings.img_height }}"
+                loading="lazy">
+        {% endif %}
+
+    </div>
+
+    <div class="container" style="{{ section.settings.max_width | prepend: 'max-width:' | append: 'px' }}">
+
+        <!-- Article content -->
+        <div class="rte">
+            {{ article.content }}
+        </div>
+
+         <!-- Tags -->
+        {% if section.settings.show_tags and article.tags.size > 0 %}
+            <ul class="list-unstyled d-inline-flex flex-wrap align-items-center mx-n1">
+
+            <p class="small text-muted px-1 mb-0 mr-1">{{ 'blog.tagged_under' | t }}</p>
+
+            {% for tag in article.tags %}
+                <li class="p-1" style="line-height: normal">
+                {{ tag | link_to_tag: tag | replace: 'title=', 'class="badge badge-light" title=' }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Social sharing -->
+        {% if section.settings.enable_social_sharing %}
+            <hr class="mt-2">
+            <div class="text-center mb-7">
+                {% render 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+            </div>
+        {% endif %}
+
+        <!-- Comments -->
+        {% if blog.comments_enabled? %}
+            <div id="comments">
+
+                {% if article.comments_count == 0 %}
+                    <h3 class="mb-3">{{ 'blog.comments.no_comments' | t }}</h3>
+                    <p class="alert alert-info" role="alert">{{ 'blog.comments.be_first' | t }}</p>
+
+                {% else %}
+                    <h3 class="mb-3">{{ 'blog.comments.with_count' | t: count: article.comments_count }}</h3>
+
+                    {% paginate article.comments by section.settings.comments_per_page %}
+
+                    <ul class="list-unstyled">
+                        {% for comment in article.comments %}
+                            <li id="comment-{{ comment.id }}" class="card mb-3">
+                                <div class="card-header">
+                                    <p class="font-weight-500 mb-0">
+                                        {{ comment.author }}
+                                        &nbsp; <span class="opacity-75"> | </span> &nbsp;
+                                        {{ comment.created_at | time_tag: '%B %d, %Y - %I:%M %p' }}
+                                    </p>
+                                </div>
+                                <div class="card-body rte pb-1">
+                                    {{ comment.content }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    {% render 'pagination' with paginate: paginate %}
+
+                    {% endpaginate %}
+                {% endif %}
+
+                <!-- New Comment -->
+                {% form 'new_comment', article %}
+                    <h3 class="mt-6 mb-3">{{ 'blog.comments.title' | t }}</h3>
+
+                    {{ form.errors | default_errors }}
+
+                    <div class="form-row">
+                        <div class="form-group col-sm">
+                            <input type="text" name="comment[author]" id="CommentAuthor" class="form-control {% if form.errors contains 'author' %}is-invalid{% endif %}" placeholder="{{ 'blog.comments.name' | t }}" aria-label="{{ 'blog.comments.name' | t }}"  value="{{ form.author }}" autocapitalize="words" required>
+                        </div>
+
+                        <div class="form-group col-sm">
+                            <input type="email" name="comment[email]" id="CommentEmail" class="form-control {% if form.errors contains 'email' %}is-invalide{% endif %}" placeholder="{{ 'blog.comments.email' | t }}" aria-label="{{ 'blog.comments.email' | t }}"  value="{{ form.email }}" autocorrect="off" autocapitalize="off" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea name="comment[body]" id="CommentBody" class="form-control {% if form.errors contains 'body' %}is-invalid{% endif %}" placeholder="{{ 'blog.comments.message' | t }}" aria-label="{{ 'blog.comments.message' | t }}" rows="4" required>{{ form.body }}</textarea>
+                    </div>
+
+                    {% if blog.moderated? %}
+                        <p class="alert alert-warning">{{ 'blog.comments.moderated' | t }}</p>
+                    {% endif %}
+
+                    <input type="submit" class="btn btn-primary" value="{{ 'blog.comments.post' | t }}">
+
+                {% endform %}
+
+            </div>
+        {% endif %}
+
+    </div>
+</article>
+
+
+{% schema %}
+{
+    "name": "Postagens no blog",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "show_tags",
+            "label": "Mostrar tags",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_author",
+            "label": "Mostrar Autor",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_date",
+            "label": "Mostrar data",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_comments_count",
+            "label": "Mostrar contagem de comentários",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_social_sharing",
+            "label": "Ativar compartilhamento social",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "1280"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "720"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largura máxima do conteúdo (px)",
+            "info": "Aumente a legibilidade com largura de conteúdo estreita (palavras recomendadas por frase são 20-25)",
+            "default": "767"
+        },
+        {
+            "type": "range",
+            "id": "comments_per_page",
+            "label": "Comentários por página",
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "default": 10
+        }
+    ]
+}
+{% endschema %}

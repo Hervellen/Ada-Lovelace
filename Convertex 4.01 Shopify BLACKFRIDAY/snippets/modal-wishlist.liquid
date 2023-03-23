@@ -1,0 +1,40 @@
+<div 
+    class="modal fade" 
+    id="wishlist-modal" 
+    tabindex="-1" 
+    aria-labelledby="wishlist-modal-label" 
+    aria-hidden="true">
+    <div 
+        class="modal-dialog modal-dialog-scrollable animate__animated"
+        data-animate-enter="{{ settings.modal_animation_enter }}"
+        data-animate-exit="{{ settings.modal_animation_exit }}"
+        data-animate-speed="{{ settings.modal_animation_speed }}">
+        <div class="modal-content">
+            
+            <div class="modal-header py-3">
+                <h5 class="modal-title" id="wishlist-modal-label">
+                    {{ 'general.wishlist.modal_title' | t }}
+                    <span id="wishlist-modal-label-count">
+                        <!-- Auto injected via JS -->
+                    </span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'general.close' | t }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="wishlist-modal-empty" class="py-1">
+                    <p class="text-center text-muted">
+                        {{ 'general.wishlist.empty' | t }}
+                    </p>
+                    <a class="btn btn-outline-primary btn-block" href="/collections/all">
+                        {{ 'general.browse_all_products' | t }}
+                    </a>
+                </div>
+               <!-- Injected via JS -->
+            </div>
+
+        </div>
+    </div>
+</div>

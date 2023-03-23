@@ -1,0 +1,244 @@
+{% assign pt = section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb = section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt = section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb = section.settings.margin_bottom | prepend: 'mb-' %}
+
+{% capture max_width %}
+    {% unless section.settings.max_width == blank %}
+        {{ section.settings.max_width | prepend: 'max-width: ' | append: 'px;' }}
+    {% endunless %}
+{% endcapture %}
+
+<section
+    id="faq-{{ section.id }}"
+    class="faq {% if section.settings.light_bg %}bg-light{% endif %} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div
+        class="container"
+        style="{{ max_width }}">
+
+        <!-- Title -->
+        {% if section.settings.title != blank %}
+            <h2 class="title mb-1 {{ section.settings.title_alignment }} {{ section.settings.title_size }}">
+                {{ section.settings.title }}
+            </h2>
+        {% endif %}
+
+        <!-- Description -->
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }}">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+        <div
+            id="accordion-{{ section.id }}"
+            class="accordion">
+
+            {% for block in section.blocks %}
+                <div class="card">
+                    <div class="card-header" id="heading-{{ block.id }}">
+                        <h3 class="mb-0">
+                            <button
+                                class="btn btn-link text-dark btn-block text-left text-decoration-none {% if forloop.index0 == 0 %}{% else %}collapsed{% endif %}"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapse-{{ block.id }}"
+                                aria-expanded="{% if forloop.index0 == 0 %}true{% else %}false{% endif %}"
+                                aria-controls="collapse-{{ block.id }}">
+                                {{ block.settings.title | escape }}
+                            </button>
+                        </h3>
+                    </div>
+
+                    <div
+                        id="collapse-{{ block.id }}"
+                        class="collapse {% if forloop.index0 == 0 %}show{% endif %}"
+                        aria-labelledby="heading-{{ block.id }}"
+                        data-parent="#accordion-{{ section.id }}">
+                        <div class="card-body">
+                            {{ block.settings.description }}
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    
+</section>
+
+{% schema %}
+{
+    "name": "F.A.Q",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "F.A.Q"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "info": "Deixe em branco para desativar",
+            "default": "<p>Escreva algo atraente para esta seção.</p>"
+        },
+        {
+            "type": "checkbox",
+            "id": "light_bg",
+            "label": "Fundo claro",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do Título",
+            "default": "h2",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largura máxima (px)",
+            "info": "Ajuste a largura do contêiner (em pixels) ",
+            "default": "768"
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/5.0/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 7
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "Item",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Título"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Descrição"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "F.A.Q",
+            "category": "Texto",
+            "blocks": [
+                {
+                    "type": "text",
+                    "settings": {
+                        "title": "Em quanto tempo receberei meu pedido?",
+                        "description": "<p>Nosso envio é grátis para todo o Brasil, sem surpresas adicionais. nosso prazo é de15 à 35 dias úteis para chegar. Nunca mais se preocupe em pagar frete! </p>"
+                    }
+                },
+                {
+                    "type": "text",
+                    "settings": {
+                        "title": "Todos pedidos acompanham número de rastreio ?",
+                        "description": "<p>Sim. Nós prezamos pela transparência e por isso todos os produtos são enviados com códigos de rastreamento válidos internacionalmente. </p>"
+                    }
+                },
+                {
+                    "type": "text",
+                    "settings": {
+                        "title": "Quais métodos de pagamento vocês aceitam?",
+                        "description": "<p>Aceitamos Pix, Visa, MasterCard e American Express, mas sinta-se à vontade para nos contatar para outras opções de pagamento.</p>"
+                    }
+                },
+                {
+                    "type": "text",
+                    "settings": {
+                        "title": "Como posso rastrear meu pedido?",
+                        "description": "<p>Enviaremos informações de rastreamento para o endereço de e-mail associado ao seu pedido assim que o item for enviado. Se você não recebeu suas informações de rastreamento e já se passaram mais de 7 dias úteis, entre em contato conosco.</p>"
+                    }
+                },
+                {
+                    "type": "text",
+                    "settings": {
+                        "title": "Posso fazer um pedido como presente para outra pessoa?",
+                        "description": "<p>Ao fazer o pedido como um presente para alguém, certifique-se de inserir seu endereço de e-mail para receber todas as informações de resumo, mas insira o nome do destinatário e as informações de envio. Manteremos todos os preços e receitas fora do pacote.</p>"
+                    }
+                },
+                {
+                    "type": "text",
+                    "settings": {
+                        "title": "Como posso obter o reembolso do meu pedido?",
+                        "description": "<p>Se por algum motivo você não estiver totalmente satisfeito com sua compra, dentro de 7 dias após receber seu pedido, iremos reembolsá-lo por sua compra sem perguntas.</p>"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

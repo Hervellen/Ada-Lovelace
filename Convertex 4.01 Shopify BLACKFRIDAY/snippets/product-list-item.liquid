@@ -1,0 +1,142 @@
+<li
+    class="product-item splide__slide px-2 py-4 text-center {% unless section.settings.animate_class == blank %}animate__animated animate__fast{% endunless %} {{ index | prepend: 'enter-view-step-' }} {% unless product.available %}product-unavailable{% endunless %}"
+    data-animate="{{ section.settings.animate_class }}">
+    <a class="product-link d-block text-decoration-none pt-1 pb-2 mb-2" href="{{ product.url | within: collection }}">
+        <div class="misc-img-wrapper product-img-wrapper mb-3">
+
+            <!-- Sold out badge -->
+            {% unless product.available %}
+                <span class="badge badge-sold-out">
+                    {{ 'product.sold_out' | t }}
+                </span>
+            {% endunless %}
+
+            <!-- Discount badge -->
+            {% if product.compare_at_price > product.price and product.available %}
+                <span class="badge badge-discount">
+                    <span class="sr-only">
+                        {{ 'general.discount' | t }}:
+                    </span>
+                    {{ product.compare_at_price
+                        | minus: product.price
+                        | times: 100.0
+                        | divided_by: product.compare_at_price
+                        | round
+                        | prepend: '-'
+                        | append: '%' }}
+                </span>
+            {% endif %}
+
+            <!-- Product Image -->
+            {% assign img_width = section.settings.img_width | default: '480' %}
+            {% assign img_height = section.settings.img_height | default: '480' %}
+            {% assign img_size = img_width | append: 'x' | append: img_height %}
+            <img
+                class="misc-img product-img img-fluid {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                data-src="{{ product.featured_image.src | img_url: img_size, crop: 'center' }}"
+                srcset="{{ product.featured_image.src | img_url: img_size, crop: 'center' }}"
+                alt="{% if product.featured_image.alt contains 'youtube.com' %}{% else %}{{ product.featured_image.alt | escape }}{% endif %}"
+                width="{{ img_width }}"
+                height="{{ img_height }}"
+                loading="lazy">
+
+            <!-- Wishlist button -->
+            {% render 'wishlist-button' with product as product %}
+        </div>
+
+        <!-- Product title -->
+        <h3 class="product-title  {{ section.settings.product_title_heading_size }}">
+            {{ product.title }}
+        </h3>
+
+        <!-- Product rating -->
+        {% if section.settings.show_rating %}
+            <div class="mt-2 mb-3 small">
+                <span
+                    class="shopify-product-reviews-badge"
+                    data-id="{{ product.id }}">
+                </span>
+                <span
+                    class="loox-rating"
+                    data-id="{{ product.id }}"
+                    data-rating="{{ product.metafields.loox.avg_rating }}"
+                    data-raters="{{ product.metafields.loox.num_reviews }}">
+                </span>
+                {% if product.metafields.ryviu.product_reviews_info %}
+                    <div class="review-widget">
+                        <ryviu-widget-total
+
+                                reviews_data="{{product.metafields.ryviu.product_reviews_info | escape }}"
+
+                                product_id="{{product.id}}" handle="{{product.handle}}">
+
+                        </ryviu-widget-total>
+                    </div>
+                {% endif %}
+                {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', jm_style: '', concierge_install: false, product: product %}
+            </div>
+        {% endif %}
+
+        <!-- Product price -->
+        {% if section.settings.show_price %}
+            <p class="product-price mb-0">
+                {% if product.compare_at_price > product.price %}
+
+                    <s class="price-compare">
+                      {{ product.compare_at_price | money }}
+                    </s>
+                {% endif %}
+                <span class="price" data-id='{{ product.id }}' data-value='{{ product.price | money_without_currency }}'>
+
+                    {% if product.price_varies %}
+                    {% endif %}
+                    {{ product.price | money }}
+                    <br>
+                    {% if settings.parcelamento_enable %}
+                        {% assign taxa_decima_segunda_parcela = settings.taxa_decima_segunda_parcela | divided_by: 100 | plus: 1 %}
+                        <span style="color: #575757;font-size: 14px;">  ou 12x de <strong>{{ product.price | times: taxa_decima_segunda_parcela | divided_by: 12 | money }}</strong></span>
+                    {% endif %}
+                </span>
+            </p>
+        {% endif %}
+    </a>
+
+    <!-- Variant select field -->
+    {% if is_bundle %}
+        <div class="form-group mb-4 {% if product.has_only_default_variant %}d-none{% endif %}">
+            <select
+                name="id"
+                class="custom-select">
+                {% for variant in product.variants %}
+                    <option
+                        data-options="{{ variant.options | join: '-' }}"
+                        data-variant-image="{{ variant.image | img_url: 'master'}}"
+                        data-price={{ variant.price }}
+                        value="{{ variant.id }}"
+                        {% if variant == current_variant %}selected{% endif %}
+                        {% unless variant.available %}disabled{% endunless %}>
+                        {{ variant.title }} - {{ variant.price | money }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+
+     <!-- Add this product checkbox -->
+     {% if is_bundle %}
+        <div
+            class="custom-control custom-checkbox">
+            <input
+                id="add-this-product-checkbox-{{ product.id }}"
+                class="custom-control-input"
+                type="checkbox"
+                {% if product.available %}checked{% else %}disabled{% endif %}>
+            <label
+                class="custom-control-label"
+                for="add-this-product-checkbox-{{ product.id }}">
+                {{ 'product.bundle.add_this_product' | t }}
+            </label>
+        </div>
+     {% endif %}
+
+</li>

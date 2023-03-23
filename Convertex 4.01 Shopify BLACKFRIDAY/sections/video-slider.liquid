@@ -1,0 +1,429 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<section
+    id="video-slider-{{ section.id }}"
+    class="video-slider overflow-hidden {{ section.settings.bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{% if section.settings.container %} container {% else %} container-fluid {% endif %}">
+
+        <!-- Title -->
+        <h2 class="title mb-1 {{ section.settings.title_alignment }} {{ section.settings.title_size }}">
+            {{ section.settings.title }}
+        </h2>
+
+        <!-- Description -->
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }} ">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+        <div
+            id="{{ 'carousel-' | append: section.id }}"
+            class="carousel slide {{ section.settings.transition_effect }} {% unless section.settings.animate_class == blank %}animate__animated{% endunless %}"
+            data-animate="{{ section.settings.animate_class }}"
+            data-ride="carousel"
+            data-pause="hover"
+            data-interval="{{ section.settings.interval | times: 1000 }}"
+            aria-roledescription="carousel">
+
+            <div id="{{ 'carousel-inner' | append: section.id }}" class="carousel-inner my-6 text-center">
+                {% for block in section.blocks %}
+                    <div
+                        class="carousel-item animate__animated {{ section.settings.transition_speed }} {% if forloop.first == true %} active {% endif %}"
+                        role="group"
+                        aria-roledescription="slide"
+                        aria-label="{{ forloop.index }} {{ 'general.from' | t }} {{ section.blocks.size }}">
+
+                        {% capture video_src %}
+                            {% if block.settings.video_url.type == 'youtube' %}
+
+                                {% if block.settings.youtube_controls %}
+                                    {% assign youtube_controls = '1' %}
+                                {% else %}
+                                    {% assign youtube_controls = '0' %}
+                                {% endif %}
+
+                                {% if block.settings.youtube_privacy %}
+                                    {% assign youtube_address = 'https://www.youtube-nocookie.com' %}
+                                {% else %}
+                                    {% assign youtube_address = 'https://www.youtube.com' %}
+                                {% endif %}
+
+                                {{ youtube_address }}/embed/{{ block.settings.video_url.id }}?controls={{ youtube_controls }}&amp;start={{ block.settings.youtube_start }}
+
+                            {% else %}
+                                https://player.vimeo.com/video/{{ block.settings.video_url.id }}
+                            {% endif %}
+                        {% endcapture %}
+
+                        <div class="embed-responsive {{ block.settings.ratio }}">
+                            <iframe
+                                data-src="{{ video_src | strip}}"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                frameborder="0"
+                                allowfullscreen
+                                loading="lazy">
+                            </iframe>
+                        </div>
+
+                        {% if block.settings.title != blank %}
+                            <h3 class="title mt-5 mb-1 {{ block.settings.title_alignment }} {{ block.settings.title_size }}">
+                                {{ block.settings.title }}
+                            </h3>
+                        {% endif %}
+
+                        {% if block.settings.description != blank %}
+                            <div class="description rte mb-n4 {{ block.settings.title_alignment }} ">
+                                {{ block.settings.description }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if section.blocks.size > 1 and section.settings.controls %}
+                <a
+                    class="carousel-control-prev"
+                    href="#{{ 'carousel-' | append: section.id }}"
+                    role="button"
+                    data-slide="prev"
+                    aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">{{ 'general.previous' | t }}</span>
+                </a>
+                <a
+                    class="carousel-control-next"
+                    href="#{{ 'carousel-' | append: section.id }}"
+                    role="button" data-slide="next"
+                    aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">{{ 'general.next' | t }}</span>
+                </a>
+            {% endif %}
+
+            {% if section.blocks.size > 1 and section.settings.indicators %}
+                <ol class="carousel-indicators mb-1">
+                    {% for block in section.blocks %}
+                        <li
+                            data-target="#{{ 'carousel-' | append: section.id }}"
+                            data-slide-to="{{ forloop.index0 }}"
+                            class="{% if forloop.first == true %} active {% endif %}">
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "Video Slider",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Header"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Vídeos em Destaque"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Escreva algo atraente para esta seção.</p>"
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "default": "text-center",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do título",
+            "default": "h2",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Cor do background",
+            "default": "bg-white text-body",
+            "options": [
+                { "group": "Light", "value": "bg-white text-body", "label": "White" },
+                { "group": "Light", "value": "bg-light text-body", "label": "Light" },
+                { "group": "Dark", "value": "bg-dark text-white", "label": "Dark" },
+                { "group": "Dark", "value": "bg-primary text-white", "label": "Primary" },
+                { "group": "Dark", "value": "bg-secondary text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-dark-gradient text-white", "label": "Dark" },
+                { "group": "Gradient", "value": "bg-primary-gradient text-white", "label": "Primary" },
+                { "group": "Gradient", "value": "bg-secondary-gradient text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-custom-gradient text-white", "label": "Custom" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Configurações de carrossel"
+        },
+        {
+            "type": "checkbox",
+            "id": "controls",
+            "default": false,
+            "label": "Mostrar controles",
+            "info": "Botões Anterior / Próximo"
+        },
+        {
+            "type": "checkbox",
+            "id": "indicators",
+            "default": true,
+            "label": "Mostrar indicadores",
+            "info": "Pequenos pontos na parte inferior"
+        },
+        {
+            "type": "range",
+            "id": "interval",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "unit": "sec",
+            "label": "Tempo do Autoplay",
+            "default": 5,
+            "info": "Selecione '0' para desativar"
+        },
+        {
+            "type": "header",
+            "content": "Transição"
+        },
+        {
+            "type": "select",
+            "id":  "transition_effect",
+            "label": "Efeito de transição",
+            "default": "carousel-animate-css carousel-zoom",
+            "info": "Saiba mais sobre [Animate.css](https://animate.style)",
+            "options": [
+                { "group": "Default", "value": "", "label": "Slide" },
+                { "group": "Default", "value": "carousel-fade", "label": "Fade" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-back", "label": "Back" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-fade-big", "label": "Fade Big" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-slide-left-right", "label": "Slide left/right" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-slide-up-down", "label": "Slide up/down" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-zoom", "label": "Zoom" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-rotate", "label": "Rotate" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-jack", "label": "Jack In The Box" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-roll", "label": "Roll" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-flip-y", "label": "FlipY" }
+            ]
+        },
+        {
+            "type": "select",
+            "id":  "transition_speed",
+            "label": "Velocidade de transição",
+            "default": "animate__normal",
+            "options": [
+                { "value": "animate__slower", "label": "Slower" },
+                { "value": "animate__slow", "label": "Slow" },
+                { "value": "animate__normal", "label": "Normal" },
+                { "value": "animate__fast", "label": "Fast" },
+                { "value": "animate__faster",  "label": "Faster" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "blocks": [
+        {
+            "type": "video",
+            "name": "Vídeo",
+            "settings": [
+                {
+                    "type": "video_url",
+                    "id": "video_url",
+                    "label": "Link do vídeo",
+                    "accept": [
+                        "youtube", "vimeo"
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Configurações gerais"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Título"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Descrição"
+                },
+                {
+                    "type": "select",
+                    "id": "title_alignment",
+                    "label": "Alinhamento do título",
+                    "default": "text-left",
+                    "options": [
+                        { "value": "text-left", "label": "Esquerda" },
+                        { "value": "text-center", "label": "Centro" },
+                        { "value": "text-right", "label": "Direita" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Tamanho do título",
+                    "default": "h5",
+                    "options": [
+                        {  "value": "h1", "label": "H1" },
+                        {  "value": "h2", "label": "H2" },
+                        {  "value": "h3", "label": "H3" },
+                        {  "value": "h4", "label": "H4" },
+                        {  "value": "h5", "label": "H5" },
+                        {  "value": "h6", "label": "H6" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "ratio",
+                    "label": "Razão",
+                    "info": "Proporção de vídeo",
+                    "options": [
+                        { "value": "embed-responsive-1by1", "label": "1x1" },
+                        { "value": "embed-responsive-4by3", "label": "4x3" },
+                        { "value": "embed-responsive-16by9", "label": "16x9" },
+                        { "value": "embed-responsive-21by9", "label": "21x9" }
+                    ],
+                    "default": "embed-responsive-16by9"
+                },
+                {
+                    "type": "header",
+                    "content": "Configurações do Youtube"
+                },
+                {
+                    "type": "text",
+                    "id": "youtube_start",
+                    "label": "Iniciar (em segundos)",
+                    "info": "Deixe em branco para começar do início"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "youtube_controls",
+                    "label": "Mostrar controles do jogador",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "youtube_privacy",
+                    "label": "Ativar modo de privacidade aprimorada",
+                    "info": "Quando você ativa o modo de privacidade aprimorada, o YouTube não armazena informações sobre os visitantes do seu site, a menos que eles reproduzam o vídeo.",
+                    "default": true
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Video slider",
+              "category": "imagem",
+            "blocks": [
+                {
+                    "type": "video",
+                    "settings": {
+                        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+                        "title": "Amostra de vídeo incorporado do YouTube",
+                        "description": "<p>Você pode optar por escrever uma descrição longa opcional para o seu vídeo</p>"
+                    }
+                },
+                {
+                    "type": "video",
+                    "settings": {
+                        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+                        "title": "Amostra de vídeo incorporado do YouTube",
+                        "description": "<p>Você pode optar por escrever uma descrição longa opcional para o seu vídeo</p>"
+                    }
+                },
+                {
+                    "type": "video",
+                    "settings": {
+                        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+                        "title": "Amostra de vídeo incorporado do YouTube",
+                        "description": "<p>Você pode optar por escrever uma descrição longa opcional para o seu vídeo</p>"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

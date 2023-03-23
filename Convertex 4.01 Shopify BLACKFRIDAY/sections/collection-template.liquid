@@ -1,0 +1,340 @@
+{% assign row_      =  section.settings.row_mobile | prepend: 'row-cols-' %}
+{% assign row_md    =  section.settings.row_tablet | prepend: 'row-cols-md-' %}
+{% assign row_lg    =  section.settings.row_desktop | prepend: 'row-cols-lg-' %}
+
+{% capture header_img %}
+    {% if section.settings.show_collection_img and collection.image  %}
+        {{ collection.image | img_url: '1600x900', crop: 'center' }}
+    {% endif %}
+{% endcapture %}
+
+<div>
+
+    <!-- Page header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-8 {% if section.settings.show_collection_img and collection.image %}has-collection-img{% endif %}"
+        data-lazy-img="{{ header_img }}">
+        <div class="container">
+
+            <div
+                id=""
+                class="{% unless section.settings.header_animate_class == blank %}animate__animated{% endunless %}"
+                data-header-animate="{{ section.settings.header_animate_class }}">
+
+                <h3 class="">
+                    {{ collection.title }}
+                </h3>
+
+                {% unless collection.description == blank %}
+                    <div class="rte lead text-muted">
+                        {{ collection.description }}
+                    </div>
+                {% endunless %}
+
+                <!-- Tags -->
+                {% if section.settings.show_tags and collection.all_tags.size > 0 %}
+                    {% if section.settings.collection_header_color == 'bg-white' or section.settings.collection_header_color == 'bg-light' %}
+                        {% assign badge_class = 'class="badge badge-light" title=' %}
+                    {% else %}
+                        {% assign badge_class = 'badge-dark' %}
+                    {% endif %}
+
+                    <div id="collection-tags-wrapper" class="d-flex align-items-center justify-content-center mt-4 mb-0" style="line-height: normal;">
+                        <p class="mb-0 mr-2 sr-only">
+                            {{ 'products.filter_by' | t }}
+                        </p>
+                        <ul
+                            id="collection-tags"
+                            class="list-unstyled d-flex flex-wrap justify-content-center m-0">
+                            {% for tag in collection.all_tags %}
+                                {% unless tag contains '__' %}
+                                    {% if current_tags contains tag %}
+                                        <li class="collection-tags-item active list-inline-item mx-0" data-tag="{{ tag }}">
+                                            <span class="sr-only">{{ 'products.remove_tag' | t: tag: tag }}</span>
+                                            {{ tag
+                                                | link_to_remove_tag: tag
+                                                | replace: 'title=', 'class="badge badge-primary m-1" title='
+                                                | replace: '</a>', '<span class="ml-1" aria-hidden="true">&times;</span></a>'  }}
+                                        </li>
+                                    {% else %}
+                                        <li class="collection-tags-item list-inline-item mx-0" data-tag="{{ tag }}">
+                                            {{ tag
+                                                | link_to_tag: tag
+                                                | replace: 'title=', 'class="badge badge-secondary font-weight-500 font-size-90 m-1" title=' }}
+                                        </li>
+                                    {% endif %}
+                                {% endunless %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div id="page-header-border-bottom"></div>
+
+    </header>
+
+    <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+         <!-- Collection utilities -->
+         <div
+            id="collection-utilities"
+            class="d-flex flex-column-reverse flex-md-row pt-2 mb-5 mb-xl-6 justify-content-between justify-content-xl-end">
+
+            <!-- Filter by -->
+            {% if section.settings.enable_filters  %}
+                <div id="collection-filter-by" class="mt-3 mt-md-0 d-xl-none">
+                    <div class="d-flex align-items-center">
+                        <button
+                            type="button"
+                            id="collection-filters-btn"
+                            class="btn d-flex justify-content-center align-items-center w-100 w-md-auto btn-outline-secondary"
+                            data-toggle="collapse"
+                            data-target="#collection-filter-collapse"
+                            aria-expanded="false"
+                            aria-controls="collection-filter-collapse">
+                            {% render 'icon-filter', size: 20, class: 'mr-2' %}
+                            {{ 'products.filter_products' | t }}
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Sort by -->
+            <form class="form-inline justify-content-end mb-0">
+                <div class="input-group w-100">
+                    <div class="input-group-prepend">
+                        <label for="sort-by" class="input-group-text">
+                            {{ 'products.sort_by' | t }}
+                        </label>
+                    </div>
+                    <select id="sort-by" class="custom-select" name="sort_by">
+                        {% for option in collection.sort_options %}
+                            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+                                {{ option.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            {% if section.settings.enable_filters  %}
+                <div id="collection-sidebar" class="col-xl-2">
+                    <div id="collection-filter-collapse" class="collapse">
+                        <h2 class="h4 sr-only">
+                            {{ 'products.filter_products' | t }}
+                        </h2>
+                        <a href="#collection-product-list" class="sr-only sr-only-focusable">
+                            {{ 'general.accessibility.skip_to_product_list' | t }}
+                        </a>
+                        {% render 'collection-filters' %}
+                    </div>
+                </div>
+            {% endif %}
+            <div id="collection-main" class="col-xl">
+                {% if collection.products.size == 0 %}
+                    <p
+                        id="collection-empty"
+                        class="alert alert-warning my-5">
+                        {{ 'products.empty_html' | t }}
+                    </p>
+                {% else %}
+
+                    {% if section.settings.no_show_rating_name %}
+                        <style>
+                            .trw-text{
+                                display: none !important;
+                            }
+                        </style>
+                    {% endif %}
+
+                    {% paginate collection.products by section.settings.paginate %}
+
+                        <!-- Product list -->
+                        <ul
+                            id="collection-product-list"
+                            class="product-list animated-list list-unstyled mx-n2 my-n4 row {{ row_ }} {{ row_md }} {{ row_lg }}"
+                            data-steps="{{ section.settings.row_mobile }}"
+                            data-steps-md="{{ section.settings.row_tablet }}"
+                            data-steps-lg="{{ section.settings.row_desktop }}">
+                            {% for product in collection.products %}
+                                {% render 'product-list-item' with product as product %}
+                            {% endfor %}
+                        </ul>
+
+                        <!-- Default Pagination -->
+                        <div class="{% if section.settings.infinite_scroll %}d-none{% endif %} pb-3">
+                            {% render 'pagination' with paginate: paginate %}
+                        </div>
+
+                        <!-- Infinite scroll spinner -->
+                        {% if section.settings.infinite_scroll %}
+                            <div id="infinite-scroll-wrapper" class="js text-center" aria-hidden="true">
+                                <div
+                                    id="infinite-scroll-spinner"
+                                    class="d-none spinner-border text-primary mt-6"
+                                    role="status"
+                                    data-next-page="{{ paginate.next.url }}">
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    {% endpaginate %}
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "Páginas de coleções",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Container",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "paginate",
+            "label": "Produtos por página",
+            "min": 1,
+            "max": 40,
+            "step": 1,
+            "default": 25
+        },
+        {
+            "type": "checkbox",
+            "id": "show_tags",
+            "label": "Mostrar tags",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_collection_img",
+            "label": "Mostrar imagem da coleção",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "infinite_scroll",
+            "label": "Rolagem infinita",
+            "info": "Oculte a paginação padrão e carregará os produtos na rolagem",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_filters",
+            "label": "Habilitar filtros",
+            "info": "Regra para adicionar: acrescente aos produtos uma tag com NOME__OPÇÃO , o '__' é o separador. Observe que será aplicada a coleção que o produto se encontra. Ex: cor__azul",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "show_filter_color",
+            "label": "Mostrar cores de filtro",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Configurações do produto"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "product_title_heading_size",
+            "label": "Tamanho do título",
+            "default": "h6",
+            "options": [
+                { "value": "h1", "label": "H1" },
+                { "value": "h2", "label": "H2" },
+                { "value": "h3", "label": "H3" },
+                { "value": "h4", "label": "H4" },
+                { "value": "h5", "label": "H5" },
+                { "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_rating",
+            "label": "Mostrar avaliação",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "no_show_rating_name",
+            "label": "Desativar nome 'Avaliações' no app Ryviu",
+            "info": "Alerta: Essa opção pode causar erro em telas pequenas quando desmarcada!",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_price",
+            "label": "Mostrar preço",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Rows"
+        },
+        {
+            "type": "range",
+            "id": "row_mobile",
+            "label": "Produtos por linha / celular ",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "row_tablet",
+            "label": "Produtos por linha / tablet ",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+            "label": "Produtos por linha / Desktop",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+<article class="mx-auto w-100" style="max-width: 500px;">
+
+  <div class="bg-light border py-4 px-5 rounded">
+
+    {% form 'activate_customer_password' %}
+
+      <h3 class="h3 text-center">{{ 'customer.activate_account.title' | t }}</h3>
+
+      <p class="text-muted text-center mb-4">
+        {{ 'customer.activate_account.subtext' | t }}
+      </p>
+
+      {{ form.errors | default_errors }}
+
+      <div class="form-group">
+        <input
+          type="password"
+          name="customer[password]"
+          id="CustomerPassword"
+          class="form-control"
+          required
+          placeholder="{{ 'customer.activate_account.password' | t }}"
+          aria-label="{{ 'customer.activate_account.password' | t }}"
+        >
+      </div>
+
+      <div class="form-group">
+        <input
+          type="password"
+          name="customer[password_confirmation]"
+          id="CustomerPasswordConfirmation"
+          class="form-control"
+          placeholder="{{ 'customer.activate_account.password_confirm' | t }}"
+          aria-label="{{ 'customer.activate_account.password_confirm' | t }}"
+        >
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary btn-block" value="{{ 'customer.activate_account.submit' | t }}">
+      </div>
+
+      <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <input class="nav-link btn btn-link text-danger" type="submit" role="button" name="decline" value="{{ 'customer.activate_account.cancel' | t }}">
+        </li>
+      </ul>
+
+    {% endform %}
+
+  </div>
+
+</article>
+
+<style>
+  #site-main {
+    display: flex;
+    align-items: center;
+  }
+</style>

@@ -1,0 +1,247 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+{% capture bg_img %}
+    {% unless section.settings.bg_img == blank %}
+        {{ section.settings.bg_img | img_url: '1600x900', crop: 'center' }}
+    {% endunless %}
+{% endcapture %}
+
+{% capture max_width %}
+    {% unless section.settings.max_width == blank %}
+        max-width: {{ section.settings.max_width | append: 'px' }};
+    {% endunless %}
+{% endcapture %}
+
+<div
+    id="featured-content-{{ section.id }}"
+    class="featured-content {{ pt }} {{ pb }} {{ mt }} {{ mb }} {% if bg_img == blank %} {{ section.settings.bg_color }} {% endif %} {% if section.settings.fixed_bg_img %}background-attachment-fixed{% endif %}"
+    data-lazy-img="{{ bg_img }}">
+
+    <div class="featured-content-border-top"></div>
+
+    <div class="container {{ section.settings.alignment }}">
+
+        <div
+            class="featured-content-inner-container {% unless section.settings.animate_class == blank %}animate__animated{% endunless %}"
+            data-animate="{{ section.settings.animate_class }}">
+
+            <div
+                class="mx-auto"
+                style="{{ max_width }}">
+
+                <!-- Title -->
+                {% if section.settings.title != blank %}
+                    <h2 class="title {{ section.settings.title_size }}">
+                        {{ section.settings.title }}
+                    </h2>
+                {% endif %}
+
+                <!-- Description -->
+                {% if section.settings.description != blank %}
+                    <div class="description rte {% if section.settings.description_lead %}lead{% endif %}">
+                        {{ section.settings.description }}
+                    </div>
+                {% endif %}
+
+                <!-- Button -->
+                {% if section.settings.button_url != blank %}
+                    <a href="{{ section.settings.button_url }}" class="btn mt-5 mb-1 {{ section.settings.btn_color }} {{ section.settings.btn_size }}">
+                        {{ section.settings.button_text }}
+                    </a>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="featured-content-border-bottom"></div>
+
+</div>
+
+{% schema %}
+{
+    "name": "Conteúdo em destaque",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Conteúdo em destaque"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Use este texto para compartilhar informações sobre sua marca com seus clientes. Descreva um produto, compartilhe anúncios ou dê as boas-vindas aos clientes em sua loja.</p>"
+        },
+        {
+            "type": "url",
+            "id": "button_url",
+            "label": "URL do botão",
+            "info": "Deixe em branco para desativar o botão"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Texto do botão",
+            "default": "Saber mais"
+        },
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Cor do Background",
+            "default": "bg-light",
+            "options": [
+                { "group": "Light", "value": "bg-white", "label": "White" },
+                { "group": "Light", "value": "bg-light", "label": "Light" },
+                { "group": "Dark", "value": "bg-dark", "label": "Dark" },
+                { "group": "Dark", "value": "bg-primary", "label": "Primary" },
+                { "group": "Dark", "value": "bg-secondary", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-dark-gradient", "label": "Dark" },
+                { "group": "Gradient", "value": "bg-primary-gradient", "label": "Primary" },
+                { "group": "Gradient", "value": "bg-secondary-gradient", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-custom-gradient", "label": "Custom" }
+            ]
+        },
+        {
+            "type": "image_picker",
+            "id": "bg_img",
+            "label": "Imagem do Background"
+        },
+        {
+            "type": "checkbox",
+            "id": "fixed_bg_img",
+            "label": "Imagem do background fixa",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "alignment",
+            "label": "Alinhamento",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largura máxima do conteúdo (px)",
+            "info": "Deixe vazio para desativá-lo.",
+            "default": "720"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do título",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "H1" },
+                { "value": "h2", "label": "H2" },
+                { "value": "h3", "label": "H3" },
+                { "value": "h4", "label": "H4" },
+                { "value": "h5", "label": "H5" },
+                { "value": "h6", "label": "H6" }
+            ]
+        },
+
+        {
+            "type": "checkbox",
+            "id": "description_lead",
+            "label": "Fonte grande da descrição",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Cor do botão",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Link" },
+                { "group": "Normal", "value": "btn-light", "label": "Light" },
+                { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primary" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondary" },
+                { "group": "Normal", "value": "btn-success", "label": "Success" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Warning" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Outline", "value": "btn-outline-dark", "label": "Dark Outline" },
+                { "group": "Outline", "value": "btn-outline-primary", "label": "Primary Outline" },
+                { "group": "Outline", "value": "btn-outline-secondary", "label": "Secondary Outline" },
+                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                { "group": "Outline", "value": "btn-outline-danger", "label": "Danger Outline" },
+                { "group": "Outline", "value": "btn-outline-warning", "label": "Warning Outline" },
+                { "group": "Outline", "value": "btn-outline-info", "label": "Info Outline" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "btn_size",
+            "label": "Tamanho do botão",
+
+            "options": [
+                { "value": "btn-sm", "label": "Pequeno" },
+                { "value": "", "label": "Normal" },
+                { "value": "btn-lg", "label": "Grande" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "presets": [
+        {
+            "name": "Conteúdo em destaque",
+            "category": "Texto"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,175 @@
+{% assign show_announcement = false %}
+
+{% if section.settings.announcement_homepage == false or template.name == 'index' %}
+    {% assign show_announcement = true %}
+{% endif %}
+
+{% if section.settings.topbar_display and show_announcement %}
+    {% if section.settings.topbar_dis%}
+        <div style="color:{{ section.settings.toplink}} !important;background: {{ section.settings.topbg}};"  id="topbar" class="py-1">
+            <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+                <div class="row justify-content-between align-items-center">
+
+
+                    <!-- Announcement -->
+                    {% if show_announcement %}
+                        <div
+                            id="announcement"
+                            class="col-12 rte text-center small w-100 {% if section.settings.announcement_animate and template.name == 'index' %}animate__animated {{ section.settings.announcement_animate_name }}{% endif %}">
+                            {% capture coundown %}
+                                <span style=" font-size: 16px; background: #E22120; border-radius: 10px; padding-left: 6px; padding-right: 6px; font-weight: bold" id="timecont"></span>
+                                <script>
+                                    if(!window.moment || typeof moment == 'undefined' || moment == null)
+                                    {
+                                        document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js" integrity=""></' + 'script>');
+                                    }
+                                </script>
+                                <script>
+                                    // Update the count down every 1 second
+                                    const timecont = setInterval(function () {
+                                        document.getElementById("timecont").innerHTML = moment.utc(moment().endOf('day').diff()).format('HH:mm:ss');
+                                    }, 1000);
+                                </script>
+                            {% endcapture %}
+                            {{ section.settings.announcement_content | replace: '[timecont]', coundown }}
+                        </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Ativar imagem -->
+     {% if section.settings.anuncio_img and section.settings.imgdesk and section.settings.imgmb %}
+        <section class="d-flex justify-content-center" style="background: {{ section.settings.img_fundo}};">
+            <!-- Imagem desktop -->
+             <a  class="d-none d-sm-none d-md-block d-lg-block" {% if section.settings.url_i %} href="{{ section.settings.url_i}} {% endif %}">
+                    <img src="{{ section.settings.imgdesk | img_url: '1110x44' }}" class="img-responsive" >
+             </a>
+            <!-- Imagem mobile -->
+             <a  class="d-md-none" {% if section.settings.url_i %} href="{{ section.settings.url_i }}" {% endif %}>
+                <img src="{{ section.settings.imgmb| img_url: '760x44' }}" class="img-responsive">
+            </a>
+        </section>
+     {% endif %}
+{% endif %}
+{% schema %}
+{
+    "name": "Barra do topo",
+    "tag": "section",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "topbar_display",
+            "label": "Exibir barra superior",
+            "info": "Nota: Se você desabilitar esta configuração, ela ocultará completamente a barra superior, independentemente das outras configurações que você tenha abaixo.",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "announcement_homepage",
+            "label": "Mostrar apenas na página inicial",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Container",
+            "default": true
+        },
+        {
+            "type": "color",
+            "id": "topbg",
+            "label": "Cor do background",
+            "default": "#000"
+        },
+
+        {
+            "type": "color",
+            "id": "toplink",
+            "label": "Cor do texto",
+            "default": "#fff"
+        },
+        {
+            "type": "header",
+            "content": "Anúncio"
+        },
+        {
+            "type": "checkbox",
+            "id": "topbar_dis",
+            "label": "Exibir anúncio",
+            "default": true
+        },
+        {
+            "type": "textarea",
+            "id": "announcement_content",
+            "label": "Texto",
+            "info": "Para adicionar uma contagem regressiva (pode ser definida abaixo), adicione [timecont] em qualquer lugar do seu texto.",
+            "default": "Use <strong>VIP2021</strong> para obter um desconto de 20%. A oferta expira em: [timecont] "
+        },
+        {
+            "type": "checkbox",
+            "id": "announcement_animate",
+            "label": "Anúncio de animação",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "announcement_animate_name",
+            "label": "Animation style",
+            "info": "[Saber mais](https://animate.style/)",
+            "default": "animate__flash",
+            "options": [
+                { "value": "animate__bounce", "label": "Bounce" },
+                { "value": "animate__flash", "label": "Flash" },
+                { "value": "animate__pulse", "label": "Pulse" },
+                { "value": "animate__rubberBand", "label": "rubberBand" },
+                { "value": "animate__shakeX", "label": "ShakeX" },
+                { "value": "animate__shakeY", "label": "ShakeY" },
+                { "value": "animate__headShake", "label": "headShake" },
+                { "value": "animate__swing", "label": "Swing" },
+                { "value": "animate__tada", "label": "Tada" },
+                { "value": "animate__wobble", "label": "Wobble" },
+                { "value": "animate__jello", "label": "Jello" },
+                { "value": "animate__heartBeat", "label": "heartBeat" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Anúncio em imagem"
+        },
+        {
+            "type": "checkbox",
+            "id": "anuncio_img",
+            "label": "Anúncio em imagem",
+            "default": true,
+            "info": "Selecione as duas imagens para mostrar."
+        },
+        {
+            "type": "color",
+            "id": "img_fundo",
+            "label": "Cor do fundo",
+            "default": "#000"
+        },
+        {
+            "type": "image_picker",
+            "id": "imgdesk",
+            "info": "Sugestão (1110x44).",
+            "label": "Imagem Desktop "
+        },
+        {
+            "type": "image_picker",
+            "id": "imgmb",
+            "info": "Sugestão (460x44).",
+            "label": "Imagem Mobile"
+        },
+        {
+            "type": "url",
+            "id": "url_i",
+            "info": "Deixe em branco para desativar",
+            "label": "Link do anúncio"
+        }
+    ]
+}
+{% endschema %}

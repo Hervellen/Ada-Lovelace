@@ -1,0 +1,248 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+{% assign row_      =  section.settings.row_mobile | prepend: 'row-cols-' %}
+{% assign row_md    =  section.settings.row_tablet | prepend: 'row-cols-md-' %}
+{% assign row_lg    =  section.settings.row_desktop | prepend: 'row-cols-lg-' %}
+
+<section
+    id="collection-list-{{ section.id }}"
+    class="collection-list overflow-hidden {% if section.settings.bg_light %}bg-light{% endif %} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+        <!-- Title -->
+        <h2 class="title mb-1 {{ section.settings.title_alignment }}">
+            {{ section.settings.title }}
+        </h2>
+
+        <!-- Description -->
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }}">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+        <!-- Collection list -->
+        <ul class="collection-list-list list-unstyled mx-n2 mb-0 row {{ row_ }} {{ row_md }} {{ row_lg }}">
+
+            {% for block in section.blocks %}
+                {% assign collection = collections[block.settings.collection] %}
+                {% assign image = collection.image | default: collection.products.first.featured_image %}
+
+                <!-- Collection -->
+                <li
+                    class="collection-list-item px-2 py-2 text-center {% unless section.settings.animate_class == blank %}animate__animated animate__fast{% endunless %} {{ forloop.index | prepend: 'enter-view-step-' }} {% if section.settings.img_thumbnail %}has-img-thumbnail{% endif %}"
+                    data-animate="{{ section.settings.animate_class }}">
+                    <a class="collection-list-link position-relative d-block text-decoration-none" href="{{collection.url }}">
+
+                        <!-- Collection Image -->
+                        {% assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height %}
+                        <img
+                            class="collection-list-img img-fluid {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                            data-src="{{ image | img_url: img_size, crop: 'center' }}"
+                            alt="{{ image.alt | escape }}"
+                            width="{{ section.settings.img_width }}"
+                            height="{{ section.settings.img_height }}"
+                            loading="lazy">
+
+                        <!-- Collection title -->
+                        <h3 class="collection-list-title h6">
+
+                            <span>{{ collection.title }}</span>
+
+                            <!-- Product count -->
+                            {% if section.settings.show_products_count %}
+                                <small>
+                                    ({{ collection.products.size }})
+                                </small>
+                            {% endif %}
+                        </h3>
+                    </a>
+                </li>
+            {% else %}
+
+                <!-- Collection placeholder -->
+                {% for i in (1..6) %}
+                    <li class="collection-list-item px-2 py-2 text-center">
+                        <a href="#" class="d-block text-decoration-none">
+                            {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                            {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg collection-list-img bg-light img-fluid' }}
+                            <h3 class="collection-list-title h6">
+                                {{ 'general.onboarding.collection_title' | t }}
+                            </h3>
+                        </a>
+                    </li>
+                {% endfor %}
+
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Lista de coleções",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Lista de coleções"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Escreva algo atraente para esta seção.</p>"
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_light",
+            "label": "Fundo claro",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Container",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+        {
+            "type": "header",
+            "content": "Configurações de itens de coleção"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "show_products_count",
+            "label": "Mostrar contagem de produtos",
+            "default": false
+        },
+        {
+            "type": "header",
+            "content": "Ajustar itens por linha"
+        },
+        {
+            "type": "range",
+            "id": "row_mobile",
+            "label": "Coleção por linha / móvel",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "row_tablet",
+            "label": "Coleções por linha / tablet",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+            "label": "Coleções por linha / Desktop",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margem superior",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margem inferior",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Coleção",
+            "settings": [
+                {
+                    "label": "Coleção",
+                    "id": "collection",
+                    "type": "collection"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Coleções em lista",
+            "category": "produtos"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,212 @@
+{%- comment -%}
+    Spacing
+{%- endcomment -%}
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+
+
+{%- comment -%}
+    Begin section
+{%- endcomment -%}
+<section id="infobar" style=" background: {% if section.settings.bg_cor %}{{ section.settings.bg_cor }} {% endif %}; color: {% if section.settings.infolink %}{{ section.settings.infolink }} {% endif %} " >
+    <div class=" {{ pt }} {{ pb }} {{ mt }} {{ mb }}{% if section.settings.container %} container {% else %} container-fluid {% endif %}">
+
+        <ul class="list-unstyled mx-n3 mb-0 row row-cols-{{ section.settings.row_mobile }} row-cols-md-{{ section.settings.row_tablet }} row-cols-lg-{{ section.settings.row_desktop }}">
+
+            {% for block in section.blocks %}
+                <li
+                    class="infobar-item px-3 py-4 d-flex align-items-center {% unless section.settings.animate_class == blank %}animate__animated animate__fast{% endunless %} {{ forloop.index | prepend: 'enter-view-step-' }}"
+                    data-animate="{{ section.settings.animate_class }}">
+
+                    <!-- Icon -->
+                    <div class="mr-4" style="color: {{ block.settings.icon_color }};">
+                        {{ block.settings.icon }}
+                    </div>
+
+                    <div>
+                         <!-- Title -->
+                         <h3 class="{{ section.settings.title_size }} {{ title_color }}" style="font-weight: 700">
+                            {{ block.settings.title }}
+                        </h3>
+
+                        <!-- Description -->
+                        <div class="rte {{ desc_color }}">
+                            {{ block.settings.description }}
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Barra de informações",
+    "class": "overflow-hidden",
+    "settings": [
+
+        {
+            "type": "color",
+            "id": "bg_cor",
+            "label": "Cor do background",
+            "default": "#fff"
+        },
+        {
+            "type": "color",
+            "id": "infolink",
+            "label": "Cor do texto",
+            "default": "#000"
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do título",
+            "default": "h6",
+            "options": [
+                { "value": "h1", "label": "H1" },
+                { "value": "h2", "label": "H2" },
+                { "value": "h3", "label": "H3" },
+                { "value": "h4", "label": "H4" },
+                { "value": "h5", "label": "H5" },
+                { "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "animate_class",
+            "label": "Animação",
+            "info": "Efeito de animação ao rolar. Ele dispara apenas uma vez. Deixe vazio para desativar [Saiba mais](https://animate.style/). Sugerido: animate__zoomInUp"
+        },
+        {
+            "type": "header",
+            "content": "Linhas"
+        },
+        {
+            "type": "range",
+            "id": "row_mobile",
+            "label": "Itens por linha / Mobile",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "range",
+            "id": "row_tablet",
+            "label": "Itens por linha / Tablet",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+            "label": "Itens por linha / Desktop",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 4
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "Content",
+            "settings": [
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icone",
+                    "info": "Copie e cole qualquer código SVG dos [ícones de bootstrap] recomendados (https://icons.getbootstrap.com/) biblioteca. Você também pode usar códigos SVG de outras fontes. Para alterar o tamanho do ícone, edite os valores de 'largura' e 'altura' dentro do código SVG."
+                },
+                {
+                    "type": "color",
+                    "id": "icon_color",
+                    "label": "Cor do icone",
+                    "default": "#28a745"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Título"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Descrição"
+                }
+            ]
+        }
+    ],
+    "default": {
+        "blocks": [
+            {
+                "type": "text",
+                "settings": {
+                    "icon": "<svg width=\"2.5em\" height=\"2.5em\" viewbox=\"0 0 16 16\" class=\"bi bi-truck\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" d=\"M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z\"></path></svg>",
+                    "title": "Frete Grátis",
+                    "description": "<p>Nosso envio é grátis para todo o Brasil, sem surpresas adicionais. Nunca mais se preocupe em pagar frete!<a href=\"/policies/shipping-policy\" title=\"Politica de envio\">conferir »</a></p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "icon": "<svg width=\"2.5em\" height=\"2.5em\" viewbox=\"0 0 16 16\" class=\"bi bi-trophy\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" d=\"M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5c0 .538-.012 1.05-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33.076 33.076 0 0 1 2.5.5zm.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935zm10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935zM3.504 1c.007.517.026 1.006.056 1.469.13 2.028.457 3.546.87 4.667C5.294 9.48 6.484 10 7 10a.5.5 0 0 1 .5.5v2.61a1 1 0 0 1-.757.97l-1.426.356a.5.5 0 0 0-.179.085L4.5 15h7l-.638-.479a.501.501 0 0 0-.18-.085l-1.425-.356a1 1 0 0 1-.757-.97V10.5A.5.5 0 0 1 9 10c.516 0 1.706-.52 2.57-2.864.413-1.12.74-2.64.87-4.667.03-.463.049-.952.056-1.469H3.504z\"></path></svg>",
+                    "title": "Compra Garantida",
+                    "description": "<p>Receba o produto ou nossa equipe devolverá todo seu dinheiro de volta na sua conta em poucos minutos. <a href=\"/policies/refund-policy\" title=\"Politica de reembolso\">conferir »</a></p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "icon": "<svg width=\"2.5em\" height=\"2.5em\" viewbox=\"0 0 16 16\" class=\"bi bi-box-seam\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" d=\"M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z\"></path></svg>",
+                    "title": "Pagamento Seguro",
+                    "description": "<p>Ambiente fortemente seguro para pagamentos no Cartão de Crédito e Boleto Bancário <a href=\"/\" title=\"Pagamento seguro\">conferir »</a></p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "icon": "<svg width=\"2.5em\" height=\"2.5em\" viewbox=\"0 0 16 16\" class=\"bi bi-question-circle\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" d=\"M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z\"></path></svg>",
+                    "title": "Suporte Rápido",
+                    "description": "<p>Atendimento de segunda á sexta 9h às 17h. <a href=\"/pages/contato\" title=\"Contate nos\">conferir »</a></p>"
+                }
+            }
+        ]
+    }
+}
+{% endschema %}

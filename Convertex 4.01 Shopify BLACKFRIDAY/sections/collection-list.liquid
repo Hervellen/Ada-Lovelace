@@ -1,0 +1,404 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<style>
+    :root {
+        --color-title-col: {{ section.settings.cortitlec }};
+        --color-title-hover: {{ section.settings.corhover}};
+    }
+
+    .title-colection {
+        color: var(--color-title-col) !important;
+        transition: 0.3s;
+    }
+
+    .title-colection:hover {
+        color: var(--color-title-hover) !important;
+        text-decoration: none !important;
+    }
+
+    a:hover {
+        text-decoration: none !important;
+    }
+</style>
+
+<section  style="background: {{ section.settings.cor_bg }}; " class="featured-collection  {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class=" {% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+
+        <!-- Title -->
+        <h2 class="title mb-1 {{ section.settings.title_alignment }}">
+            {{ section.settings.title_t }}
+        </h2>
+
+        <!-- Description -->
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }}">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+                <div
+                    class="tab-pane fade show {% if forloop.first == true %}active{% endif %}">
+                      <div
+                            id="{{ 'split-' | append: section.id }}"
+                            class="splide"
+                            data-splide='{
+                                "type": "slide",
+                                "rewind": {{ section.settings.carousel_rewind }},
+                                "perPage": {{ section.settings.breakpoint_xxl }},
+                                "easing": "{{ section.settings.carousel_easing }}",
+                                "speed": {{ section.settings.carousel_speed }},
+                                "arrows": {{ section.settings.carousel_arrows }},
+                                "pagination": {{ section.settings.carousel_pagination }},
+                                "autoplay": {{ section.settings.carousel_autoplay }},
+                                "interval": {{ section.settings.carousel_interval | times: 1000 }},
+                                "keyboar": "focused",
+                                "breakpoints": {
+                                    "576": {
+                                        "perPage": {{ section.settings.breakpoint_xm }}
+                                    },
+                                    "768": {
+                                        "perPage": {{ section.settings.breakpoint_sm }}
+                                    },
+                                    "992": {
+                                        "perPage": {{ section.settings.breakpoint_md }}
+                                    },
+                                    "1200": {
+                                        "perPage": {{ section.settings.breakpoint_lg }}
+                                    },
+                                    "1400": {
+                                        "perPage": {{ section.settings.breakpoint_xl }}
+                                    }
+                                },
+                                "i18n": {
+                                    "prev":	"{{ 'general.splide.prev' | t }}",
+                                    "next":	"{{ 'general.splide.next' | t }}",
+                                    "first": "{{ 'general.splide.first' | t }}",
+                                    "last":	"{{ 'general.splide.last' | t }}",
+                                    "slideX": "{{ 'general.splide.slideX' | t }} %s",
+                                    "pageX": "{{ 'general.splide.pageX' | t }} %s",
+                                    "play":	"{{ 'general.splide.play' | t }}",
+                                    "pause": "{{ 'general.splide.pause' | t }}"
+                                }
+                            }'>
+
+
+                            <div class="splide__track mb-2">
+                                <ul class="product-list animated-list splide__list list-unstyled my-n4 mx-n2">
+                                    {% for block in section.blocks %}
+                                        <li
+                                        class="product-item splide__slide px-2 py-4 text-center {% unless section.settings.animate_class == blank %}animate__animated animate__fast{% endunless %} {{ index | prepend: 'enter-view-step-' }} "
+                                        data-animate="{{ section.settings.animate_class }}">
+                                        {% assign collection = collections[block.settings.collection] %}
+
+                                        {% assign image = collection.image | default: collection.products.first.featured_image %}
+
+                                            <!-- Collection Image -->
+                                            <a href="{{collection.url }}">
+                                                {% assign img_size_800 = image_aspect_ratio | times: 800 | round | prepend: '800x'  %}
+                                                {% assign img_size_1600 = image_aspect_ratio | times: 1600 | round | prepend: '1600x'  %}
+
+                                                <img class="collection-list-img img-fluid {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                                                        data-src="{{ image | img_url: img_size_1600, crop: 'center' }}"
+                                                        srcset="{{ image | img_url: img_size_1600, crop: 'center' }}"
+                                                        alt="{{ image.alt | escape }}"
+                                                        width="{{ section.settings.img_width }}"
+                                                        height="{{ section.settings.img_height }}"
+                                                        loading="lazy">
+
+                                                <!-- Collection title -->
+                                                {% unless section.settings.title == blank %}
+                                                    <p class="title-colection">
+                                                     {{ collection.title}}
+                                                    </p>
+                                                {% endunless %}
+                                             </a>
+                                         </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                </div>
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "Coleções em Carrossel",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "text",
+            "id": "title_t",
+            "label": "Título",
+            "default": "Lista de coleções"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Escreva algo atraente para esta seção.</p>"
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Container",
+            "default": true
+        },
+
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+
+        {
+            "type": "checkbox",
+            "id": "title",
+            "label": "Mostrar Titulo da coleção",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "cortitlec",
+            "label": "Cor do título",
+            "default": "#fff"
+        },
+        {
+            "type": "color",
+            "id": "corhover",
+            "label": "Ao passar o Mouse",
+            "default": "#3380ff"
+        },
+
+       {
+            "type": "color",
+            "id": "cor_bg",
+            "label": "Background",
+            "default": "#fff"
+        },
+        {
+            "type": "header",
+            "content": "Configurações de carrossel"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_arrows",
+            "label": "Mostrar controles",
+            "info": "Ícones anterior / seguinte",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_pagination",
+            "label": "Mostrar paginação",
+            "info": "Pequenos pontos na parte inferior",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_rewind",
+            "label": "Retroceder",
+            "info": "Mova para o primeiro slide quando terminar",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Carrossel Autoplay"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_autoplay",
+            "label": "Autoplay",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "carousel_interval",
+            "label": "Tempo do Autoplay",
+            "default": 6,
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "unit": "sec"
+        },
+        {
+            "type": "header",
+            "content": "Transição Carrossel"
+        },
+        {
+            "type": "text",
+            "id": "carousel_easing",
+            "label": "Efeito de transição",
+            "info": "[Saber mais](https://cubic-bezier.com/#.42,.65,.27,.99)",
+            "default": "cubic-bezier(.42,.65,.27,.99)"
+        },
+        {
+            "type": "text",
+            "id": "carousel_speed",
+            "label": "Velocidade de transição",
+            "default": "400"
+        },
+        {
+            "type": "header",
+            "content": "Configurações do produto"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": false
+        },
+        {
+            "type": "header",
+            "content": "Breakpoints",
+            "info": "Ajuste os produtos por slide com base em diferentes resoluções de tela"
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xm",
+            "label": "Produtos por slide / xm",
+            "info": "Largura da tela: <=576px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Produtos por slide /sm",
+            "info": "Largura da tela: <=768px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Produtos por slide /md",
+            "info": "Largura da tela: <=992px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Produtos por slide /lg",
+            "info": "Largura da tela: <=1200px",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Produtos por slide /xl",
+            "info": "Largura da tela: <=1400px",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Produtos por slide /xxl",
+            "info": "Largura da tela: >1400px",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 5
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Coleção",
+            "settings": [
+                {
+                    "label": "Coleção",
+                    "id": "collection",
+                    "type": "collection"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Coleções em Carrossel",
+            "category": "produtos"
+        }
+    ]
+}
+{% endschema %}

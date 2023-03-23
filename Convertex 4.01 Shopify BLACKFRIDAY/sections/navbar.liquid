@@ -1,0 +1,709 @@
+<style>
+    :root {
+        --color-pesbotao:  {{ section.settings.bglink }};
+        --color-peslink:  {{ section.settings.peslink }};
+        --color-menu-link:  {{ section.settings.menulink }};
+        --sticky:  {% if section.settings.menu_flut %}sticky{% endif %};
+      }
+
+    .botao-pes {
+        color: var(--color-peslink) !important;
+    }
+    .botao-pes:hover {
+        opacity: 90% !important;
+    }
+
+    /* clears the 'X' from Internet Explorer */
+    .remover-icon-search input[type=search]::-ms-clear {  display: none; width : 0; height: 0; }
+    .remover-icon-search input[type=search]::-ms-reveal {  display: none; width : 0; height: 0; }
+
+    /* clears the 'X' from Chrome */
+    .remover-icon-search input[type="search"]::-webkit-search-decoration,
+    .remover-icon-search input[type="search"]::-webkit-search-cancel-button,
+    .remover-icon-search input[type="search"]::-webkit-search-results-button,
+    .remover-icon-search input[type="search"]::-webkit-search-results-decoration { display: none; }
+</style>
+
+<nav  style="background: {{ section.settings.bg}};"
+    id="navbar"
+    class="
+        navbar navbar-expand-xl
+        {{ section.settings.shadow }}
+    ">
+    <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %} position-relative">
+
+        <!-- Navbar brand wrapper -->
+        <div class="navbar-brand-wrapper d-flex align-items-center">
+
+            <!-- Toggler -->
+            <button
+                class="navbar-toggler collapsed ml-n1 mr-3"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbar-collapse"
+                aria-controls="navbar-collapse"
+                aria-expanded="false"
+                aria-label="{{ 'general.accessibility.toggle_nav' | t }}">
+                <div class="animated-icon1"></div>
+                <span style="background-color: var(--color-peslink) !important;"></span>
+                <span style="background-color: var(--color-peslink) !important;"></span>
+                <span style="background-color: var(--color-peslink) !important;"></span>
+            </button>
+  <!-- Collapse button -->
+
+            <!-- Logo -->
+            <a
+                id="navbar-brand"
+                class="navbar-brand d-sm-block overflow-hidden flex-grow-1 flex-xl-grow-0 mr-2 py-0"
+                href="/">
+                {% if section.settings.logo == blank %}
+                    <span style="color: {{ section.settings.bglink}} !important;">{{ shop.name }}</span>
+                {% else %}
+                    <img
+                        class="img-fluid"
+                        id="logo-image"
+                        src="{{ section.settings.logo | img_url: 'master' }}"
+                        alt="{{ section.settings.logo.alt | default: shop.name }}"
+                        width="{{ section.settings.logo_height  }}"
+                        height="{{ section.settings.logo_height }}">
+                {% endif %}
+            </a>
+        </div>
+
+        <!-- Icon menu -->
+        <div class="navbar-expand order-xl-1 flex-shrink-0 ml-2">
+
+            <ul id="iconmenu" class="navbar-nav d-flex mb-0">
+                <li
+                    id="nav-item-search"
+                    class="d-block d-sm-none nav-item {% if template.name == 'search' %}active{% endif %}">
+                    <a
+                        class="nav-link botao-pes d-flex px-2"
+                        href="{{ routes.search_url }}"
+                        role="button"
+                        data-toggle="modal"
+                        data-target="#search-modal"
+                        aria-label="{{ 'search.label' | t }}">
+                        {% render 'icon-search', size: 22 %}
+                    </a>
+                </li>
+            <li>
+                <form action="/search" method="get" class=" {{ section.settings.cor_box }} d-none d-sm-block predictive-search" role="search">
+                    <div class="d-flex remover-icon-search">
+                        <input style="color: var(--color-menu-link) !important; opacity:0.7;" type="search" name="q" class="form-control mr-2" value="" placeholder="{{ 'search.placeholder' | t }}" aria-label="Procurar" size="26">
+                        <button style="margin: -50px; z-index: 100;"  type="submit" class="btn  flex-shrink-0">
+                            {% render 'icon-search', size: 22 %}
+                        </button>
+                    </div>
+                </form>
+            </li>
+                {% if shop.customer_accounts_enabled %}
+                    <li
+                        id="nav-item-account"
+                        class="botao-pes d-none d-xl-block {% if template.name == 'account' or template.name == 'login' %}active{% endif %}">
+                        <a
+                            class="botao-pes nav-link d-flex align-items-center px-2"
+                            href="{{ routes.account_url }}"
+                            {% if customer == blank %}
+                                role="button"
+                                data-toggle="modal"
+                                data-target="#account-modal"
+                            {% endif %}
+                            aria-label="{{ 'customer.account.label' | t }}">
+                            {% if customer == blank %}
+                                {% render 'icon-account', size: 22 %}
+                            {% else %}
+                                {% render 'icon-account-logged-in', size: 22 %}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if settings.wishlist_enable %}
+                    <li
+                        id="nav-item-wishlist"
+                        class=" nav-item d-none d-xl-block {% if page.handle == 'wishlist' %}active{% endif %}">
+                        <a
+                            class="nav-link botao-pes  d-flex align-items-center px-2"
+                            href="#"
+                            role="button"
+                            data-toggle="modal"
+                            data-target="#wishlist-modal"
+                            aria-label="{{ 'general.wishlist.label' | t }}">
+                            {% render 'icon-heart', size: 22 %}
+                            <span
+                                class="nav-item-wishlist-bubble {% if section.settings.wishlist_icon_animate_class != blank %}animate__animated{% endif %} {{ section.settings.wishlist_icon_animate_class }}"
+                                data-animate-class="{{ section.settings.wishlist_icon_animate_class }}"
+                                style="{{ section.settings.wishlist_icon_bubble_color | prepend: 'background-color:' }}">
+                            </span>
+
+                        </a>
+                    </li>
+                {% endif %}
+                {% if section.settings.show_icon_cart %}
+                    <li
+                        id="nav-item-cart"
+                        class="nav-item mr-n1 mr-xl-0  {% if template.name == 'cart' %}active{% endif %} {% if cart.item_count > 0 %}has-items{% endif %}">
+                        <a
+                            class="nav-link botao-pes  d-flex align-items-center px-2"
+                            href="{{ routes.cart_url }}"
+                            {% if template.name != 'cart' %}
+                                role="button"
+                                data-toggle="modal"
+                                data-target="#cart-modal"
+                            {% endif %}
+                            aria-label="{{ 'cart.label' | t }}">
+                            {% case section.settings.cart_icon_icon %}
+                                {% when 'cart' %}
+                                    {% render 'icon-cart' size: 22 %}
+                                {% when 'bag' %}
+                                    {% render 'icon-bag' size: 22 %}
+                            {% endcase %}
+                            {% if cart.item_count == 0 %}
+                                {% assign cart_badge_color = section.settings.cart_icon_badge_color_empty %}
+                            {% else %}
+                                {% assign cart_badge_color = section.settings.cart_icon_badge_color_has_items %}
+                            {% endif %}
+                            <span
+                                class="nav-item-cart-badge badge text-white ml-1 {% if section.settings.cart_icon_animate_class != blank and cart.item_count > 0 %}animate__animated{% endif %} {{ section.settings.cart_icon_animate_class }}"
+                                data-animate-class="{{ section.settings.cart_icon_animate_class }}"
+                                style="{{ cart_badge_color | prepend: 'background-color: ' }}">
+                                {{ cart.item_count }}
+                            </span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Collapse -->
+        <div id="navbar-collapse" class="collapse navbar-collapse">
+
+            <!-- Menu -->
+            <ul id="navbar-menu" class="navbar-nav slide-out pt-2 pt-xl-0 {{ section.settings.menu_position }}">
+                {% for link in linklists[section.settings.menu].links %}
+                    {% if link.links == blank %}
+                        <li class="nav-item {% if link.active %}active{% endif %}">
+                            <a
+                                class="nav-link"
+                                href="{{ link.url }}"
+                                aria-current="{% if link.active %}page{% endif %}">
+                                {{ link.title }}
+                            </a>
+                        </li>
+                    {% else %}
+                        {% if link.levels > 1 %}
+                            {% assign is_megamenu = true %}
+                        {% else %}
+                            {% assign is_megamenu = false %}
+                        {% endif %}
+
+                        <li class="nav-item dropdown {% if link.child_current %}active{% endif %} {% if is_megamenu %}megamenu position-static{% endif %}">
+                            <a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                id="nav-link-{{ forloop.index0 }}"
+                                role="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                                {{ link.title }}
+                            </a>
+                            <ul
+                                class="dropdown-menu mb-3 mb-lg-0 animate__animated {{ section.settings.menu_dropdown_animation }} {{ section.settings.menu_dropdown_animation_speed }}"
+                                aria-labelledby="nav-link-{{ forloop.index0 }}">
+                                {% for child_link in link.links %}
+                                    <li>
+                                        {% if child_link.title contains "-divider" %}
+                                            <div class="dropdown-divider"></div>
+                                        {% elsif child_link.title contains "-header" %}
+                                            <h6 class="dropdown-header">
+                                                {{ child_link.title | remove: "-header" }}
+                                            </h6>
+                                        {% elsif child_link.url contains 'megamenu' %}
+                                            {% assign page_handle = child_link.title | handleize %}
+                                            <div class="megamenu-page">
+                                                {{ pages[page_handle].content | replace: '<img', '<img class="img-fluid img-thumbnail"' }}
+                                            </div>
+                                        {% else %}
+                                            <a
+                                                class="{% if is_megamenu == false %}dropdown-item{% endif %} {% if child_link.active %}active{% endif %}"
+                                                href="{{ child_link.url }}"
+                                                aria-current="{% if child_link.active %}page{% endif %}">
+                                                {% if child_link.title contains '|' %}
+                                                    {{ child_link.title | split: '|' | first }}
+                                                    <small class="opacity-70">
+                                                        {{ child_link.title | split: '|' | last }}
+                                                    </small>
+                                                {% else %}
+                                                    {{ child_link.title }}
+                                                {% endif %}
+                                            </a>
+
+                                            {% if child_link.levels > 0 %}
+                                                <ul class="list-unstyled">
+                                                    {% for child_child_link in child_link.links %}
+                                                        <li>
+                                                            {% if child_child_link.title contains "-divider" %}
+                                                                <div class="dropdown-divider"></div>
+                                                            {% elsif child_child_link.title contains "-header" %}
+                                                                <h6 class="dropdown-header">
+                                                                    {{ child_child_link.title | remove: "-header" }}
+                                                                </h6>
+                                                            {% elsif child_child_link.url contains 'megamenu' %}
+                                                                {% assign page_handle = child_child_link.title | handleize %}
+                                                                <div class="megamenu-page">
+                                                                    {{ pages[page_handle].content | replace: '<img', '<img class="img-fluid img-thumbnail" lazy="loading"' }}
+                                                                </div>
+                                                            {% else %}
+                                                                <a
+                                                                    class="dropdown-item"
+                                                                    href="{{ child_child_link.url }}"
+                                                                    aria-current="{% if child_child_link.active %}page{% endif %}">
+                                                                    {% if child_child_link.title contains '|' %}
+                                                                        {{ child_child_link.title | split: '|' | first }}
+                                                                        <small class="opacity-70">
+                                                                            {{ child_child_link.title | split: '|' | last }}
+                                                                        </small>
+                                                                    {% else %}
+                                                                        {{ child_child_link.title }}
+                                                                    {% endif %}
+                                                                </a>
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Mobile custom elements -->
+                <hr class="d-xl-none">
+
+                {% if shop.customer_accounts_enabled %}
+                    <li
+                        class="nav-item d-xl-none {% if template.name == 'account' or template.name == 'login' %}active{% endif %}">
+                        <a
+                            class="nav-link d-flex"
+                            href="{{ routes.account_url }}"
+                            {% if customer == blank %}
+                                role="button"
+                                data-toggle="modal"
+                                data-target="#account-modal"
+                            {% endif %}
+                            aria-label="{{ 'customer.account.label' | t }}">
+                            {% if customer == blank %}
+                                {% render 'icon-account', size: 22 %}
+                            {% else %}
+                                {% render 'icon-account-logged-in', size: 22 %}
+                            {% endif %}
+                            <span class="ml-2">{{ 'customer.account.label' | t }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if settings.wishlist_enable %}
+                    <li
+                        id="nav-item-wishlist"
+                        class="nav-item-wishlist nav-item d-xl-none {% if page.handle == 'wishlist' %}active{% endif %}">
+                        <a
+                            class="nav-link d-flex align-items-center position-relative"
+                            href="#"
+                            role="button"
+                            data-toggle="modal"
+                            data-target="#wishlist-modal"
+                            aria-label="{{ 'general.wishlist.label' | t }}">
+                            {% render 'icon-heart', size: 22 %}
+                            <span
+                                class="nav-item-wishlist-bubble {% if section.settings.wishlist_icon_animate_class != blank %}animate__animated{% endif %} {{ section.settings.wishlist_icon_animate_class }}"
+                                data-animate-class="{{ section.settings.wishlist_icon_animate_class }}"
+                                style="{{ section.settings.wishlist_icon_bubble_color | prepend: 'background-color: ' }}">
+                            </span>
+                            <span class="ml-2">{{ 'general.wishlist.label' | t }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if section.settings.fone %}
+                    <li       class="nav-item d-xl-none ">
+
+                        <a
+                            class="nav-link d-flex align-items-center position-relative"
+                            href="#"
+                            role="button">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="{{ size | default: 25 }}" height="{{ size | default: 25 }}" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                                <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                              </svg>
+                            <span
+                                class="{% if section.settings.wishlist_icon_animate_class != blank %}animate__animated{% endif %} {{ section.settings.wishlist_icon_animate_class }}"
+                                data-animate-class="{{ section.settings.wishlist_icon_animate_class }}"
+                                style="{{ section.settings.wishlist_icon_bubble_color | prepend: 'background-color: ' }}">
+                            </span>
+                            <span class="ml-2">{{ section.settings.fone }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if section.settings.email %}
+                    <li
+                        id="nav-item-wishlist"
+                        class="nav-item-wishlist nav-item d-xl-none {% if page.handle == 'wishlist' %}active{% endif %}">
+
+                        <a
+                            class="nav-link d-flex align-items-center position-relative"
+                            href="mailto:{% if section.settings.email %}{{ section.settings.email }} {% endif %}"
+                            role="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="{{ size | default: 25 }}" height="{{ size | default: 25 }}" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                              </svg>
+                            <span
+                                class="{% if section.settings.wishlist_icon_animate_class != blank %}animate__animated{% endif %} {{ section.settings.wishlist_icon_animate_class }}"
+                                data-animate-class="{{ section.settings.wishlist_icon_animate_class }}"
+                                style="{{ section.settings.wishlist_icon_bubble_color | prepend: 'background-color: ' }}">
+                            </span>
+                            <span class="ml-2">{{ section.settings.email }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if shop.enabled_currencies.size > 1 %}
+                    <li
+                        id="currency-converter"
+                        class="nav-item d-none">
+                        <a
+                            id="currency-converter-button"
+                            class="nav-link d-flex align-items-center"
+                            href="#currency-converter-modal"
+                            role="button"
+                            data-toggle="modal">
+                            <img
+                                src="https://cdn.jsdelivr.net/gh/convertx/flags/currency/{{ cart.currency.iso_code | downcase }}.svg"
+                                alt=""
+                                width="21"
+                                height=""
+                                class="mr-2">
+                            <span>{{ cart.currency.iso_code }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</nav>
+{% if section.settings.bar-bottom %}
+    <div class="container-fluid color-line" style="
+    background: linear-gradient(to right, {{ section.settings.color-bar-bottom-one }}, {{ section.settings.color-bar-bottom-two }}, {{ section.settings.color-bar-bottom-three }});
+    height: 6px;
+    width: 100%;">
+      </div>
+{% endif %}
+<div id="navbar-fake-overlay"></div>
+
+{% schema %}
+{
+    "name": "Barra de navegação",
+    "class": "sticky-top",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "menu_flut",
+            "label": "Ativar menu flutuante",
+            "default": true
+        },
+        {
+            "type": "color",
+            "id": "bg",
+            "label": "Background do Menu",
+            "default": "#fff"
+         },
+         {
+            "type": "color",
+            "id": "menulink",
+            "label": "Link do Menu",
+            "default": "#000"
+         },
+         {
+            "type": "color",
+            "id": "bglink",
+            "label": "Menu Hover",
+            "default": "#000"
+         },
+         {
+            "type": "color",
+            "id": "peslink",
+            "label": "Ícones Menu",
+            "default": "#000"
+         },
+        {
+            "type": "select",
+            "id": "shadow",
+            "label": "Sombra",
+            "default": "shadow-sm",
+            "options": [
+                { "value": "shadow-none", "label": "No Shadow" },
+                { "value": "shadow-sm", "label": "Shadow sm" },
+                { "value": "shadow", "label": "Shadow" },
+                { "value": "shadow-lg", "label": "Shadow lg" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "cor_box",
+            "label": "Tipo da barra",
+            "default": "form-transparent",
+            "options": [
+                {  "value": "form-transparent", "label": "Transparente" },
+                {  "value": "form-opac", "label": "Opaco" },
+                {  "value": "form-branco", "label": "Branco" }
+
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Logo"
+        },
+        {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Logo"
+        },
+        {
+            "type": "text",
+            "id": "logo_height",
+            "label": "Altura do logotipo (px)",
+            "default": "120"
+        },
+        {
+            "type": "header",
+            "content": "Menu"
+        },
+        {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Menu",
+            "default": "main-menu"
+        },
+        {
+            "type": "select",
+            "id": "menu_position",
+            "label": "Posição do menu",
+            "default": "mx-auto",
+            "options": [
+                { "value": "mr-auto", "label": "Esquerda" },
+                { "value": "mx-auto", "label": "Centralizado" },
+                { "value": "ml-auto", "label": "Direita" }
+            ]
+        },
+        {
+            "type": "text",
+            "id":  "menu_dropdown_animation",
+            "label": "Efeito de animação suspenso",
+            "default": "animate__jackInTheBox",
+            "info": "Copie o efeito de animação da biblioteca Animate.css [Saiba mais](https://animate.style). Nota: Deixe em branco para desativar."
+        },
+        {
+            "type": "select",
+            "id":  "menu_dropdown_animation_speed",
+            "label": "Velocidade de animação suspensa",
+            "default": "animate__fast",
+            "options": [
+                { "value": "animate__slower", "label": "Slower" },
+                { "value": "animate__slow", "label": "Slow" },
+                { "value": "animate__normal", "label": "Normal" },
+                { "value": "animate__fast", "label": "Fast" },
+                { "value": "animate__faster",  "label": "Faster" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Contato da loja",
+            "info": "Essa opção será visivel apenas em dispositivos moveis"
+        },
+        {
+            "type": "text",
+            "id": "fone",
+            "label": "Telefone",
+            "default": "63 9 0000 - 0000"
+
+        },
+        {
+            "type": "text",
+            "id": "email",
+            "label": "Email de suporte",
+            "default": "contato@email.com"
+        },
+        {
+            "type": "header",
+            "content": "Ícone de lista de desejos"
+        },
+        {
+            "type": "color",
+            "id": "wishlist_icon_bubble_color",
+            "label": "Cor da bolha",
+            "info": "Visível apenas quando a lista de desejos tem produtos.",
+            "default": "#FFFF00"
+        },
+        {
+            "type": "select",
+            "id": "wishlist_icon_animate_class",
+            "label": "Animação de bolha",
+            "info": "[Saber mais](https://animate.style/)",
+            "default": "animate__heartBeat",
+            "options": [
+                { "value": "", "label": "No Animation" },
+                { "value": "animate__bounce", "label": "Bounce" },
+                { "value": "animate__flash", "label": "Flash" },
+                { "value": "animate__pulse", "label": "Pulse" },
+                { "value": "animate__rubberBand", "label": "rubberBand" },
+                { "value": "animate__shakeX", "label": "ShakeX" },
+                { "value": "animate__shakeY", "label": "ShakeY" },
+                { "value": "animate__headShake", "label": "headShake" },
+                { "value": "animate__swing", "label": "Swing" },
+                { "value": "animate__tada", "label": "Tada" },
+                { "value": "animate__wobble", "label": "Wobble" },
+                { "value": "animate__jello", "label": "Jello" },
+                { "value": "animate__heartBeat", "label": "heartBeat" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Barra Inferior"
+        },
+        {
+            "type": "checkbox",
+            "id": "bar-bottom",
+            "label": "Barra Inferior",
+            "default": true
+        },
+        {
+            "type": "color",
+            "id": "color-bar-bottom-one",
+            "label": "Cor Gradiente 1",
+            "default": "#EC271D"
+        },
+        {
+            "type": "color",
+            "id": "color-bar-bottom-two",
+            "label": "Cor Gradiente 2",
+            "default": "#3B89C9"
+        },
+        {
+            "type": "color",
+            "id": "color-bar-bottom-three",
+            "label": "Cor Gradiente 3",
+            "default": "#2F4AE4"
+        },
+        {
+            "type": "header",
+            "content": "Ícone do carrinho"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_icon_cart",
+            "label": "Mostrar ícone",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "cart_icon_icon",
+            "label": "Ícone do carrinho",
+            "default": "cart",
+            "options": [
+                {
+                    "value": "cart",
+                    "label": "Cart"
+                },
+                {
+                    "value": "bag",
+                    "label": "Bag"
+                }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "cart_icon_badge_color_empty",
+            "label": "Cor do emblema (vazio)",
+            "default": "#6c757d"
+        },
+        {
+            "type": "color",
+            "id": "cart_icon_badge_color_has_items",
+            "label": "Cor do emblema (contém itens)",
+            "default": "#FFFF00"
+        },
+        {
+            "type": "select",
+            "id": "cart_icon_animate_class",
+            "label": "Animação do ícone do carrinho",
+            "info": "Visível apenas quando o carrinho tem itens. [Saber mais](https://animate.style/)",
+            "default": "animate__heartBeat",
+            "options": [
+                { "value": "", "label": "No Animation" },
+                { "value": "animate__bounce", "label": "Bounce" },
+                { "value": "animate__flash", "label": "Flash" },
+                { "value": "animate__pulse", "label": "Pulse" },
+                { "value": "animate__rubberBand", "label": "rubberBand" },
+                { "value": "animate__shakeX", "label": "ShakeX" },
+                { "value": "animate__shakeY", "label": "ShakeY" },
+                { "value": "animate__headShake", "label": "headShake" },
+                { "value": "animate__swing", "label": "Swing" },
+                { "value": "animate__tada", "label": "Tada" },
+                { "value": "animate__wobble", "label": "Wobble" },
+                { "value": "animate__jello", "label": "Jello" },
+                { "value": "animate__heartBeat", "label": "heartBeat" }
+            ]
+        }
+    ]
+}
+{% endschema %}
+
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "{{ shop.name }}",
+    {% if section.settings.logo %}
+        "logo": "https:{{ section.settings.logo | img_url: 'master' }}",
+    {% endif %}
+    "sameAs": [
+        "{{ settings.social_facebook_link }}",
+        "{{ settings.social_twitter_link }}",
+        "{{ settings.social_instagram_link }}",
+        "{{ settings.social_tiktok_link }}",
+        "{{ settings.social_pinterest_link }}",
+        "{{ settings.social_snapchat_link }}",
+        "{{ settings.social_youtube_link }}",
+        "{{ settings.social_linkedin_link }}"
+    ],
+    "url": "{{ shop.url }}{{ page.url }}"
+}
+</script>
+
+{% if template.name == 'index' %}
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "name": "{{ shop.name }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ shop.url }}/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        },
+        "url": "{{ shop.url }}{{ page.url }}"
+    }
+    </script>
+{% endif %}

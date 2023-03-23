@@ -1,0 +1,261 @@
+<section>
+
+    <!-- Header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-9">
+        <div class="container">
+
+            <h3 class="">
+                {{ blog.title }}
+            </h3>
+
+            {% unless section.settings.description == blank %}
+                <div class="rte lead text-muted">
+                    {{ section.settings.description }}
+                </div>
+            {% endunless %}
+
+            <!-- Tags -->
+            {% if section.settings.show_tags and blog.all_tags.size > 0 %}
+                <div id="header-tags" class="d-flex align-items-center justify-content-center" style="line-height: normal;">
+                    <p class="mb-0 mr-2 sr-only">
+                        {{ 'general.tags' | t }}
+                    </p>
+                    <ul class="list-unstyled d-flex flex-wrap justify-content-center m-0">
+                        {% for tag in blog.all_tags %}
+                            {% if current_tags contains tag %}
+                                <li class="active list-inline-item mx-0">
+                                    <span class="sr-only">{{ 'general.remove_tag' | t: tag: tag }}</span>
+                                    {{ tag
+                                        | link_to_remove_tag: tag
+                                        | replace: 'title=', 'class="badge badge-secondary active m-1" title='
+                                        | replace: '</a>', '<span class="ml-1" aria-hidden="true">&times;</span></a>'  }}
+                                </li>
+                            {% else %}
+                                <li class="list-inline-item mx-0">
+                                    {{ tag
+                                        | link_to_add_tag: tag
+                                        | replace: 'title=', 'class="badge badge-primary font-weight-500 font-size-90 m-1" title=' }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+        </div>
+    </header>
+
+    <div class="container overflow-hidden mb-n7">
+        {% paginate blog.articles by section.settings.results_per_page %}
+
+            <!-- Empty -->
+            {% if blog.articles.size == 0 %}
+                <p class="alert alert-warning">{{ 'blog.empty_html' | t }}</p>
+            {% else %}
+
+                <ul class="list-unstyled">
+
+                    {% for article in blog.articles %}
+
+                        <!-- Article -->
+                        <article
+                            class="blog-article row align-items-center mb-9">
+                            <div class="col-lg mb-4 mb-lg-0">
+                                <a class="d-block py-1 text-body text-decoration-none" href="{{ article.url }}">
+                                    {% assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height %}
+                                    <img
+                                        class="article-img img-fluid w-100 {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                                        data-src="{{ article.image | img_url: img_size, crop: 'center' }}"
+                                        alt="{{ article.image.alt | escape }}"
+                                        width="{{ section.settings.img_width }}"
+                                        height="{{ section.settings.img_height }}"
+                                        loading="lazy">
+                                </a>
+                            </div>
+                            <div class="col-lg">
+
+                                <!-- Article title -->
+                                <h2 class="h3 blog-article-title">
+                                    <a href="{{ article.url }}" class="">
+                                        {{ article.title }}
+                                    </a>
+                                </h2>
+
+                                <!-- Article meta -->
+                                <p class="text-muted small">
+                                    {% if section.settings.show_author %}
+                                        {{ article.author }}
+                                        <span class="opacity-75 mx-1"> | </span>
+                                    {% endif %}
+                                    {% if section.settings.show_date %}
+                                        {{ article.created_at | time_tag: '%b %d, %Y' }}
+                                        <span class="opacity-75 mx-1"> | </span>
+                                    {% endif %}
+                                    {% if section.settings.show_comments_count and blog.comments_enabled? %}
+                                        {{ 'blog.comments.with_count' | t: count: article.comments_count }}
+                                    {% endif %}
+                                </p>
+
+                                <!-- Article excerpt -->
+                                {% if section.settings.show_excerpt %}
+                                    <div class="rte mb-5">
+                                        {% if article.excerpt.size > 0 %}
+                                            {% if section.settings.excerpt_length != blank %}
+                                                {{ article.excerpt | truncate: section.settings.excerpt_length }}
+                                            {% else %}
+                                                {{ article.excerpt }}
+                                            {% endif %}
+                                        {% else %}
+                                            {{ article.content | truncate: section.settings.excerpt_length | default: 240 }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                <!-- Article readmore button -->
+                                {% if section.settings.show_readmore %}
+                                    <a href="{{ article.url }}" class="btn {{ section.settings.readmore_color }} {{ section.settings.readmore_size }}">
+                                        {{ 'blog.readmore' | t }}
+                                    </a>
+                                {% endif %}
+
+                            </div>
+                        </article>
+                    {% endfor %}
+                </ul>
+
+                <!-- Pagination -->
+                {% render 'pagination' with paginate: paginate %}
+
+            {% endif %}
+        {% endpaginate %}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Páginas de blogs",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "info": "Deixe em branco para desativar",
+            "default": "<p>Bem-vindo ao nosso blog, esperamos que inspire você.</p>"
+        },
+        {
+            "type": "range",
+            "id": "results_per_page",
+            "label": "Resultados por página",
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "default": 10
+        },
+        {
+            "type": "checkbox",
+            "id": "show_tags",
+            "label": "Mostrar tags",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Configurações de postagem do blog"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_author",
+            "label": "Mostrar Autor",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_date",
+            "label": "Mostrar data",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_comments_count",
+            "label": "Mostrar contagem de comentários",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_excerpt",
+            "label": "Mostrar trecho",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "excerpt_length",
+            "label": "Tamanho do Resumo",
+            "info": "Deixe em branco para mostrar todo o texto",
+            "default": "240"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_readmore",
+            "label": "Mostrar botão ver mais",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "readmore_color",
+            "label": "Cor do botão ver mais",
+            "default": "btn-outline-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Link" },
+                { "group": "Normal", "value": "btn-light", "label": "Luz" },
+                { "group": "Normal", "value": "btn-dark", "label": "Escuro" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primário" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secundário" },
+                { "group": "Normal", "value": "btn-success", "label": "Success" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Warning" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Outline", "value": "btn-outline-dark", "label": "Dark Outline" },
+                { "group": "Outline", "value": "btn-outline-primary", "label": "Primary Outline" },
+                { "group": "Outline", "value": "btn-outline-secondary", "label": "Secondary Outline" },
+                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                { "group": "Outline", "value": "btn-outline-danger", "label": "Danger Outline" },
+                { "group": "Outline", "value": "btn-outline-warning", "label": "Warning Outline" },
+                { "group": "Outline", "value": "btn-outline-info", "label": "Info Outline" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "readmore_size",
+            "label": "Tamanho do botão ver mais",
+            "options": [
+                { "value": "btn-sm", "label": "Pequeno" },
+                { "value": "", "label": "Normal" },
+                { "value": "btn-lg", "label": "Grande" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "720"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "405"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,115 @@
+<!-- Theme CSS Variables -->
+<style>
+    :root {
+        /* Base */
+        --color-primary: {{ settings.color_primary }};
+        --color-secondary: {{ settings.color_secondary }};
+        --color-dark: {{ settings.color_dark }};
+        --color-light: {{ settings.color_light }};
+
+        /* Body */
+        --color-body-bg: {{ settings.color_body_bg }};
+        --color-body-text: {{ settings.color_body_text }};
+
+        /* Utilities */
+        --color-price: {{ settings.color_price }};
+        --color-economize: {{ settings.color-price-economize }};
+        --color-pix: {{ settings.color-price-pix }};
+        --color-price-tag: {{ settings.color-price-tag }};
+        --color-variante: {{ settings.color_variante.red }}, {{ settings.color_variante.green }},{{ settings.color_variante.blue }};
+        --color-variante-unselected: {{ settings.color_variante_unselected }};
+        --color-button-buy: {{ settings.color_button_buy }};
+        --color-text-button-buy: {{ settings.color_text_button_buy }};
+        --color-button-add-cart: {{ settings.color_button_add_cart }};
+        --color-border-button-add-cart: {{ settings.color_border_button_add_cart }};
+        --color-text-button-add-cart: {{ settings.color_text_button_add_cart }};
+        --color-text: {{ settings.color_text }};
+        --color-rating: {{ settings.color_rating }};
+
+        /* Footer */
+        --color-bglink: {{ settings.bglink }};
+
+
+        /* OFERTAS DO DIA */
+        --color-ofertabg: {{ settings.ofertabg }};
+        --color-ofertalink: {{ settings.ofertalink }};
+
+
+        /* Custom Gradient */
+        --color-custom-gradient: {{ settings.custom_gradient }};
+
+        /* Color filters */
+        --color-primary-lighten-5: {{ settings.color_primary | color_lighten: 5 }};
+        --color-primary-lighten-10: {{ settings.color_primary | color_lighten: 10 }};
+        --color-primary-lighten-20: {{ settings.color_primary | color_lighten: 20 }};
+        --color-primary-darken-5: {{ settings.color_primary | color_darken: 5 }};
+        --color-primary-darken-10: {{ settings.color_primary | color_darken: 10 }};
+        --color-primary-darken-20: {{ settings.color_primary | color_darken: 20 }};
+        --color-secondary-lighten-5: {{ settings.color_secondary | color_lighten: 5 }};
+        --color-secondary-lighten-10: {{ settings.color_secondary | color_lighten: 10 }};
+        --color-secondary-lighten-20: {{ settings.color_secondary | color_lighten: 20 }};
+        --color-secondary-darken-5: {{ settings.color_secondary | color_darken: 5 }};
+        --color-secondary-darken-10: {{ settings.color_secondary | color_darken: 10 }};
+        --color-secondary-darken-20: {{ settings.color_secondary | color_darken: 20 }};
+        --color-dark-lighten-5: {{ settings.color_dark | color_lighten: 5 }};
+        --color-dark-lighten-10: {{ settings.color_dark | color_lighten: 10 }};
+        --color-dark-lighten-20: {{ settings.color_dark | color_lighten: 20 }};
+        --color-dark-darken-5: {{ settings.color_dark | color_darken: 5 }};
+        --color-dark-darken-10: {{ settings.color_dark | color_darken: 10 }};
+        --color-dark-darken-20: {{ settings.color_dark | color_darken: 20 }};
+
+        --color-primary-90: {{ settings.color_primary | color_darken: 10 | color_modify: 'alpha', 0.9 }};
+        --color-secondary-90: {{ settings.color_secondary | color_darken: 10 | color_modify: 'alpha', 0.9 }};
+        --color-dark-90: {{ settings.color_dark | color_darken: 10 | color_modify: 'alpha', 0.9 }};
+
+        /* Border Radius */
+        --button-form-radius: {{ settings.buttons_forms_radius }}px;
+
+    }
+</style>
+
+<!-- Fonts -->
+<style>
+    {{ settings.type_body_font | font_face: font_display: 'swap' }}
+    {{ body_font_bold | font_face: font_display: 'swap' }}
+    {{ body_font_italic | font_face: font_display: 'swap' }}
+    {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+    {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+
+    {{ settings.font_headings | font_face: font_display: 'swap'  }}
+    :root {
+        --font-headings: {{ settings.font_headings.family }},{{ settings.font_headings.fallback_families }};
+        --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
+
+        --font-heading-style: {{ settings.type_header_font.style }};
+        --font-heading-weight: {{ settings.type_header_font.weight }};
+
+    }
+</style>
+
+<!-- Fancybox -->
+<link
+        href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"
+        rel="stylesheet"
+        integrity="sha384-Q8BgkilbsFGYNNiDqJm69hvDS7NCJWOodvfK/cwTyQD4VQA0qKzuPpvqNER1UC0F"
+        crossorigin="anonymous"/>
+
+<!-- Animate.css -->
+<link
+        href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"
+        rel="stylesheet"
+        integrity="sha384-Gu3KVV2H9d+yA4QDpVB7VcOyhJlAVrcXd0thEjr4KznfaFPLe0xQJyonVxONa4ZC"
+        crossorigin="anonymous"/>
+
+<!-- Splide.js -->
+<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@2.4.21/dist/css/splide-core.min.css"
+      rel="stylesheet"
+      integrity="sha384-qLb4HfLGAdg00b7EY6yTORB2tFApwf3HPfmXzMqbyoj7ImS9xuJcduB9yU0Xq1IR"
+      crossorigin="anonymous"/>
+
+<!-- Theme CSS -->
+<link href="{{ 'theme.min.css' | asset_url }}" rel="stylesheet"/>
+
+<!-- Custom CSS -->
+<link href="{{ 'custom.css' | asset_url }}" rel="stylesheet"/>

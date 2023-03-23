@@ -1,0 +1,190 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<section
+    class="newsletter {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div
+        class="container text-center {% unless section.settings.animate_class == blank %}animate__animated{% endunless %}"
+        data-animate="{{ section.settings.animate_class }}">
+
+        <h2 class="title mb-1">
+            {{ section.settings.title }}
+        </h2>
+
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+        <!-- Newsletter form -->
+        {% form 'customer', id: 'newsletter_form', class: '' %}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            {{ form.errors | default_errors }}
+
+            {% if form.posted_successfully? %}
+                <p class="alert alert-success">
+                    {{ 'general.newsletter.confirmation' | t }}
+                </p>
+            {% endif %}
+
+            <div class="form-inline flex-nowrap justify-content-center">
+
+                <!-- Newsletter input field -->
+                <input
+                    type="email"
+                    name="contact[email]"
+                    size="30"
+                    class="form-control mr-2"
+                    value="{% if customer.email != blank %}{{ customer.email }}{% endif %}"
+                    placeholder="{{ 'general.newsletter.label' | t }}"
+                    aria-label="{{ 'general.newsletter.label' | t }}"
+                    autocorrect="off"
+                    autocapitalize="off">
+
+                    <button
+                        type="submit"
+                        name="commit"
+                        class="btn flex-shrink-0 {{ section.settings.btn_color }} {{ section.settings.btn_size }}">
+                    {{ 'general.newsletter.submit' | t }}
+                </button>
+            </div>
+        {% endform %}
+
+        <!-- Note -->
+        {% if section.settings.note != blank %}
+            <div class="rte small text-muted font-italic mt-4 mb-n3">
+                {{ section.settings.note }}
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "Newsletter",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Inscreva-se na Newsletter"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Seja o primeiro a ser notificado sobre nossas últimas ofertas.</p>"
+        },
+        {
+            "type": "richtext",
+            "id": "note",
+            "label": "Note",
+            "info": "Será exibido abaixo do formulário do boletim informativo",
+            "default": "<p>Observação: geralmente enviamos uma vez por semana</p>"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Cor do background",
+            "default": "bg-primary-gradient text-white",
+            "options": [
+                { "group": "Light", "value": "bg-white text-body", "label": "White" },
+                { "group": "Light", "value": "bg-light text-body", "label": "Light" },
+                { "group": "Dark", "value": "bg-dark text-white", "label": "Dark" },
+                { "group": "Dark", "value": "bg-primary text-white", "label": "Primary" },
+                { "group": "Dark", "value": "bg-secondary text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-dark-gradient text-white", "label": "Dark" },
+                { "group": "Gradient", "value": "bg-primary-gradient text-white", "label": "Primary" },
+                { "group": "Gradient", "value": "bg-secondary-gradient text-white", "label": "Secondary" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Cor do botão",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Link" },
+                { "group": "Normal", "value": "btn-light", "label": "Light" },
+                { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primary" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondary" },
+                { "group": "Normal", "value": "btn-success", "label": "Success" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Warning" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Outline", "value": "btn-outline-dark", "label": "Dark Outline" },
+                { "group": "Outline", "value": "btn-outline-primary", "label": "Primary Outline" },
+                { "group": "Outline", "value": "btn-outline-secondary", "label": "Secondary Outline" },
+                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                { "group": "Outline", "value": "btn-outline-danger", "label": "Danger Outline" },
+                { "group": "Outline", "value": "btn-outline-warning", "label": "Warning Outline" },
+                { "group": "Outline", "value": "btn-outline-info", "label": "Info Outline" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "btn_size",
+            "label": "Tamanho do botão",
+            "options": [
+                { "value": "btn-sm", "label": "Pequeno" },
+                { "value": "", "label": "Normal" },
+                { "value": "btn-lg", "label": "Grande" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 8
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 8
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "presets": [
+        {
+            "name": "Newsletter",
+            "category": "home"
+        }
+    ]
+}
+{% endschema %}

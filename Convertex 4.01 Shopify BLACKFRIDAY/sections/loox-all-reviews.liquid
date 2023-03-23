@@ -1,0 +1,63 @@
+<div
+	id="looxReviews"
+	data-limit="{{section.settings.data-limit}}"
+	{% if section.settings.aggregated %}data-loox-aggregate{% endif %}
+	{% if section.settings.only_photos %}data-mode="img"{% endif %}
+	{% if section.settings.product_handle %}data-product-id="{{ all_products[section.settings.product_handle].id }}"{% endif %}
+	{% if section.settings.hide_thumbnails %}data-product-thumbnails="false"{% endif %}
+	style="margin:0 auto;max-width:{{section.settings.maxwidth}}px;"
+></div>
+{% schema %}
+{
+	"name": "Loox Widget - avaliações",
+	"class": "index-section",
+	"settings": [
+		{
+			"id": "only_photos",
+			"type": "checkbox",
+			"label": "Exibir apenas comentários com fotos",
+			"default": false
+		},
+		{
+			"id": "hide_thumbnails",
+			"type": "checkbox",
+			"label": "Ocultar miniaturas de produtos",
+			"default": false
+		},
+		{
+			"type": "product",
+			"id": "product_handle",
+			"label": "Adicionar \"Escreva uma crítica\" botão vinculado a:"
+		},
+		{
+			"type": "checkbox",
+			"id": "aggregated",
+			"label": "Mostrar resenhas de todos os produtos",
+			"default": true
+		},
+		{
+			"type": "range",
+			"id": "data-limit",
+			"min": 1,
+			"max": 40,
+			"step": 1,
+			"label": "Número de avaliações para exibir",
+			"default": 20
+		},
+		{
+			"type": "range",
+			"id": "maxwidth",
+			"min": 480,
+			"max": 1920,
+			"step": 40,
+			"unit": "px",
+			"label": "Largura máxima",
+			"default": 1080
+		}
+	],
+	"presets": [{
+		"name": "Loox Widget - All Reviews",
+		"category": "Loox"
+	}]
+}
+{% endschema %}

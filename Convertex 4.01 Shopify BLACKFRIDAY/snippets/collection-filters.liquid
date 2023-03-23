@@ -1,0 +1,92 @@
+<div id="collection-filters" data-collection-url="{{ collection.url }}">
+<style>
+
+input[type='radio']:checked + label {
+  background-color: transparent !important;
+  color: var(--color-primary) !important;
+  border: 0 solid !important;
+}
+
+
+</style>
+    {% for tag in collection.all_tags %}
+        {% if tag contains '__' %}
+
+            {% assign header        = tag | split: '__' | first | capitalize %}
+            {% assign prevIndex     = forloop.index0 | minus: 1 %}
+            {% assign nextIndex     = forloop.index0 | plus: 1 %}
+            {% assign prevHeader    = collection.all_tags[prevIndex] | split: '__' | first | capitalize %}
+            {% assign nextHeader    = collection.all_tags[nextIndex] | split: '__' | first | capitalize %}
+
+            {% if header != prevHeader %}
+                <div class="py-1">
+                    <button
+                        class="btn btn-light btn-block font-weight-bold"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#filter-collapse-{{ header | handleize }}"
+                        aria-expanded="false"
+                        aria-controls="filter-collapse-{{ header | handleize }}">
+                        {{ header }}
+                    </button>
+
+                    <div class="collapse show px-1" id="filter-collapse-{{ header | handleize }}">
+                        <div class="custom-control custom-radio my-1 mt-3">
+                            <input
+                                type="radio"
+                                name="filter-tag-{{ header | handleize }}"
+                                id="filter-all-{{ header | handleize }}"
+                                class="collection-filter-control custom-control-input"
+                                checked>
+                            <label
+                                class="custom-control-label d-flex justify-content-between align-items-center"
+                                for="filter-all-{{ header | handleize }}">
+                                <span class="d-inline-block">
+                                    {{ 'general.all' | t }}
+                                </span>
+                            </label>
+                        </div>
+            {% endif %}
+
+                        <div class="custom-control custom-radio my-1">
+                            <input
+                                type="radio"
+                                name="filter-tag-{{ header | handleize }}"
+                                id="filter-tag-{{ tag | handleize }}"
+                                class="collection-filter-control custom-control-input"
+                                data-tag="{{ tag | handleize }}"
+                                {% if current_tags contains tag %}checked{% endif %}>
+                            <label
+                                class="custom-control-label d-flex justify-content-between align-items-center"
+                                for="filter-tag-{{ tag | handleize }}">
+                                <span class="d-flex align-items-center">
+                                    {{ tag | split: '__' | last }}
+                                    {% if section.settings.show_filter_color %}
+                                        <span
+                                            class="d-inline-block rounded ml-1"
+                                            style="width: 12px; height: 12px; background: {{ tag | split: '__' | last | downcase }}">
+                                        </span>
+                                    {% endif %}
+                                </span>
+                                {% if current_tags contains tag %}
+                                    <small
+                                        class="collection-filter-counter text-muted d-inline-block ml-1">
+                                        {% if collection.products.size == 50 %}
+                                            50+
+                                        {% else %}
+                                            {{ collection.products.size }}
+                                        {% endif %}
+                                    </small>
+                                {% endif %}
+                            </label>
+                        </div>
+
+            {% if header != nextHeader %}
+                        <div class="py-2"></div>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% endif %}
+    {% endfor %}
+</div>

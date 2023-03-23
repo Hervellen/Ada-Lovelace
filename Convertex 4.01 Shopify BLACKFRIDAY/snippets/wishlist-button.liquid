@@ -1,0 +1,15 @@
+{% if settings.wishlist_enable %}
+   <button
+        class="wishlist-btn btn btn-link"
+        data-product-id="{{ product.id }}"
+        data-product-title="{{ product.title }}"
+        data-product-url="{{ product.url }}"
+        data-product-compare-price="{{ product.compare_at_price }}"
+        data-product-price="{{ product.price }}"
+        data-product-price-varies="{{ product.price_varies }}"
+        data-product-img-src="{{ product.featured_image.src | img_url: 'master' }}"
+        data-product-img-alt="{{ product.featured_image.alt | escape }}"
+        data-toggle="tooltip">
+        {% render 'icon-heart' size: 20 %}
+    </button>
+{% endif %}

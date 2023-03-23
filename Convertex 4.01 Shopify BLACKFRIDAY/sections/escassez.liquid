@@ -1,0 +1,156 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<div style="padding:5px;background: {{ section.settings.ofertabg }} !important; color: {{ section.settings.ofertalink }} !important;">
+
+    <div class="container {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+        <div class="row align-items-center text-center">
+            <div class="col-md-3">
+                <h3 style="color: {{ section.settings.oferta }} !important; font-weight: 400" class="title mb-1 h3">
+                    {% if section.settings.title %}
+                        {{ section.settings.title }}
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="col-md-6 d-none d-md-block">
+                 <span style="font: normal 20px/30px Montserrat, sans-serif; color: {{ section.settings.oferta }} !important;">
+                    {% if section.settings.title %}
+                        {{ section.settings.subt }}
+                    {% endif %}
+                 </span>
+            </div>
+            <div style="padding:5px" class="col-md-3">
+                    <div class="row d-flex justify-content-center align-items-center text-center">
+                        <div style="font-size: 16px; padding-right: 10px;">
+                            {% if section.settings.stopwatch-type == 'black-moving' %}
+                                <img data-src="{{ 'icons8-sand-timer.gif' | asset_url }}" srcset="{{ 'icons8-sand-timer.gif' | asset_url }}" alt="" loading="lazy" style="width: 40px;">
+                            {% endif %}
+                            {% if section.settings.stopwatch-type == 'colored-fixed' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" fill="currentColor"
+                                    class="bi bi-hourglass-split" viewBox="0 0 16 16">
+                                    <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
+                                </svg> 
+                            {% endif %}
+                        </div>
+                        <div style="font-size: 30px; font-weight: bold" id="dday"></div>
+                    </div>
+            </div>
+            <script>
+                if(!window.moment || typeof moment == 'undefined' || moment == null)
+                {
+                    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></' + 'script>');
+                }
+            </script>
+            <script>
+                // Update the count down every 1 second
+                const time = setInterval(function () {
+                    document.getElementById("dday").innerHTML = moment.utc(moment().endOf('day').diff()).format('HH:mm:ss');
+                }, 1000);
+            </script>
+        </div>
+    </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "Escassez diária",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Oferta do Dia"
+        },
+        {
+            "type": "color",
+            "id": "oferta",
+            "label": "Cor do titulo",
+            "default": "#e92626"
+         },
+        {
+            "type": "richtext",
+            "id": "subt",
+            "label": "Descrição",
+            "default": "<p>Todos os dias produtos especiais para você Mas corre que é por tempo limitado!</p>"
+        },
+        {
+            "type": "color",
+            "id": "ofertabg",
+            "label": "Background",
+            "default": "#fff"
+         },
+        {
+            "type": "color",
+            "id": "ofertalink",
+            "label": "Cronômetro",
+            "default": "#e92626"
+        },
+        {
+            "type": "select",
+            "id": "stopwatch-type",
+            "label": "Tipo de Cronômetro",
+            "options": [
+              {
+                "value": "colored-fixed",
+                "label": "Colorido Fixo"
+              },
+              {
+                "value": "black-moving",
+                "label": "Preto com Efeito"
+              }
+            ],
+            "default": "black-moving"
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 8
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 8
+        }
+    ],
+    "presets": [
+        {
+            "name": "Escassez diária",
+            "category": "home"
+        }
+    ]
+}
+{% endschema %}

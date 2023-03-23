@@ -1,0 +1,205 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<section
+    id="brands-{{ section.id }}"
+    class="brands {% if section.settings.bg_light %}bg-light{% endif %} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{% if section.settings.container %} container {% else %} container-fluid {% endif %}">
+
+        <!-- Title -->
+        <h2 class="title mb-1 {{ section.settings.title_size }} {{ section.settings.title_alignment }}">
+            {{ section.settings.title | escape }}
+        </h2>
+
+        <!-- Description -->
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }}">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+        <ul
+            class="brand-list text-center list-unstyled my-0"
+            data-speed="{{ section.settings.speed }}">
+
+            {% for block in section.blocks %}
+                <li class="d-inline-block p-1">
+                    {% if block.settings.url != blank %}
+                        <a href="{{ block.settings.url }}">
+                    {% endif %}
+
+                    {% assign img_size = section.settings.img_height | prepend: 'px' %}
+                    <img
+                        class="img-fluid"
+                        data-src="{{ block.settings.image | img_url: img_size, crop: 'center' }}"
+                        alt="{{ block.settings.image.alt }}"
+                        width="{{ section.settings.img_height | times: block.settings.image.aspect_ratio | round }}"
+                        height="{{ section.settings.img_height }}"
+                        loading="lazy">
+
+                    {% if block.settings.url != blank %}
+                        </a>
+                    {% endif %}
+                </li>
+            {% else %}
+                {% for i in (1..16) %}
+                    <li class="d-inline-block p-2">
+                        <a href="#">
+                            <div style="width: {{ section.settings.img_height | append: 'px' }}">
+                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg img-thumbnail img-fluid' }}
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+
+        </ul>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Marcas",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Marcas"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Marcas que você já ama"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Escreva algo atraente para esta seção.</p>"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do Título",
+            "default": "h4",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ],
+            "default": "text-center"
+        },
+        {
+            "type": "header",
+            "content": "Configurações Gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_light",
+            "label": "Background claro",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Tamanho do container",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "speed",
+            "label": "Velocidade do slider",
+            "min": 50,
+            "max": 500,
+            "step": 50,
+            "default": 50
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "90"
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 15,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image",
+            "name": "Imagem",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Imagem"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Marcas",
+            "category": "imagem"
+        }
+    ]
+}
+{% endschema %}

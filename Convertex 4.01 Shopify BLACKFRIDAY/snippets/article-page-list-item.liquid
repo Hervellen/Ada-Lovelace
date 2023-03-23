@@ -1,0 +1,45 @@
+<li
+    class="article-page-list-item product-item splide__slide px-2 py-4 text-center {% unless section.settings.animate_class == blank %}animate__animated animate__fast{% endunless %} {{ index | prepend: 'enter-view-step-' }}"
+    data-animate="{{ section.settings.animate_class }}">
+    <a class="product-link d-block text-decoration-none pt-1 pb-2 mb-2" href="{{ item.url }}">
+        <div class="misc-img-wrapper product-img-wrapper mb-3">
+
+            <!-- Image -->
+            {% assign img_width = section.settings.img_width | default: '480' %}
+            {% assign img_height = section.settings.img_height | default: '480' %}
+            {% assign img_size = img_width | append: 'x' | append: img_height %}
+            <img
+                class="misc-img product-img img-fluid {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                data-src="{{ item.image.src | img_url: img_size, crop: 'center' }}"
+                alt="{{ item.image.alt | escape }}"
+                width="{{ img_width }}"
+                height="{{ img_height }}"
+                loading="lazy">
+        </div>
+
+        <!-- Title -->
+        <h3 class="item-title product-title mb-1 {{ section.settings.product_title_heading_size }}">
+            {{ item.title }}
+        </h3>
+
+        <!-- Type -->
+        <span class="item-badge badge badge-secondary mb-2">
+            {% if item.object_type == 'article' %}
+                {{ 'search.result_article' | t }}
+            {% else %}
+                {{ 'search.result_page' | t }}
+            {% endif %}
+        </span>
+
+        <!-- Content -->
+        <p class="item-content text-muted">
+            {% if item.object_type == 'article' %}
+                {{ item.excerpt_or_content | strip_html | truncate: 60, '...' }}
+            {% else %}
+                {{ item.content  | strip_html | truncate: 60, '...' }}
+            {% endif %}
+        </p>
+
+    </a>
+
+</li>

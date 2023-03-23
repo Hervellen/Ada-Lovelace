@@ -1,0 +1,228 @@
+{% assign row_      =  section.settings.row_mobile | prepend: 'row-cols-' %}
+{% assign row_md    =  section.settings.row_tablet | prepend: 'row-cols-md-' %}
+{% assign row_lg    =  section.settings.row_desktop | prepend: 'row-cols-lg-' %}
+
+<section>
+
+    <!-- Header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-9">
+        <div class="container">
+
+            <h3 class="">
+                {% if search.performed %}
+                    <span
+                        class="sr-only">
+                        {{ 'search.heading' | t: count: search.results_count }}:
+                    </span>
+                    {{ 'search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+                {% else %}
+                    {{ 'search.title' | t }}
+                {% endif %}
+            </h3>
+
+            <form
+                action="/search"
+                method="get"
+                role="search"
+                id="search-page-form"
+                class="bg-light mt-3 mb-5 py-4 px-4 rounded has-search-types">
+                <div class="input-group input-group-{{ section.settings.search_form_size }} mb-0">
+                    <input
+                    type="search"
+                    name="q"
+                    id="Search"
+                    class="form-control"
+                    value="{{ search.terms | escape }}"
+                    placeholder="{{ 'search.label' | t }}"
+                    aria-label="{{ 'search.label' | t }}"
+                    required>
+
+                    <!--
+                    {% if section.settings.enable_search_types %}
+                        <select class="custom-select" name="type">
+                            <option disabled>{{ 'search.label' | t }}</option>
+                            <option value="product" selected >{{ 'search.predictive.tabs.products' | t }}</option>
+                            <option value="article" {% if settings.search_article %}selected{% endif %}>{{ 'search.predictive.tabs.articles' | t }}</option>
+                            <option value="page" {% if settings.search_page %}selected{% endif %}>{{ 'search.predictive.tabs.pages' | t }}</option>
+                        </select>
+                    {% endif %}
+                    -->
+
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">{{ 'search.submit' | t }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+        {% if search.results.size == 0 %}
+            <p
+                id="search-results-empty"
+                class="alert alert-warning my-5">
+                {{ 'search.no_results' | t }}
+            </p>
+        {% else %}
+
+            {% paginate search.results by section.settings.limit %}
+
+                <!-- Product list -->
+                <ul
+                    id="collection-product-list"
+                    class="product-list animated-list list-unstyled mx-n2 my-n4 row {{ row_ }} {{ row_md }} {{ row_lg }}"
+                    data-steps="{{ section.settings.row_mobile }}"
+                    data-steps-md="{{ section.settings.row_tablet }}"
+                    data-steps-lg="{{ section.settings.row_desktop }}">
+                    {% for item in search.results %}
+                        {% if item.object_type == 'product' %}
+                            {% render 'product-list-item' with item as product %}
+                        {% elsif item.object_type == 'article' and settings.search_article %}
+                            {% render 'article-page-list-item' with item as item %}
+                        {% elsif item.object_type == 'page' and settings.search_page %}
+                            {% render 'article-page-list-item' with item as item %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+                <!-- Default Pagination -->
+                <div class="{% if section.settings.infinite_scroll %}d-none{% endif %} pb-3">
+                    {% render 'pagination' with paginate: paginate %}
+                </div>
+
+                <!-- Infinite scroll spinner -->
+                {% if section.settings.infinite_scroll %}
+                    <div id="infinite-scroll-wrapper" class="js text-center" aria-hidden="true">
+                        <div
+                            id="infinite-scroll-spinner"
+                            class="d-none spinner-border text-primary mt-6"
+                            role="status"
+                            data-next-page="{{ paginate.next.url }}">
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% endpaginate %}
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+
+{% schema %}
+{
+    "name": "Search",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "infinite_scroll",
+            "label": "Rolagem infinita",
+            "info": "Oculte a paginação padrão e carregará os produtos na rolagem",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Produtos por página",
+            "min": 1,
+            "max": 50,
+            "step": 1,
+            "default": 16
+        },
+        {
+            "type": "header",
+            "content": "Configurações do produto"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "product_title_heading_size",
+            "label": "Tamanho do título",
+            "default": "h6",
+            "options": [
+                { "value": "h1", "label": "H1" },
+                { "value": "h2", "label": "H2" },
+                { "value": "h3", "label": "H3" },
+                { "value": "h4", "label": "H4" },
+                { "value": "h5", "label": "H5" },
+                { "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_rating",
+            "label": "Mostrar avaliação",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_price",
+            "label": "Mostrar preço",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Rows"
+        },
+        {
+            "type": "range",
+            "id": "row_mobile",
+            "label": "Produtos por linha / Mobile ",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "row_tablet",
+            "label": "Produtos por linha / Tablet ",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+            "label": "Produtos por linha / Desktop ",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,235 @@
+    <!-- Header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-7">
+        <div class="container">
+
+            <h3 class="">
+                {{ page.title }}
+            </h3>
+
+            {% unless section.settings.description == blank %}
+                <div class="rte lead text-muted">
+                    {{ section.settings.description }}
+                </div>
+            {% endunless %}
+
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Contact form -->
+        {% form 'contact', class: 'contact-form mb-8' %}
+
+            <!-- Form success -->
+            {% if form.posted_successfully? %}
+                <p class="form-success alert alert-success mb-4" role="alert">
+                    {{ 'general.contact.post_success' | t }}
+                </p>
+            {% endif %}
+
+            <!-- Form errors -->
+            {{ form.errors | default_errors }}
+
+            <!-- Form fields -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input
+                        class="form-control"
+                        type="text"
+                        name="contact[name]"
+                        id="ContactFormName"
+                        value="{{ customer.name }}"
+                        placeholder="{{ 'general.contact.name' | t }}"
+                        aria-label="{{ 'general.contact.name' | t }}"
+                        required>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <input
+                        class="form-control"
+                        type="email"
+                        name="contact[email]"
+                        id="ContactFormEmail"
+                        value="{{ customer.email }}"
+                        placeholder="{{ 'general.contact.email' | t }}"
+                        aria-label="{{ 'general.contact.email' | t }}"
+                        spellcheck="false"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        required>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <input
+                        class="form-control"
+                        type="tel"
+                        name="contact[phone]"
+                        id="ContactFormPhone"
+                        value="{{ customer.phone }}"
+                        placeholder="{{ 'general.contact.phone' | t }}"
+                        aria-label="{{ 'general.contact.phone' | t }}"
+                        pattern="[0-9\-]*">
+                </div>
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group">
+                <textarea
+                    class="form-control"
+                    rows="8"
+                    name="contact[body]"
+                    id="ContactFormMessage"
+                    placeholder="{{ 'general.contact.message' | t }}"
+                    aria-label="{{ 'general.contact.message' | t }}"
+                    required>
+                    {%- if form.body -%}
+                        {{- form.body -}}
+                    {%- endif -%}
+                </textarea>
+            </div>
+
+            <!-- Submit btn -->
+            <input
+                type="submit"
+                class="btn btn-primary"
+                value="{{ 'general.contact.send' | t }}">
+        {% endform %}
+    </div>
+
+    <!-- Google Maps -->
+    {% if section.settings.show_google_maps %}
+        <div id="google-maps" class="text-center mb-6">
+            <h2 class="">
+                {{ section.settings.google_maps_title }}
+            </h2>
+            {% if section.settings.google_maps_description != blank %}
+                <div class="rte text-muted mb-5">
+                    {{ section.settings.google_maps_description }}
+                </div>
+            {% endif %}
+            {{ section.settings.google_maps }}
+        </div>
+    {% endif %}
+
+    <!-- Blocks -->
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+
+            {% for block in section.blocks %}
+                <div class="my-2 text-center">
+                    <h3 class="h5">
+                        {{ block.settings.title | escape }}
+                    </h3>
+                    <div class="rte">
+                        {{ block.settings.description }}
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</article>
+
+{% schema %}
+{
+    "name": "Página de contato",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Sinta-se livre para nos contatar. Normalmente respondemos em minutos.</p>",
+            "info": "Deixe em branco para desativar"
+        },
+        {
+            "type": "header",
+            "content": "Google mapas"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_google_maps",
+            "label": "Mostrar mapas do Google",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "google_maps_title",
+            "label": "Título",
+            "default": "Endereço físico"
+        },
+        {
+            "type": "richtext",
+            "id": "google_maps_description",
+            "label": "Descrição",
+            "default": "<p>Brasilia, DF</p>",
+            "info": "Deixe em branco para desativar"
+        },
+        {
+            "type": "html",
+            "id": "google_maps",
+            "label": "Código de incorporação do Google Maps",
+            "info": "Observação: para exibir a largura total do Google Maps, altere o valor da largura dentro do código iframe acima para \"100%\"",
+            "default": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d292333.9842040409!2d-48.049138164105614!3d-15.699312822112349!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935a3d18df9ae275%3A0x738470e469754a24!2zQnJhc8OtbGlhLCBERg!5e0!3m2!1spt-BR!2sbr!4v1624808606180!5m2!1spt-BR!2sbr\" width=\"100%\" height=\"450\" frameborder=\"0\" style=\"border:0;\" allowfullscreen=\"\" aria-hidden=\"false\" tabindex=\"0\"></iframe>"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "Texto",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Título"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Descrição"
+                }
+            ]
+        }
+    ],
+    "default": {
+        "settings": {
+        },
+        "blocks": [
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Dias úteis",
+                    "description": "<p>Segunda-feira sexta-feira</p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Jornada de trabalho",
+                    "description": "<p>09:00 - 16:00</p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Prefere ligar?",
+                    "description": "<p><a href=\"tel:6390000-0000\" title=\"tel:690000-0000\">tel:63 9 0000-0000</a></p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Outro Bloco",
+                    "description": "<p>Escreva algo importante</p>"
+                }
+            }
+        ]
+    }
+}
+{% endschema %}

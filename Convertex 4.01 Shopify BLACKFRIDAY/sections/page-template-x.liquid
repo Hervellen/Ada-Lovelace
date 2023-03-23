@@ -1,0 +1,1715 @@
+
+<style>
+  :root {
+    --color-botao:  {{ section.settings.bt_whats }};
+    --color-hove:  {{ section.settings.bt_hove }};
+
+/* Botões */
+
+    --color-btn-botao:  {{ section.settings.btn_geral }};
+    --color-btn-hove:  {{ section.settings.btn_hove }};
+
+    --color-icone:  {{ section.settings.icone }};
+  }
+  .espaco{
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  .espacop{
+    padding-top: 20px;
+  }
+  .x {
+    max-width: 1000px;
+}
+.player {
+  border-radius: 2.0rem;
+  overflow: hidden;
+  z-index: 1;
+  height: 320px;
+  width: 100%;
+}
+.selo_item {
+  height: 40px;
+  margin: 4px;
+}
+.imagemlogo {
+  max-height: 150px;
+  padding-top: -20px;
+  padding-bottom: 10px;
+}
+.preco {
+  color: #FF2929 !important;
+
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 0rem !important;
+}
+@media (max-width: 600px) {
+  .x2 {
+       max-width: 85%;
+}}
+
+.fixed {
+  position: fixed;
+  border-radius: 0rem !important;
+  z-index: 8;
+  width: 100%;
+  bottom:0;
+}
+
+.tag{
+  border-radius: 2rem !important;
+  padding-top: 0.1rem !important;
+  padding-bottom: 0.1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  background: #ff5030 !important;
+  color: #fff !important;
+}
+  .espacox{
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .botao-lp{
+    background: var(--color-btn-botao) !important;
+    color: #fff !important;
+  }
+  .botao-lp:hover{
+    background: var(--color-btn-hove) !important;
+    color: #fff !important;
+  }
+
+  .botao-whats{
+    background: var(--color-botao) !important;
+    color: #fff !important;
+  }
+  .botao-whats:hover{
+    background: var(--color-hove) !important;
+    color: #fff !important;
+  }
+  .redondo{
+    border-radius: 2rem ;
+    padding: .5rem 2rem !important;
+  }
+  .redondo2{
+    border-radius: 2.5rem !important;
+    background: #000;
+    color: #fff;
+
+  }
+
+
+  .benef li {
+    padding: 6px;
+  }
+
+.icone {
+  color: var(--color-icone) !important;
+  margin: 4px;
+}
+.icone:hover {
+  opacity: 90% !important;
+}
+.star {
+color: #ffa20c !important;
+}
+.star:hover {
+  opacity: 90% !important;
+  }
+.card-header:first-child {
+  border-radius: 1rem !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+ }
+.card-header {
+  padding: .75rem 1.25rem;
+  margin-bottom: 10px;
+  background: #000;
+  color: #fff !important;
+  border-radius: 10px;
+  radius: 20px;
+}
+.link {
+
+  color: #fff !important;
+}
+
+.card-header:hover {
+  opacity: 90% !important;
+}
+
+
+.btn-pulse {
+    animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% {
+        -webkit-transform: scale3d(1,1,1);
+        transform: scale3d(1,1,1);
+    }
+    50% {
+        -webkit-transform: scale3d(1.05,1.05,1.05);
+        transform: scale3d(1.05,1.05,1.05);
+    }
+    100% {
+        -webkit-transform: scale3d(1,1,1);
+        transform: scale3d(1,1,1);
+    }
+    }
+
+  .bg3{
+  color: #fff;
+  background: #262626;
+  padding-top: 55px;
+}
+
+.verificado{
+  color: #2179ff;
+}
+
+.owl-carousel .owl-nav button.owl-next,
+.owl-carousel .owl-nav button.owl-prev {
+  background: 0 0;
+  color: #1E88E5 !important;
+  border: none;
+  padding: 5px 20px !important;
+  font: inherit;
+  font-size: 50px !important
+}
+
+.owl-carousel .owl-nav button.owl-next:hover,
+.owl-carousel .owl-nav button.owl-prev:hover {
+  color: #0D47A1 !important;
+  background-color: transparent !important
+}
+
+.owl-dots {
+  display: none
+}
+
+button:focus {
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  outline-width: 0
+}
+
+.item {
+  display: none
+}
+
+.next {
+  display: block !important;
+  position: relative;
+  transform: scale(0.8);
+  transition-duration: 0.3s;
+  opacity: 0.6
+}
+
+.prev {
+  display: block !important;
+  position: relative;
+  transform: scale(0.8);
+  transition-duration: 0.3s;
+  opacity: 0.6
+}
+
+.item.show {
+  display: block;
+  transition-duration: 0.4s
+}
+
+@media screen and (max-width: 999px) {
+
+  .next,
+  .prev {
+      transform: scale(1);
+      opacity: 1
+  }
+
+  .item {
+      display: block !important
+  }
+}
+</style>
+
+{% layout 'full.lp' %}
+<script>
+  if(!window.jQuery || typeof jQuery == 'undefined' || jQuery == null)
+    {
+          document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></' + 'script>');
+    }
+</script>
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+});
+</script>
+
+<!--//ABRE STICKY -->
+<script>
+
+  $(window).scroll(function(){
+    var sticky = $('.sticky'),
+        scroll = $(window).scrollTop();
+    if (scroll >= 1800) sticky.addClass('fixed').fadeIn();
+    else sticky.removeClass('fixed').fadeOut();
+  });
+</script>
+
+<script>
+
+  $(document).ready(function() {
+
+    $('.owl-carousel').owlCarousel({
+    mouseDrag:false,
+    loop:true,
+    margin:2,
+    nav:true,
+    responsive:{
+    0:{
+    items:1
+    },
+    600:{
+    items:1
+    },
+    1000:{
+    items:3
+    }
+    }
+    });
+
+    $('.owl-prev').click(function() {
+    $active = $('.owl-item .item.show');
+    $('.owl-item .item.show').removeClass('show');
+    $('.owl-item .item').removeClass('next');
+    $('.owl-item .item').removeClass('prev');
+    $active.addClass('next');
+    if($active.is('.first')) {
+    $('.owl-item .last').addClass('show');
+    $('.first').addClass('next');
+    $('.owl-item .last').parent().prev().children('.item').addClass('prev');
+    }
+    else {
+    $active.parent().prev().children('.item').addClass('show');
+    if($active.parent().prev().children('.item').is('.first')) {
+    $('.owl-item .last').addClass('prev');
+    }
+    else {
+    $('.owl-item .show').parent().prev().children('.item').addClass('prev');
+    }
+    }
+    });
+
+    $('.owl-next').click(function() {
+    $active = $('.owl-item .item.show');
+    $('.owl-item .item.show').removeClass('show');
+    $('.owl-item .item').removeClass('next');
+    $('.owl-item .item').removeClass('prev');
+    $active.addClass('prev');
+    if($active.is('.last')) {
+    $('.owl-item .first').addClass('show');
+    $('.owl-item .first').parent().next().children('.item').addClass('prev');
+    }
+    else {
+    $active.parent().next().children('.item').addClass('show');
+    if($active.parent().next().children('.item').is('.last')) {
+    $('.owl-item .first').addClass('next');
+    }
+    else {
+    $('.owl-item .show').parent().next().children('.item').addClass('next');
+    }
+    }
+    });
+
+    });
+</script>
+<!--//FECHA STICKY -->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+
+
+{% for block in section.blocks %}
+
+
+
+<!--//ABRE 1 SEÇÃO - PROMOÇÃO -->
+  {% if block.type == 'richtext' %}
+<section class="py-5 py-md-7 bg3" id="home" style="background:{{ block.settings.bg_cor}}; color:{{ block.settings.bglink}};">
+    <div class="container x espaco ">
+        <div class="row">
+            <div class="col-md-6 my-md-auto mb-5 mb-md-0 text-center text-md-left " >
+              {% if block.settings.tag != blank %} <span class="tag text-uppercase text-muted small-xl">{{ block.settings.tag}}</span>{% endif %}
+                <h3>{{ block.settings.htm}}</h3>
+
+               <!--//ABRE AVALIAÇÕES -->
+               {% if block.settings.star != blank %}
+                <span class="star">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                  </svg>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                  </svg>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                  </svg>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                  </svg>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-half" viewBox="0 0 16 16">
+                    <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"/>
+                  </svg>
+                 </span>
+                 <p> 4.80/5 (389 Avaliações)</p>
+              {% endif %} <!--//FECHA AVALIAÇÕES -->
+                <br>
+                <a href="#comprar" class="btn  botao-lp {% if section.settings.borda %} redondo  {% endif %} btn-pulse btn-lg d-inline-flex flex-row align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag mr-2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                   Aproveitar oferta
+                </a>
+
+
+            </div>
+            <div class="col-md-6 play-wrapper">
+              <img  class="img-fluid"  src="{{ block.settings.imgp | img_url:''}}" alt="image" >
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endif %}
+<!--//FECHA 1 SEÇÃO - PROMOÇÃO -->
+
+<!--//ABRE BENEFICIOS COPY -->
+  {% if block.type == 'html' %}
+<section id="content-section" class="content-section " style="background:{{ block.settings.bg_cor}}; color:{{ block.settings.bglink}};">
+    <div class="container x espaco">
+      <div class="row">
+        <div class="col-12 col-md-6 mb-5">
+          <h2>{{ block.settings.title}}</h2>
+          <p>{{ block.settings.htm }}</p>
+          <br>
+          {% if block.settings.botaoinfo != blank %}
+          <a class="btn  {% if section.settings.borda %} redondo  {% endif %} btn-pulse  btn-outline-light btn-lg" href="{{ block.settings.botaoinfo }}">{{ block.settings.textobotaoinfo }}</a>{% endif %}
+
+    </div>
+
+    <div class="col-12 col-md-6 mb-5">
+      <img class="img-fluid" src="{{ block.settings.imgp | img_url:''}}" alt="image" >
+  </div>
+
+
+  </div>
+  </div>
+    </section>
+  {% endif %}
+<!--//FECHA BENEFICIOS COPY -->
+<!-- ABRE SEÇÃO BENEFICIOS - LIST  -->
+  {% if block.type == 'social' %}
+<section id="content-section" class="content-sectionanimate__animated animate__fadeInLeft animate__delay-1s" style="background:{{ block.settings.bg_cor}}; color:{{ block.settings.linkcor}};">
+    <div class="container x espaco">
+        <div class="single-col-max mx-auto">
+        <h2 class="section-heading text-center mb-5">{{ block.settings.title}}</h2>
+        <h6 class="text-center">{{ block.settings.sub}}</h6>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-5">
+                    <div class="key-points mb-4 text-center">
+                        <ul class="key-points-list list-unstyled mb-4 mx-auto d-inline-block text-left benef animate__animated animate__fadeInLeft animate__delay-1s">
+                          {% if block.settings.p1 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p1}}{% else %}</li>{% endif %}
+                          {% if block.settings.p2 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p2}}{% else %}</li>{% endif %}
+                          {% if block.settings.p3 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p3}}{% else %}</li>{% endif %}
+                          {% if block.settings.p4 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p4}}{% else %}</li>{% endif %}
+                          {% if block.settings.p5 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p5}}{% else %}</li>{% endif %}
+                          {% if block.settings.p6 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p6}}{% else %}</li>{% endif %}
+                          {% if block.settings.p7 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p7}}{% else %}</li>{% endif %}
+                          {% if block.settings.p8 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p8}}{% else %}</li>{% endif %}
+                          {% if block.settings.p9 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p9}}{% else %}</li>{% endif %}
+                          {% if block.settings.p10 != blank %}
+                            <li><span class="icone">{{ block.settings.icon }}</span></i> {{ block.settings.p10}}{% else %}</li>{% endif %}
+
+                          </ul>
+                          <br>
+                          <br>
+
+
+                          {% if block.settings.botaobene != blank %}
+                        <a class="btn  {% if section.settings.borda %} redondo  {% endif %} btn-pulse  btn-outline-light btn-lg" href="{{ block.settings.botaobene }}">{{ block.settings.textobotaobene }}</a>{% endif %}
+                    </div><!--//key-points-->
+
+                </div><!--//col-12-->
+
+                <div class="col-12 col-md-6 justify-content-center ">
+                    <div class="figure-holder mb-5">
+                      <div class="espacop"></div>
+                      {% if block.settings.img != blank %}
+                        <img class="img-fluid" src="{{ block.settings.img | img_url:''}}" alt="image" >
+                        {% else %}
+                        <div class="player">
+                        <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}" title="YouTube video player" frameborder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+
+                    </div>  {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endif %}
+
+<!-- FECHA BENEFICIOS - LIST -->
+
+
+<!-- ABRE SEÇÃO PROVA SOCIAL -->
+  {% if block.type == 'image' %}
+    <section class="pb-4 espaco" id="prova">
+<div class="container px-3 px-sm-5 my-5 text-center">
+  <h4 class="mb-5 font-weight-bold">VEJA O QUE ESTÃO DIZENDO</h4>
+
+  <span class="star">
+  	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+     <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+    </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+      <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+    </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+      <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+    </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+      <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+    </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-half" viewBox="0 0 16 16">
+      <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z"/>
+    </svg>
+  </span>
+  <p> 4.80/5 (389 Avaliações)</p>
+  <div class="owl-carousel owl-theme">
+      <div class="item first prev">
+          <div class="card border-0 py-3 px-4">
+            <div class="justify-content-center"><img class="img-fluid redondo2" src="{{ block.settings.imgprova1 | img_url:''}}" alt="image" >  </div>
+            <h6 class="mb-3 mt-2">{{ block.settings.prova1nome}}  <span class="verificado"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+              <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+            </svg></span></h6>
+            <p class="content mx-2">{{ block.settings.prova1 }}</p>
+          </div>
+      </div>
+      <div class="item show">
+          <div class="card border-0 py-3 px-4">
+              <div class="justify-content-center"><img class="img-fluid redondo2" src="{{ block.settings.imgprova2 | img_url:''}}" alt="image" >  </div>
+              <h6 class="mb-3 mt-2">{{ block.settings.prova2nome}} <span class="verificado"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+              </svg></span></h6>
+              <p class="content  mx-2">{{ block.settings.prova2 }}</p>
+          </div>
+      </div>
+      <div class="item next">
+          <div class="card border-0 py-3 px-4">
+            <div class="justify-content-center"><img class="img-fluid redondo2" src="{{ block.settings.imgprova3 | img_url:''}}" alt="image" >  </div>
+            <h6 class="mb-3 mt-2">{{ block.settings.prova3nome}} <span class="verificado"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+              <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+            </svg></span></h6>
+            <p class="content mx-2">{{ block.settings.prova3 }}</p>
+          </div>
+      </div>
+      <div class="item last">
+          <div class="card border-0 py-3 px-4">
+            <div class="justify-content-center"><img class="img-fluid redondo2" src="{{ block.settings.imgprova4 | img_url:''}}" alt="image" >  </div>
+              <h6 class="mb-3 mt-2">{{ block.settings.prova4nome}} <span class="verificado"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
+                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+              </svg></span></h6>
+              <p class="content  mx-2">{{ block.settings.prova4 }}</p>
+      </div>
+  </div>
+</div>
+</section>
+{% endif %}
+<!-- FECHA SEÇÃO PROVA SOCIAL -->
+
+<!-- ABRE SEÇÃO VENDA -->
+
+{% if block.type == 'text' %}
+<section class="pb-4" id="comprar">
+  <div class="container x espaco x2">
+
+    <h2 class="section-heading text-center mb-5">{{ block.settings.titlec }}</h2>
+
+ <!-- ABRE TEMPORIDAZOR -->  {% if block.settings.time != blank %}
+ <div class="redondo x" style="background:   !important; color: #FF5030 !important;" >
+ <div class="row d-flex justify-content-center">
+   <div class="col-md-3 col-12" >
+    <div  class="text-center" style=" font-size: 22px;  padding-top: 5px; ">Oferta termina em:</div>
+  </div>
+
+    <div class="col-md-1 col-3">
+
+  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="40" fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
+  </svg>
+
+    </div>
+  <div class="col-md-2 col-9">
+    <div style=" font-size: 32px; padding-left: 0px; font-weight: bold" id="dday"></div>
+  </div>
+
+</div>
+</div>
+          <script>
+              if(!window.moment || typeof moment == 'undefined' || moment == null)
+              {
+                  document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></' + 'script>');
+              }
+          </script>
+        <script>
+            // Update the count down every 1 second
+            const time = setInterval(function () {
+                document.getElementById("dday").innerHTML = moment.utc(moment().endOf('day').diff()).format('HH:mm:ss');
+            }, 1000);
+        </script>
+
+  <h6 class="text-center"> {{ block.settings.richtext }}</h6>
+      {% endif %}    <!-- FECHA TEMPORIDAZOR -->
+
+
+      <br><br>
+    <div class="card-deck mb-3 text-center">
+
+
+      <div class="card mb-4 shadow-sm redondo2 animate__animated animate__fadeInLeft " style="background-color: {{ block.settings.bg}};">
+        <h4  style="color: {{ block.settings.t1}};" class="espacox">{{ block.settings.title }}</h4>
+           <div class="card-body" style="background: #fff; margin-right: 10px; margin-left: 10px; color: #000; ">
+               <ul class="list-unstyled mt-3 mb-4">
+         <img class="card-img-top" src="{{ block.settings.img | img_url:''}}"/>
+          <li>{{ block.settings.de }}</li>
+          <h2 class="preco">{{ block.settings.por }}</h2>
+          <li>{{ block.settings.ou }}</li>
+        </ul>
+
+        <a href="{{ block.settings.c1 }}" class="btn  botao-lp {% if section.settings.borda %} redondo  {% endif %} btn-pulse btn-lg d-inline-flex flex-row align-items-center">
+          {{ block.settings.bttx }}
+      </a>
+
+       </div>
+       <div class="espacox" style="margin-right: 20px; margin-left: 20px;">
+       {% if block.settings.imgg != blank %}
+        <img class="card-img-top" src="{{ block.settings.imgg | img_url:''}}"/>
+      {% endif %}
+       </div>
+      </div>
+
+
+
+
+      <div class="card mb-4 shadow-sm redondo2 animate__animated animate__fadeInLeft " style="background-color: {{ block.settings.bg2}};">
+        <h4  style="color: {{ block.settings.t2}};" class="espacox">{{ block.settings.title2 }}</h4>
+           <div class="card-body" style="background: #fff; margin-right: 10px; margin-left: 10px; color: #000; ">
+               <ul class="list-unstyled mt-3 mb-4">
+         <img class="card-img-top" src="{{ block.settings.img2 | img_url:''}}"/>
+          <li>{{ block.settings.de2 }}</li>
+          <h2 class="preco">{{ block.settings.por2 }}</h2>
+          <li>{{ block.settings.ou2 }}</li>
+        </ul>
+
+        <a href="{{ block.settings.c2 }}" class="btn  botao-lp {% if section.settings.borda %} redondo  {% endif %}btn-pulse btn-lg d-inline-flex flex-row align-items-center">
+          {{ block.settings.bttx2 }}
+      </a>
+
+       </div>
+
+       <div class="espacox" style="margin-right: 20px; margin-left: 20px;">
+        {% if block.settings.imgg2 != blank %}
+        <img class="card-img-top" src="{{ block.settings.imgg2 | img_url:''}}"/>
+      {% endif %}
+       </div>
+      </div>
+
+
+
+
+      <div class="card mb-4 shadow-sm redondo2 animate__animated animate__fadeInLeft " style="background-color: {{ block.settings.bg3}};">
+        <h4  style="color: {{ block.settings.t3}};" class="espacox">{{ block.settings.title3 }}</h4>
+           <div class="card-body" style="background: #fff; margin-right: 10px; margin-left: 10px; color: #000; ">
+               <ul class="list-unstyled mt-3 mb-4">
+         <img class="card-img-top" src="{{ block.settings.img3 | img_url:''}}"/>
+          <li>{{ block.settings.de3 }}</li>
+          <h2 class="preco">{{ block.settings.por3 }}</h2>
+          <li>{{ block.settings.ou3 }}</li>
+        </ul>
+
+        <a href="{{ block.settings.c3 }}" class="btn  botao-lp {% if section.settings.borda %} redondo  {% endif %} btn-pulse btn-lg d-inline-flex flex-row align-items-center">
+          {{ block.settings.bttx3 }}
+      </a>
+
+       </div>
+
+       <div class="espacox" style="margin-right: 20px; margin-left: 20px;">
+       {% if block.settings.imgg3 != blank %}
+        <img class="card-img-top" src="{{ block.settings.imgg3 | img_url:''}}"/>
+      {% endif %}
+       </div>
+      </div>
+
+
+
+    </div>
+</div>
+</section>
+{% endif %}
+{%endfor%}
+<!-- FECHA SEÇÃO VENDA -->
+
+
+{% for block in section.blocks %}
+  {% if block.type == 'button' %}
+<div class="container x espaco">
+          <h2 class=" text-center ">{{ block.settings.title }}</h2>
+          <div class="espacop"></div>
+
+            <div id="accordion">
+                <div class="card">
+                  <div class="card-header" id="headingOne">
+                    <h5 class="mb-0" ><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                      <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                    </svg></span>
+                      <button class="btn link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" >
+                        {{ block.settings.faq1 }}
+                      </button>
+                    </h5>
+                  </div>
+
+                  <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                    {{ block.settings.faqr1 }}</div>
+                  </div>
+                </div>
+
+                {% if block.settings.faq2  != blank %}
+                <div class="card">
+                  <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                      <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                    </svg></span>
+                      <button class="btn link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        {{ block.settings.faq2 }}
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                      {{ block.settings.faqr2 }}</div>
+                  </div>
+                </div>
+              {% endif %}
+              {% if block.settings.faq3  != blank %}
+                <div class="card">
+                  <div class="card-header" id="headingThree">
+                    <h5 class="mb-0"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                      <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                    </svg></span>
+                      <button class="btn link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      {{ block.settings.faq3 }}
+                      </button>
+                    </h5>
+                  </div>
+                  <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                      {{ block.settings.faqr3 }}
+                    </div>
+                  </div>
+                {% endif %}
+                  {% if block.settings.faq4  != blank %}
+                  <div class="card">
+                    <div class="card-header" id="headingFoor">
+                      <h5 class="mb-0"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                      </svg></span>
+                        <button class="btn link collapsed" data-toggle="collapse" data-target="#collapseFoor" aria-expanded="false" aria-controls="collapseFoor">
+                        {{ block.settings.faq4 }}
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseFoor" class="collapse" aria-labelledby="collapseFoor" data-parent="#accordion">
+                      <div class="card-body">
+                        {{ block.settings.faqr4 }}
+                      </div>
+                    </div>
+                  {% endif %}
+                    {% if block.settings.faq5  != blank %}
+                    <div class="card">
+                      <div class="card-header" id="headingFive">
+                        <h5 class="mb-0"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                          <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                        </svg></span>
+                          <button class="btn link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                          {{ block.settings.faq5 }}
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                        <div class="card-body">
+                          {{ block.settings.faqr5 }}
+                        </div>
+                      </div>
+
+
+
+                    </div>  {% endif %}
+
+                </div>
+               </div>
+              </div>
+ </div>
+
+{% endif %}
+{% endfor %}
+
+
+ <section class="pb-4 bg3" id="footer">
+ <div class="container x espaco ">
+<div class="row">
+<div class="col-md-6 col-lg-5">
+  {% if section.settings.sobre != blank %}
+
+    {% if section.settings.imagemlogo != blank %}
+      <img class="imagemlogo" src="{{ section.settings.imagemlogo | img_url:''}}"/>
+    {% endif %}
+<div class="block-23 mb-3">
+<ul class="list-unstyled">
+<li><span class="text"> {{ section.settings.sobre }}</span></li>
+
+<a href="https://wa.me/55{{ section.settings.numerowhats }}?text={{ section.settings.whatsfrase }} {{shop.url}}{{page.url}}" class="btn botao-whats {% if section.settings.borda %} redondo  {% endif %}  align-items-center btn-lg" style="margin-top:30px;" >
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+  </svg>
+  {{ section.settings.textowhats }}
+</a>
+
+</ul>
+</div>
+</div>
+{% endif %}
+   <!-- Linklist block -->
+
+
+<div class="col-md-4 col-lg-4 ">
+
+<ul class="list-unstyled">
+  {% for block in section.blocks %}
+    {% if block.type == 'link_list' %}
+  <h4 class="footer-heading d-flex align-items-center"><span class="icon d-flex align-items-center justify-content-center"></span>{{ block.settings.title }}</h4>
+  {% for link in linklists[block.settings.menu].links %}
+<li><a href="{{ link.url }}" class="py-1 d-block"> {{ link.title }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endfor %}
+</div>
+
+
+
+   <!-- Linklist block
+<div class="col-md-3 col-lg-3">
+    <h4 class="footer-heading d-flex align-items-center"><span class="icon d-flex align-items-center justify-content-center"></span>Informações extra</h4>
+    <ul class="list-unstyled">
+    <li><a href="#" class="py-1 d-block">Politica</a></li>
+    <li><a href="#" class="py-1 d-block">Politica</a></li>
+    <li><a href="#" class="py-1 d-block">Politica</a></li>
+    <li><a href="#" class="py-1 d-block">Politica</a></li>
+    <li><a href="#" class="py-1 d-block">Politica</a></li>
+    </ul>
+    </div>-->
+</div>
+
+</section>
+
+<section>
+  <div class="container">
+  <div class="row">
+  <div class="col-md-5 col-12" >
+    <!-- Payment icons -->
+        <div class="social-icons" style="margin-top: 20px">
+          <p class="text-center">Formas de pagamento</p>
+            <div class="payment-list list-unstyled d-flex justify-content-center">
+
+                <img class="payment-list__item" src="{{ 'amex.svg' | asset_url }}">
+                <img class="payment-list__item" src="{{ 'boleto.svg' | asset_url }}">
+                <img class="payment-list__item" src="{{ 'mastercard.svg' | asset_url }}">
+                <img class="payment-list__item" src="{{ 'visa.svg' | asset_url }}">
+                <img class="payment-list__item" src="{{ 'elo.svg' | asset_url }}">
+                <img class="payment-list__item" src="{{ 'icon-pix.png' | asset_url }}">
+            </div>
+        </div>
+</div>
+
+  <div class="col-md-4 col-12" style="margin-top: 20px">
+    <div class="social-icons">
+      <p class="text-center">Segurança</p>
+        <div class="payment-list list-unstyled d-flex justify-content-center">
+            <a href="https://transparencyreport.google.com/safe-browsing/search?url={{ shop.url }}%2F&amp;hl=pt_BR" target="_blank">
+                <img class="payment-list__item-security" src="{{ 'google-safe-browsing-icon.png' | asset_url }}">
+            </a>
+            <img class="payment-list__item-security" src="{{ 'pci-security-icon.png' | asset_url }}">
+        </div>
+    </div>
+
+</div></div>
+</div>
+</section>
+
+<p class="text-center espaco">Copyright <script>document.write(new Date().getFullYear());</script> Todos os direitos reservados.</p>
+
+
+
+{% if section.settings.compra != blank %}
+<a href="{{ section.settings.botaoflut }}" class="btn sticky  botao-lp redondo  align-items-center btn-lg">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag mr-2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+  {{ section.settings.textbotaoflut }}
+</a>
+{% endif %}
+
+      {% schema %}
+      {
+        "name": "Landingx",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Configurações do rodapé"
+        },
+
+          {
+            "type": "image_picker",
+            "id": "imagemlogo",
+            "label": "Logo do Rodapé"
+        },
+
+          {
+            "type": "richtext",
+            "id": "sobre",
+            "label": "sobre",
+            "default": "<p>Horário Comercial:<br> Seg à Sex: 09:00h às 18:00h, exceto feriados.</p>"
+          },
+
+          {
+            "type": "text",
+            "id": "textowhats",
+            "label": "Texto do botão WhatsApp",
+            "default": "Atendimento via WhatsApp"
+        },
+
+        {
+          "type": "text",
+          "id": "numerowhats",
+          "label": "Numero de Whatsapp",
+          "info": "Coloque dessa forma (63992029347) sendo (63) o DDD.",
+          "default": "630000000"
+
+      },
+      {
+        "type": "text",
+        "id": "whatsfrase",
+        "label": "Texto Padrão",
+        "default": "Olá, gostaria de saber como posso comprar o produto de vocês:"
+    },
+      {
+        "type": "color",
+        "id": "bt_whats",
+        "label": "Cor do Botão Whats",
+        "default": "#20C200"
+    },
+    {
+      "type": "color",
+      "id": "bt_hove",
+      "label": "Ao passar o mouse",
+      "default": "#309D1D"
+  },
+      {
+        "type": "header",
+        "content": "Configurações Gerais"
+    },
+
+    {
+      "type": "color",
+      "id": "btn_geral",
+      "label": "Cor dos botões",
+      "default": "#ff5030"
+  },
+  {
+    "type": "color",
+    "id": "btn_hove",
+    "label": "Ao passar o mouse",
+    "default": "#FFA425"
+},
+
+{
+  "type": "color",
+  "id": "icone",
+  "label": "Cor do icone beneficios",
+  "default": "#fff",
+  "info": "Essa opção altera a cor dos icones na seção beneficios"
+},
+            {
+              "type": "checkbox",
+              "id": "compra",
+              "label": "Botão de compra Flutuante",
+              "default": true
+          },
+          {
+            "type": "text",
+            "id": "textbotaoflut",
+            "label": "Texto do botão Flutuante",
+            "default": "COMPRAR AGORA"
+        },
+          {
+            "type": "url",
+            "id": "botaoflut",
+            "label": "URL do botão Flutuante",
+            "info": "Coloque (#comprar) para levar a seção do produto"
+        },
+
+          {
+            "type": "checkbox",
+            "id": "borda",
+            "label": "Borda do botão arredondada",
+            "default": true
+        }
+          ],
+
+          "blocks": [
+            {
+              "type": "text",
+              "name": "Box de produtos",
+              "limit": 1,
+              "settings": [
+                {
+                    "type": "header",
+                    "content": "Configurações do produto"
+                },
+                {
+                  "type": "text",
+                  "id": "titlec",
+                  "label": "Titulo da seção",
+                  "default": "Garanta já o seu!"
+
+                },
+                {
+                  "type": "richtext",
+                  "id": "richtext",
+                  "label": "Texto da oferta",
+                  "default": "<p>Esta é uma oferta especial e é válida até a meia noite de hoje.</p>"
+                },
+              {
+                "type": "checkbox",
+                "id": "time",
+                "label": "Oferta termina em",
+                "default": true
+            },
+
+                {
+                  "type": "header",
+                  "content": "Produto 01"
+              },
+
+              {
+                "type": "text",
+                "id": "title",
+                "label": "Titulo",
+                "default": "Titulo do produto"
+              },
+
+              {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Imagem"
+                },
+
+                {
+                  "type": "richtext",
+                  "id": "de",
+                  "label": "Preço do produto de",
+                  "default": "<p>de R$540 por:</p>"
+                },
+
+                {
+                  "type": "richtext",
+                  "id": "por",
+                  "label": "Preço do produto",
+                  "default": "<p>R$ 39,90</p>"
+                },
+                {
+                  "type": "richtext",
+                  "id": "ou",
+                  "label": "Ou à vista",
+                  "default": "<p>ou R$ 390 À VISTA</p>"
+                },
+
+                {
+                  "type": "text",
+                  "id": "bttx",
+                  "label": "Texto do botão",
+                  "default": "Comprar agora"
+                },
+                {
+                    "type": "url",
+                    "id": "c1",
+                    "label": "URL do botão"
+                },
+
+                {
+                  "type": "color",
+                  "id": "t1",
+                  "label": "Cor do titulo",
+                  "default": "#fff"
+               },
+                {
+                    "type": "color",
+                    "id": "bg",
+                    "label": "Cor do Background",
+                    "default": "#000"
+                 },
+
+               {
+                "type": "image_picker",
+                "id": "imgg",
+                "label": "Imagem do rodapé do produto",
+                "info": "Ideal para selos e formas de pagamento"
+            },
+
+                 {
+                  "type": "header",
+                  "content": "Produto 02"
+              },
+
+              {
+                "type": "text",
+                "id": "title2",
+                "label": "Titulo",
+                "default": "Titulo do produto"
+              },
+
+              {
+                    "type": "image_picker",
+                    "id": "img2",
+                    "label": "Imagem"
+                },
+
+                {
+                  "type": "richtext",
+                  "id": "de2",
+                  "label": "Preço do produto de",
+                  "default": "<p>de R$540 por:</p>"
+                },
+
+                {
+                  "type": "richtext",
+                  "id": "por2",
+                  "label": "Preço do produto",
+                  "default": "<p>R$ 39,90</p>"
+                },
+                {
+                  "type": "richtext",
+                  "id": "ou2",
+                  "label": "Ou à vista",
+                  "default": "<p>ou R$ 390 À VISTA</p>"
+                },
+
+                {
+                  "type": "text",
+                  "id": "bttx2",
+                  "label": "Texto do botão",
+                  "default": "Comprar agora"
+                },
+                {
+                    "type": "url",
+                    "id": "c2",
+                    "label": "URL do botão"
+                },
+                {
+                  "type": "color",
+                  "id": "t2",
+                  "label": "Cor do titulo",
+                  "default": "#fff"
+               },
+                {
+                    "type": "color",
+                    "id": "bg2",
+                    "label": "Cor do background",
+                    "default": "#000"
+                 },
+
+                 {
+                  "type": "image_picker",
+                  "id": "imgg2",
+                  "label": "Imagem do rodapé do produto",
+                  "info": "Ideal para selos e formas de pagamento"
+              },
+
+
+                 {
+                  "type": "header",
+                  "content": "Produto 03"
+              },
+
+              {
+                "type": "text",
+                "id": "title3",
+                "label": "Titulo",
+                "default": "Titulo do produto"
+              },
+
+              {
+                    "type": "image_picker",
+                    "id": "img3",
+                    "label": "Imagem"
+                },
+
+                {
+                  "type": "richtext",
+                  "id": "de3",
+                  "label": "Preço do produto de",
+                  "default": "<p>de R$540 por:</p>"
+                },
+
+                {
+                  "type": "richtext",
+                  "id": "por3",
+                  "label": "Preço do produto",
+                  "default": "<p>R$ 39,90</p>"
+                },
+                {
+                  "type": "richtext",
+                  "id": "ou3",
+                  "label": "Ou à vista",
+                  "default": "<p>ou R$ 390 À VISTA</p>"
+                },
+
+                {
+                  "type": "text",
+                  "id": "bttx3",
+                  "label": "Texto do botão",
+                  "default": "Comprar agora"
+                },
+                {
+                    "type": "url",
+                    "id": "c3",
+                    "label": "URL do botão"
+                },
+
+                {
+                  "type": "color",
+                  "id": "t3",
+                  "label": "Cor do titulo",
+                  "default": "#fff"
+               },
+                {
+                    "type": "color",
+                    "id": "bg3",
+                    "label": "Cor do background",
+                    "default": "#000"
+                 },
+
+                 {
+                  "type": "image_picker",
+                  "id": "imgg3",
+                  "label": "Imagem do rodapé do produto",
+                  "info": "Ideal para selos e formas de pagamento"
+              }
+
+              ]
+            },
+
+            {
+              "type": "social",
+              "name": "Beneficios",
+              "limit": 2,
+              "settings": [
+
+                {
+                  "type": "text",
+                  "id": "title",
+                  "label": "Grande promessa",
+                  "default": "Grande promessa"
+                },
+                {
+                  "type": "color",
+                  "id": "bg_cor",
+                  "label": "Cor do background",
+                  "default": "#000"
+              },
+              {
+                "type": "color",
+                "id": "linkcor",
+                "label": "Cor do link",
+                "default": "#fff"
+            },
+                {
+                  "type": "richtext",
+                  "id": "sub",
+                  "label": "Subtitulo"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Imagem"
+                },
+
+                {
+                  "id": "video_url",
+                  "type": "video_url",
+                  "label": "Video URL",
+                  "accept": ["youtube", "vimeo"],
+                  "default": "https://www.youtube.com/watch?v=ZaGWdqhy3tQ",
+                  "info": "Remova a imagem para que o vídeo seja visivel",
+                  "placeholder": "Text"
+               },
+                {
+                    "type": "url",
+                    "id": "botaobene",
+                    "label": "URL do botão",
+                    "info": "Coloque (#comprar) para levar a seção do produto"
+                 },
+                {
+                  "type": "text",
+                  "id": "textobotaobene",
+                  "label": "Texto do botão",
+                  "default": "Comprar agora"
+                },
+                {
+                  "type": "html",
+                  "id": "icon",
+                  "label": "Icone dos beneficios"
+
+              },
+
+              {
+                "type": "text",
+                "id": "p1",
+                "label": "1",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p2",
+                "label": "2",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p3",
+                "label": "3",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p4",
+                "label": "4",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p5",
+                "label": "5",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p6",
+                "label": "6",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p7",
+                "label": "7",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p8",
+                "label": "8",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p9",
+                "label": "9",
+                "default": "Grande promessa"
+              }, {
+                "type": "text",
+                "id": "p10",
+                "label": "10",
+                "default": "Grande promessa"
+              }
+
+              ]
+            },
+
+            {
+              "type": "html",
+              "name": "Informações do produto",
+              "limit": 2,
+              "settings": [
+
+                {
+                  "type": "text",
+                  "id": "title",
+                  "label": "Grande promessa",
+                  "default": "Grande promessa"
+                },
+                {
+                  "type": "richtext",
+                  "id": "htm",
+                  "label": "Grande promessa",
+                  "default": "<p>Grande promessa<p>"
+                },
+                {
+                  "type": "image_picker",
+                  "id": "imgp",
+                  "label": "Imagem"
+                },
+                {
+                  "type": "color",
+                  "id": "bg_cor",
+                  "label": "Cor do background",
+                  "default": "#000"
+              },
+              {
+                "type": "color",
+                "id": "bglink",
+                "label": "Cor do texto",
+                "default": "#ffffff"
+             },
+
+             {
+              "type": "header",
+              "content": "Configurações do botão"
+          },
+
+          {
+            "type": "url",
+            "id": "botaoinfo",
+            "label": "URL do botão",
+            "info": "Coloque (#comprar) para levar a seção do produto"
+         },
+        {
+          "type": "text",
+          "id": "textobotaoinfo",
+          "label": "Texto do botão",
+          "default": "Comprar agora"
+        }
+
+              ]
+            },
+            {
+              "type": "link_list",
+              "name": "Menus",
+              "settings": [
+                  {
+                      "type": "link_list",
+                      "id": "menu",
+                      "label": "Menu"
+                  },
+                  {
+                      "type": "text",
+                      "id": "title",
+                      "label": "Título"
+                  }
+              ]
+          },
+            {
+              "type": "richtext",
+              "name": "Informações",
+              "limit": 2,
+              "settings": [
+
+
+                {
+                  "type": "richtext",
+                  "id": "htm",
+                  "label": "Título",
+                  "default": "<p>Resgate a beleza do seu cabelo em até 4 semanas!<p>"
+                },
+                {
+                  "type": "text",
+                  "id": "tag",
+                  "label": "Tag",
+                  "default": "Promoção"
+                },
+                {
+                  "type": "checkbox",
+                  "id": "star",
+                  "label": "Ativar avaliações",
+                  "default": true
+                },
+                {
+                  "type": "image_picker",
+                  "id": "imgp",
+                  "label": "Imagem em destaque"
+                },
+
+                {
+                  "type": "color",
+                  "id": "bg_cor",
+                  "label": "Cor do background",
+                  "default": "#262626"
+              },
+              {
+                "type": "color",
+                "id": "bglink",
+                "label": "Background color",
+                "default": "#ffffff"
+             },
+             {
+              "type": "header",
+              "content": "Configurações do botão"
+          }
+
+              ]
+            },
+
+            {
+              "type": "image",
+              "name": "Prova social",
+              "limit": 1,
+              "settings": [
+
+                {
+                  "type": "header",
+                  "content": "P1 - Prova social"
+              },
+                {
+                  "type": "image_picker",
+                  "id": "imgprova1",
+                  "label": "Imagem em destaque"
+                },
+                {
+                  "type": "text",
+                  "id": "prova1nome",
+                  "label": "P1 - Nome",
+                  "default": "Rafaela Martins"
+                },
+                {
+                  "type": "richtext",
+                  "id": "prova1",
+                  "label": "P1 - Texto da Prova Social",
+                  "default": "<p>Estou satisfeita com minha compra, a qualidade do produto é sensacional, super recomendo  🥰🥰<p>"
+                },{
+                  "type": "header",
+                  "content": "P2 - Prova social"
+              },
+                {
+                  "type": "image_picker",
+                  "id": "imgprova2",
+                  "label": "Imagem em destaque"
+                },
+                {
+                  "type": "text",
+                  "id": "prova2nome",
+                  "label": "P2 - Nome",
+                  "default": "Rafaela Martins"
+                },
+                {
+                  "type": "richtext",
+                  "id": "prova2",
+                  "label": "P2 - Texto da Prova Social",
+                  "default": "<p>Estou satisfeita com minha compra, a qualidade do produto é sensacional, super recomendo  🥰🥰<p>"
+                },{
+                  "type": "header",
+                  "content": "P3 - Prova social"
+              },
+                {
+                  "type": "image_picker",
+                  "id": "imgprova3",
+                  "label": "Imagem em destaque"
+                },
+                {
+                  "type": "text",
+                  "id": "prova3nome",
+                  "label": "p3 - Nome",
+                  "default": "Rafaela Martins"
+                },
+                {
+                  "type": "richtext",
+                  "id": "prova3",
+                  "label": "P3 - Texto da Prova Social",
+                  "default": "<p>Estou satisfeita com minha compra, a qualidade do produto é sensacional, super recomendo  🥰🥰<p>"
+                },
+                {
+                  "type": "header",
+                  "content": "P4 - Prova social"
+              },
+                {
+                  "type": "image_picker",
+                  "id": "imgprova4",
+                  "label": "Imagem em destaque"
+                },
+                {
+                  "type": "text",
+                  "id": "prova4nome",
+                  "label": "P4 - Nome",
+                  "default": "Rafaela Martins"
+                },
+                {
+                  "type": "richtext",
+                  "id": "prova4",
+                  "label": "P4 - Texto da Prova Social",
+                  "default": "<p>Estou satisfeita com minha compra, a qualidade do produto é sensacional, super recomendo  🥰🥰<p>"
+                },{
+                  "type": "header",
+                  "content": "P5 - Prova social"
+              },
+                {
+                  "type": "image_picker",
+                  "id": "imgprova5",
+                  "label": "Imagem em destaque"
+                },
+                {
+                  "type": "text",
+                  "id": "prova5nome",
+                  "label": "P5 - Nome",
+                  "default": "Rafaela Martins"
+                },
+                {
+                  "type": "richtext",
+                  "id": "prova5",
+                  "label": "P5 - Texto da Prova Social",
+                  "default": "<p>Estou satisfeita com minha compra, a qualidade do produto é sensacional, super recomendo  🥰🥰<p>"
+                }
+
+              ]
+            },
+            {
+              "type": "button",
+              "name": "Dúvidas Frequentes",
+              "limit": 1,
+              "settings": [
+
+
+                {
+                  "type": "text",
+                  "id": "title",
+                  "label": "Titulo",
+                  "default": "Dúvidas frequentes"
+                },
+
+                {
+                  "type": "text",
+                  "id": "faq1",
+                  "label": "FAQ - 01",
+                  "default": "Posso comprar uma unidade?"
+                },
+                {
+                  "type": "richtext",
+                  "id": "faqr1",
+                  "label": "FAQ - 01",
+                  "default": "<p>Sim, porém não terá o mesmo desconto. Clique aqui para comprar uma unidade.<p>"
+                },
+                {
+                  "type": "text",
+                  "id": "faq2",
+                  "label": "FAQ - 02",
+                  "default": "O site é confiável?"
+                },
+                {
+                  "type": "richtext",
+                  "id": "faqr2",
+                  "label": "FAQ - 02",
+                  "default": "<p>Esse site é totalmente seguro. Possui certificado de segurança do Google e o pagamento é processado pelo MercadoPago, umas das plataformas mais seguras para compras na internet no Brasil, 100% segura e sigilosa. Também possui garantia de entrega e qualidade do produto.<p>"
+                },
+                {
+                  "type": "text",
+                  "id": "faq3",
+                  "label": "FAQ - 03",
+                  "default": "Tem garantia?"
+                },
+                {
+                  "type": "richtext",
+                  "id": "faqr3",
+                  "label": "FAQ - 03",
+                  "default": "<p>Sim, possuímos garantia estendida de 30 dias contra defeitos de fabricação.<p>"
+                },
+                {
+                  "type": "text",
+                  "id": "faq4",
+                  "label": "FAQ - 04",
+                  "default": "Quanto tempo vai demorar para receber meu pedido?"
+                },
+                {
+                  "type": "richtext",
+                  "id": "faqr4",
+                  "label": "FAQ - 04",
+                  "default": "<p>Nosso envio é grátis para todo o Brasil, sem surpresas adicionais. nosso prazo é de15 à 35 dias úteis para chegar. Nunca mais se preocupe em pagar frete!<p>"
+                },
+
+                {
+                  "type": "text",
+                  "id": "faq5",
+                  "label": "FAQ - 05",
+                  "default": "Todos pedidos acompanham número de rastreio ?"
+                },
+                {
+                  "type": "richtext",
+                  "id": "faqr5",
+                  "label": "FAQ - 05",
+                  "default": "<p>Sim. Nós prezamos pela transparência e por isso todos os produtos são enviados com códigos de rastreamento válidos internacionalmente.<p>"
+                },
+                {
+                  "type": "color",
+                  "id": "bg_cor",
+                  "label": "Cor do background",
+                  "default": "#262626"
+              },
+              {
+                "type": "color",
+                "id": "bglink",
+                "label": "Background color",
+                "default": "#ffffff"
+             }
+
+              ]
+            }
+
+
+
+          ]
+        }
+      {% endschema %}

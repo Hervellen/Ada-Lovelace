@@ -1,0 +1,402 @@
+{% assign pt =  section.settings.padding_top | prepend: 'pt-' %}
+{% assign pb =  section.settings.padding_bottom | prepend: 'pb-' %}
+{% assign mt =  section.settings.margin_top | prepend: 'mt-' %}
+{% assign mb =  section.settings.margin_bottom | prepend: 'mb-' %}
+
+<section
+    class="testimonials overflow-hidden {{ section.settings.bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{% if section.settings.container %} container {% else %} container-fluid {% endif %}">
+
+        <!-- Title -->
+        <h2 class="title mb-1 {{ section.settings.title_alignment }} {{ section.settings.title_size }}">
+            {{ section.settings.title }}
+        </h2>
+
+        <!-- Description -->
+        {% if section.settings.description != blank %}
+            <div class="description rte  text-muted mb-6 {{ section.settings.title_alignment }} ">
+                {{ section.settings.description }}
+            </div>
+        {% endif %}
+
+        <div
+            id="{{ 'carousel-' | append: section.id }}"
+            class="carousel slide {{ section.settings.transition_effect }} {% unless section.settings.animate_class == blank %}animate__animated{% endunless %}"
+            data-animate="{{ section.settings.animate_class }}"
+            data-ride="carousel"
+            data-pause="hover"
+            data-interval="{{ section.settings.interval | times: 1000 }}"
+            aria-roledescription="carousel">
+
+            <div id="{{ 'carousel-inner' | append: section.id }}" class="carousel-inner my-7 text-center">
+                {% for block in section.blocks %}
+                    <div
+                        class="carousel-item animate__animated {{ section.settings.transition_speed }} {% if forloop.first == true %} active {% endif %}"
+                        role="group"
+                        aria-roledescription="slide"
+                        aria-label="{{ forloop.index }} {{ 'general.from' | t }} {{ section.blocks.size }}">
+
+                        <blockquote class="blockquote m-0">
+
+                            <p class="font-weight-bold small mb-2">
+                                <span class="d-block">
+                                    {{ block.settings.title | escape }}
+                                </span>
+                                <span class="d-block small">
+                                    <a href="{{ all_products[block.settings.product].url }}">
+                                        {{ all_products[block.settings.product].title }}
+                                    </a>
+                                </span>
+                                <img
+                                    class="mt-2 mb-2"
+                                    data-src="{{ 'testimonial-rating.png' | asset_img_url: 'master' }}"
+                                    alt=""
+                                    width="100"
+                                    height="27"
+                                    loading="lazy">
+                            </p>
+
+                            <div class="rte font-italic">
+                                {{ block.settings.description }}
+                            </div>
+
+                            <footer class="small">
+                                <div class="pt-5 mb-3">
+                                    {% if block.settings.customer_photo != blank %}
+                                        {% assign image_size = section.settings.customer_photo_size | append: 'x' | append: section.settings.customer_photo_size %}
+                                        <img
+                                            class="img-fluid {% if section.settings.customer_photo_circle %}rounded-circle{% else %}rounded{% endif %}"
+                                            data-src="{{ block.settings.customer_photo | img_url: image_size, crop: 'center' }}"
+                                            alt="{{ block.settings.customer_photo.alt }}"
+                                            width="{{ section.settings.customer_photo_size }}"
+                                            height="{{ section.settings.customer_photo_size }}"
+                                            loading="lazy">
+                                    {% else %}
+                                        <div
+                                            class="mx-auto"
+                                            style="width: {{ section.settings.customer_photo_size }}px; height: {{ section.settings.customer_photo_size }}px">
+                                            {{ 'image' | placeholder_svg_tag: 'placeholder-svg bg-light img-fluid rounded-circle' }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <b class="d-block">{{ block.settings.customer_name }}</b>
+                                <small class="d-block text-muted">{{ block.settings.customer_description }}</small>
+                                <small class="d-block text-muted">{{ block.settings.date }}</small>
+                            </footer>
+                        </blockquote>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if section.settings.controls %}
+                <a
+                    class="carousel-control-prev"
+                    href="#{{ 'carousel-' | append: section.id }}"
+                    role="button"
+                    data-slide="prev"
+                    aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">{{ 'general.previous' | t }}</span>
+                </a>
+                <a
+                    class="carousel-control-next"
+                    href="#{{ 'carousel-' | append: section.id }}"
+                    role="button" data-slide="next"
+                    aria-controls="{{ 'carousel-inner' | append: section.id }}">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">{{ 'general.next' | t }}</span>
+                </a>
+            {% endif %}
+
+            {% if section.settings.indicators %}
+                <ol class="carousel-indicators">
+                    {% for block in section.blocks %}
+                        <li
+                            data-target="#{{ 'carousel-' | append: section.id }}"
+                            data-slide-to="{{ forloop.index0 }}"
+                            class="{% if forloop.first == true %} active {% endif %}">
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "Testemunhos",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Testemunhos"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Depoimentos de clientes"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p><strong>1000+ avaliações</strong> de nossos clientes de confiança não pode estar errado ...</p>"
+        },
+        {
+            "type": "select",
+            "id": "title_alignment",
+            "label": "Alinhamento do título",
+            "default": "text-center",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Tamanho do título",
+            "default": "h2",
+            "options": [
+                {  "value": "h1", "label": "H1" },
+                {  "value": "h2", "label": "H2" },
+                {  "value": "h3", "label": "H3" },
+                {  "value": "h4", "label": "H4" },
+                {  "value": "h5", "label": "H5" },
+                {  "value": "h6", "label": "H6" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Cor do background",
+            "default": "bg-white text-body",
+            "options": [
+                { "group": "Light", "value": "bg-white text-body", "label": "White" },
+                { "group": "Light", "value": "bg-light text-body", "label": "Light" },
+                { "group": "Dark", "value": "bg-dark text-white", "label": "Dark" },
+                { "group": "Dark", "value": "bg-primary text-white", "label": "Primary" },
+                { "group": "Dark", "value": "bg-secondary text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-dark-gradient text-white", "label": "Dark" },
+                { "group": "Gradient", "value": "bg-primary-gradient text-white", "label": "Primary" },
+                { "group": "Gradient", "value": "bg-secondary-gradient text-white", "label": "Secondary" },
+                { "group": "Gradient", "value": "bg-custom-gradient text-white", "label": "Custom" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "customer_photo_circle",
+            "label": "Círculo de fotos do cliente",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "customer_photo_size",
+            "label": "Tamanho da foto do cliente (px)",
+            "default": "90"
+        },
+        {
+            "type": "header",
+            "content": "Configurações de carrossel"
+        },
+        {
+            "type": "checkbox",
+            "id": "controls",
+            "default": true,
+            "label": "Mostrar controles",
+            "info": "Botões Anterior / Próximo"
+        },
+        {
+            "type": "checkbox",
+            "id": "indicators",
+            "default": true,
+            "label": "Mostrar indicadores",
+            "info": "Pequenos pontos na parte inferior"
+        },
+        {
+            "type": "range",
+            "id": "interval",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "unit": "sec",
+            "label": "Tempo de Autoplay]",
+            "default": 5,
+            "info": "Selecione '0' para desativar"
+        },
+        {
+            "type": "header",
+            "content": "Transition"
+        },
+        {
+            "type": "select",
+            "id":  "transition_effect",
+            "label": "Transition effect",
+            "default": "carousel-animate-css carousel-zoom",
+            "info": "Saiba mais sobre [Animate.css](https://animate.style)",
+            "options": [
+                { "group": "Default", "value": "", "label": "Slide" },
+                { "group": "Default", "value": "carousel-fade", "label": "Fade" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-back", "label": "Back" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-fade-big", "label": "Fade Big" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-slide-left-right", "label": "Slide left/right" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-slide-up-down", "label": "Slide up/down" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-zoom", "label": "Zoom" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-rotate", "label": "Rotate" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-jack", "label": "Jack In The Box" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-roll", "label": "Roll" },
+                { "group": "Animate.css", "value": "carousel-animate-css carousel-flip-y", "label": "FlipY" }
+            ]
+        },
+        {
+            "type": "select",
+            "id":  "transition_speed",
+            "label": "Velocidade de transição",
+            "default": "animate__normal",
+            "options": [
+                { "value": "animate__slower", "label": "Slower" },
+                { "value": "animate__slow", "label": "Slow" },
+                { "value": "animate__normal", "label": "Normal" },
+                { "value": "animate__fast", "label": "Fast" },
+                { "value": "animate__faster",  "label": "Faster" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espaçamento",
+            "info": "Com base nas classes do utilitário de espaçamento Bootstrap [Saiba mais](https://getbootstrap.com/docs/4.5/utilities/spacing/)"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "label": "Padding top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "label": "Margin top",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "label": "Margin bottom",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 9
+        }
+    ],
+    "blocks": [
+        {
+            "type": "testimonial",
+            "name": "Testimonial",
+            "settings": [
+                {
+                    "type": "product",
+                    "id": "product",
+                    "label": "Produto"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Título"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Descrição"
+                },
+                {
+                    "type": "text",
+                    "id": "date",
+                    "label": "Data"
+                },
+                {
+                    "type": "text",
+                    "id": "customer_name",
+                    "label": "Nome do cliente"
+                },
+                {
+                    "type": "text",
+                    "id": "customer_description",
+                    "label": "Descrição personalizada"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "customer_photo",
+                    "label": "Foto do cliente"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Testemunhos",
+            "category": "imagem",
+            "blocks": [
+                {
+                    "type": "testimonial",
+                    "settings": {
+                        "title": "Muito impressionado com o design do tema.",
+                        "description": "<p>Não só é lindo e atraente, mas também é super rápido. Eu tentei diferentes temas antes, mas com o tema eu pude terminar minha loja muito rapidamente (dentro de 1 semana). Posso recomendar, com certeza ...</p>",
+                        "date": "19 de jun, 2021",
+                        "customer_name": "Bruno santos",
+                        "customer_description": "Goiania - GO"
+                    }
+                },
+                {
+                    "type": "testimonial",
+                    "settings": {
+                        "title": "Muito impressionado com o design do tema.",
+                        "description": "<p>Não só é lindo e atraente, mas também é super rápido. Eu tentei diferentes temas antes, mas com o tema eu pude terminar minha loja muito rapidamente (dentro de 1 semana). Posso recomendar, com certeza ...</p>",
+                        "date": "19 de jun, 2021",
+                        "customer_name": "Bruno santos",
+                        "customer_description": "Goiania - GO"
+                    }
+                },
+                {
+                    "type": "testimonial",
+                    "settings": {
+                        "title": "Muito impressionado com o design do tema.",
+                        "description": "<p>Não só é lindo e atraente, mas também é super rápido. Eu tentei diferentes temas antes, mas com o tema eu pude terminar minha loja muito rapidamente (dentro de 1 semana). Posso recomendar, com certeza ...</p>",
+                        "date": "19 de jun, 2021",
+                        "customer_name": "Bruno santos",
+                        "customer_description": "Goiania - GO"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

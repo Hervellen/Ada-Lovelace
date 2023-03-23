@@ -1,0 +1,319 @@
+<div
+    class="modal fade"
+    id="cart-modal"
+    tabindex="-1"
+    aria-labelledby="cart-modal-label"
+    aria-hidden="true">
+    <div
+        class="modal-dialog modal-dialog-scrollable animate__animated"
+        data-animate-enter="{{ settings.modal_animation_enter }}"
+        data-animate-exit="{{ settings.modal_animation_exit }}"
+        data-animate-speed="{{ settings.modal_animation_speed }}">
+        <div class="modal-content">
+
+            <div class="modal-header py-3">
+                <h5 class="modal-title" id="cart-modal-label">
+                    {{ 'cart.modal_title' | t }}
+                    <span id="cart-modal-label-count">
+                        ({{ cart.item_count }})
+                    </span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'general.close' | t }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                {% if cart.item_count == 0 %}
+                    <div id="cart-modal-empty" class="py-1">
+                        <p class="text-center text-muted">
+                            {{ 'cart.empty' | t }}
+                        </p>
+                        <a class="btn btn-outline-primary btn-block" href="/collections/all">
+                            {{ 'general.browse_all_products' | t }}
+                        </a>
+                    </div>
+               {% else %}
+                    <form id="cart-modal-form-body" class="position-relative h-100 mb-0" method="post" action="/cart">
+                        <div class="container-loading">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">{{ 'general.loading' | t }}</span>
+                            </div>
+                        </div>
+                        {% if settings.cart_show_applied_discounts and  cart.discount_applications.size > 0 %}
+                            <div class="alert alert-info text-center mb-4">
+                                <b class="mb-0">{{ 'cart.applied_discounts' | t }}</b>
+                                <ul class="mb-0 list-unstyled">
+                                    {% for discount_application in cart.discount_applications %}
+                                        <li>
+                                            {{ discount_application.title }}: -{{ discount_application.total_allocated_amount | money }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <!-- Cart Goal -->
+                        {% if settings.cart_goal_enable %}
+                            {% assign cartGoalThresholdsArray   = settings.cart_goal_thresholds | split: ',' %}
+
+                            {% for cartGoalThresholdsItem in cartGoalThresholdsArray %}
+                                {% if cartGoalThresholdsItem contains cart.currency.iso_code %}
+                                    {% assign cartGoalThreshold = cartGoalThresholdsItem | strip | split: ':' | last %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% unless cartGoalThreshold == blank %}
+                                {% assign cartTotal = cart.total_price | money_without_currency | replace: ".", "" | replace: ",", "." %}
+
+                                {% assign cartGoalAamountToReach        = cartGoalThreshold | minus: cartTotal | round %}
+
+                                {% assign cartGoalAmmountToReachMoney   = cartGoalAamountToReach | times: 100 | money %}
+
+                                {% if cartGoalAamountToReach > 0 %}
+                                    {% assign cartGoalColorClass    = settings.cart_goal_color_not_reached %}
+                                    {% assign cartGoalMessage       = settings.cart_goal_message_goal_not_reached | replace: '[amount]', cartGoalAmmountToReachMoney %}
+                                    {% assign cartGoalProgressWidth = cartTotal | times: 1.00 | divided_by: cartGoalThreshold | round: 2 | times: 100 | round | append: '%' %}
+                                {% else %}
+                                    {% assign cartGoalColorClass    = settings.cart_goal_color_reached %}
+                                    {% assign cartGoalMessage       = settings.cart_goal_message_goal_reached %}
+                                    {% assign cartGoalProgressWidth = '100%' %}
+                                {% endif %}
+
+                                <div
+                                    id="cart-goal-message"
+                                    class="rte rte small text-center mb-n2">
+                                    <span class="{{ cartGoalColorClass | replace: 'bg-', 'text-' }}">
+                                        {{ cartGoalMessage }}
+                                    </span>
+                                </div>
+                                <div class="progress d-flex">
+                                    <div
+                                        id="cart-goal-progress-bar"
+                                        class="progress-bar progress-bar-striped {{ cartGoalColorClass }}"
+                                        role="progressbar"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        data-color="{{ cartGoalColorClass }}"
+                                        data-width="{{ cartGoalProgressWidth }}"
+                                        style="min-width: 50px; width: 0%">
+                                        <span class="font-weight-bold">
+                                            {{ cartGoalProgressWidth }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr>
+                            {% endunless %}
+                        {% endif %}
+
+                        <ul class="modal-product-list animated-list list-unstyled mt-n1 mb-1 mx-n2">
+                            {% for line_item in cart.items %}
+                                <li
+                                    class="modal-product-list-item {% unless settings.cart_animate == 'blank' %}animate__animated animate__fast{% endunless %} {{ forloop.index | prepend: 'enter-view-step-' }}"
+                                    data-animate="{{ settings.cart_animate }}"
+                                    data-line-item-id="{{ forloop.index }}">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div
+                                            class="d-flex align-items-center text-decoration-none py-2 px-2 w-100">
+                                            <a class="flex-shrink-0" href="{{ line_item.url }}">
+                                                <div class="misc-img-wrapper product-img-wrapper mr-3 flex-shrink-0">
+
+                                                    <!-- Sold out badge -->
+                                                    {% unless line_item.product.available %}
+                                                        <span class="badge badge-sold-out">
+                                                            {{ 'product.sold_out' | t }}
+                                                        </span>
+                                                    {% endunless %}
+
+                                                    <!-- Discount badge -->
+                                                    {% if line_item.variant.compare_at_price > line_item.variant.price and line_item.product.available %}
+                                                    <span class="badge badge-discount">
+                                                        <span class="sr-only">
+                                                            {{ 'general.discount' | t }}:
+                                                        </span>
+                                                        {{ line_item.variant.compare_at_price
+                                                            | minus: line_item.variant.price
+                                                            | times: 100.0
+                                                            | divided_by: line_item.variant.compare_at_price
+                                                            | round
+                                                            | prepend: '-'
+                                                            | append: '%' }}
+                                                    </span>
+                                                    {% endif %}
+
+                                                    {% assign img_size = settings.cart_img_width | append: 'x' | append: settings.cart_img_height %}
+                                                    <img
+                                                        class="misc-img product-img img-fluid {% if settings.cart_img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                                                        src="{{ line_item.image | img_url: img_size, crop: 'center' }}"
+                                                        alt="{{ line_item.image.alt | escape }}"
+                                                        width="{{ settings.cart_img_width }}"
+                                                        height="{{ settings.cart_img_height }}">
+                                                </div>
+                                            </a>
+                                            <div class="my-1">
+                                                <h3 class="h6 mb-1">
+                                                    <a class="" href="{{ line_item.url }}">
+                                                        {{ line_item.product.title }}
+                                                    </a>
+                                                </h3>
+                                                {% unless line_item.product.has_only_default_variant %}
+                                                    <p class="text-muted small mb-1">
+                                                        {{ line_item.variant.title }}
+                                                    </p>
+                                                {% endunless %}
+                                                <p class="product-price mb-0">
+                                                    {% if line_item.variant.compare_at_price > line_item.price %}
+                                                        <s class="price-compare">
+                                                            <span class="sr-only">
+                                                                {{ 'product.old_price' | t }}
+                                                            </span>
+                                                            {{ line_item.variant.compare_at_price | money }}
+                                                        </s>
+                                                    {% endif %}
+                                                    <span class="price">
+                                                        {{ line_item.variant.price | money }}
+                                                    </span>
+                                                </p>
+                                                {% if settings.cart_show_qty %}
+                                                    <div class="mt-2" style="max-width: 130px;">
+                                                        <label for="updates_{{ line_item.key }}" class="sr-only">
+                                                            {{ 'cart.quantity' | t }}
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            name="updates[]"
+                                                            id="updates_{{ line_item.key }}"
+                                                            class="bs-input-spinner cart-modal-qty form-control form-control-sm"
+                                                            value="{{ line_item.quantity }}"
+                                                            min="1">
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <button
+                                            class="cart-modal-btn-remove-product btn btn-outline-danger btn-sm ml-3 mr-2"
+                                            data-placement="left"
+                                            title="{{ 'cart.remove' | t }}"
+                                            aria-label="{{ 'cart.remove' | t }}">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </form>
+               {% endif %}
+            </div>
+
+            {% if cart.item_count > 0 %}
+                <div id="cart-modal-form-footer" class="modal-footer bg-light">
+                    <form class="w-100" method="post" action="/cart">
+
+                        <p class="lead text-center mb-3">
+                            <span class="text-muted">{{ 'cart.subtotal' | t }}: </span>
+                            {% if cart.original_total_price > cart.total_price %}
+                                <s class="text-muted">{{ cart.original_total_price | money }}</s>
+                            {% endif %}
+                            <span class="product-price price">{{ cart.total_price | money }}</span>
+                        </p>
+
+                        {% if settings.cart_show_taxes_shipping_info %}
+                            <small class="text-muted text-center d-block mt-n3 mb-2 text-more-muted" style="font-weight: 600; margin-top: 10px !important;">
+                                {% render 'icon-lock-small' %}
+                                {{ 'cart.taxes_shipping_at_checkout_html' | t }}
+                            </small>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-center mx-n1">
+                                <a
+                                    href="{{ routes.cart_url }}"
+                                    class="btn w-100 m-1 button-buy main-font-title gen-button" style="border: none !important; font-weight: 600">
+                                    {{ 'cart.view_cart' | t }}
+                                </a>
+                        </div>
+                        {% if settings.cart_show_buy_more_btn %}
+                            <div class="d-flex justify-content-center mx-n1">
+                                    <a
+                                            class="btn w-100 m-1 cor-botao-continuar-comprando main-font-title gen-button" data-dismiss="modal" style="font-weight: 500">
+                                        {{ 'cart.buy_more' | t }}
+                                    </a>
+                            </div>
+                        {% endif %}
+                        {% if settings.cart_show_all_products_btn %}
+                            <div class="d-flex justify-content-center mx-n1">
+                                    <a href="/collections/all"
+                                       class="btn w-100 m-1 cor-botao-continuar-comprando main-font-title gen-button" style="font-weight: 500">
+                                        {{ 'cart.all_products' | t }}
+                                    </a>
+                            </div>
+                        {% endif %}
+
+                        {% if settings.cart_show_discount_code %}
+                            <input
+                                id="cart-modal-discount-hidden-input"
+                                type="hidden"
+                                name="discount"
+                                value="">
+                            <button
+                                class="btn btn-light btn-sm btn-block mb-n1"
+                                type="button"
+                                data-target="#cart-modal-discount-collapse"
+                                aria-expanded="false"
+                                aria-controls="cart-modal-discount-collapse">
+                                {{ 'cart.have_discount_code' | t }}
+                            </button>
+                            <div
+                                id="cart-modal-discount-collapse"
+                                class="collapse">
+                                <div class="pt-3">
+                                    <div class="input-group mb-3">
+                                        <input
+                                            id="cart-modal-discount-input"
+                                            class="form-control"
+                                            type="text"
+                                            placeholder="{{ 'cart.discount_code' | t }}"
+                                            aria-label="{{ 'cart.discount_code' | t }}">
+                                        <div class="input-group-append">
+                                            <button
+                                                id="cart-modal-discount-btn"
+                                                class="btn btn-outline-secondary"
+                                                aria-label="{{ 'cart.discount_btn' | t }}"
+                                                type="submit"
+                                                name="checkout">
+                                                <span
+                                                    id="cart-modal-discount-btn-text"
+                                                    aria-hidden="true">
+                                                    {{ 'cart.discount_btn' | t }}
+                                                </span>
+                                                <span
+                                                    id="cart-modal-discount-btn-loading"
+                                                    class="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                    style="display: none;">
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </form>
+                    {% if settings.cart_show_payment_icons %}
+                            <div class="payment-icons text-center mt-2 w-100">
+                                <div class="payment-list list-unstyled d-flex justify-content-center">
+                                    <img class="payment-list__item" data-src="{{ 'amex.svg' | asset_url }}" loading="lazy">
+                                    <img class="payment-list__item" data-src="{{ 'boleto.svg' | asset_url }}" loading="lazy">
+                                    <img class="payment-list__item" data-src="{{ 'mastercard.svg' | asset_url }}" loading="lazy">
+                                    <img class="payment-list__item" data-src="{{ 'visa.svg' | asset_url }}" loading="lazy">
+                                    <img class="payment-list__item" data-src="{{ 'elo.svg' | asset_url }}" loading="lazy">
+                                    <img class="payment-list__item" data-src="{{ 'icon-pix.png' | asset_url }}" loading="lazy">
+                                </div>
+                            </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

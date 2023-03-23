@@ -1,0 +1,194 @@
+{% assign row_      =  section.settings.row_mobile | prepend: 'row-cols-' %}
+{% assign row_md    =  section.settings.row_tablet | prepend: 'row-cols-md-' %}
+{% assign row_lg    =  section.settings.row_desktop | prepend: 'row-cols-lg-' %}
+
+<article>
+
+    <!-- Page header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-8">
+        <div class="container">
+
+            {% unless section.settings.title == blank %}
+                <h2 class="">
+                    {{ section.settings.title | escape }}
+                </h2>
+            {% endunless %}
+
+            {% unless section.settings.description == blank %}
+                <div class="rte lead text-muted">
+                    {{ section.settings.description }}
+                </div>
+            {% endunless %}
+
+        </div>
+    </header>
+
+    <div
+        id="collection-list"
+        class="collection-list overflow-hidden">
+
+        <div class="{% if section.settings.container %}container{% else %}container-fluid{% endif %}">
+
+            {% if collections.size == 0 %}
+                <p
+                    id="collection-list-empty"
+                    class="alert alert-warning mb-9">
+                    {{ 'general.collections_list_empty_html' | t }}
+                </p>
+            {% else %}
+
+                {% paginate collections by section.settings.paginate %}
+
+                    <!-- Collection list -->
+                    <ul class="collection-list-list list-unstyled justify-content-center mx-n2 mt-n2 mb-0 row {{ row_ }} {{ row_md }} {{ row_lg }}">
+
+                        {% for collection in collections %}
+                            {% unless section.settings.hide_collections contains collection.handle %}
+
+                                {% assign image = collection.image | default: collection.products.first.featured_image %}
+
+                                <!-- Collection -->
+                                <li
+                                    class="collection-list-item px-2 py-2 text-center  {{ forloop.index | prepend: 'enter-view-step-' }} {% if section.settings.img_thumbnail %}has-img-thumbnail{% endif %}">
+                                    <a class="collection-list-link position-relative d-block text-decoration-none" href="{{collection.url }}">
+
+                                        <!-- Collection Image -->
+                                        {% assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height %}
+                                        <img
+                                            class="collection-list-img img-fluid {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                                            data-src="{{ image | img_url: img_size, crop: 'center' }}"
+                                            alt="{{ image.alt | escape }}"
+                                            width="{{ section.settings.img_width }}"
+                                            height="{{ section.settings.img_height }}"
+                                            loading="lazy">
+
+                                        <!-- Collection title -->
+                                        <h3 class="collection-list-title h6">
+                                            <span>{{ collection.title }}</span>
+
+                                            <!-- Product count -->
+                                            {% if section.settings.show_products_count %}
+                                                <small>
+                                                    ({{ collection.products.size }})
+                                                </small>
+                                            {% endif %}
+                                        </h3>
+                                    </a>
+                                </li>
+                            {% endunless %}
+                        {% endfor %}
+                    </ul>
+                    {% render 'pagination' with paginate: paginate %}
+                {% endpaginate %}
+            {% endif %}
+        </div>
+    </div>
+</article>
+
+{% schema %}
+{
+    "name": "Lista de coleções",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Nossas coleções"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "info": "Deixe em branco para desativar",
+            "default": "<p>Escreva uma pequena descrição aqui para a página da lista de coleções.</p>"
+        },
+        {
+            "type": "range",
+            "id": "paginate",
+            "label": "Paginar",
+            "info": "Coleções por página",
+            "min": 2,
+            "max": 50,
+            "default": 18
+        },
+        {
+            "type": "checkbox",
+            "id": "container",
+            "label": "Wrap container",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "hide_collections",
+            "label": "Coleções para esconder",
+            "info": "Uma lista de manipuladores de coleção separados por vírgulas para ocultar.",
+            "default": "frontpage"
+        },
+        {
+            "type": "header",
+            "content": "Configurações de itens de coleção"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_products_count",
+            "label": "Mostrar contagem de produtos",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Ajustar itens por linha"
+        },
+        {
+            "type": "range",
+            "id": "row_mobile",
+            "label": "Coleção por linha / Mobile",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "row_tablet",
+            "label": "Coleção por linha / Tablet",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "row_desktop",
+            "label": "Coleção por linha / Desktop",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        }
+    ]
+}
+{% endschema %}

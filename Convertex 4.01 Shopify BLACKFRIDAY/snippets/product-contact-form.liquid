@@ -1,0 +1,77 @@
+{% form 'contact', id: 'product-contact-form', class: 'contact-form' %}
+
+    <!-- Hidden inputs -->
+    <input type="hidden" name="contact[product_title]" value="{{ product.title }}">
+    <input type="hidden" name="contact[variant_title]" value="{{ current_variant.title }}">
+    <input type="hidden" name="contact[product_url]" value="{{ product.url | prepend: shop.url }}">
+    
+    <!-- Form success -->
+    {% if form.posted_successfully? %}
+        <p class="form-success alert alert-success mb-4" role="alert">
+            {{ 'general.contact.post_success' | t }}
+        </p>
+    {% endif %}
+
+    <!-- Form errors -->
+    {{ form.errors | default_errors }}
+
+    <!-- Form fields -->
+    <div class="form-row">
+        <div class="form-group col-xl-4">
+            <input 
+                class="form-control" 
+                type="text" 
+                name="contact[name]" 
+                id="ContactFormName" 
+                value="{{ customer.name }}"  
+                placeholder="{{ 'general.contact.name' | t }}" 
+                aria-label="{{ 'general.contact.name' | t }}" 
+                required>
+        </div>
+
+        <div class="form-group col-xl-4">
+            <input 
+                class="form-control" 
+                type="email" 
+                name="contact[email]" 
+                id="ContactFormEmail" 
+                value="{{ customer.email }}" 
+                placeholder="{{ 'general.contact.email' | t }}" 
+                aria-label="{{ 'general.contact.email' | t }}" 
+                spellcheck="false" 
+                autocomplete="off" 
+                autocapitalize="off" 
+                required>
+        </div>
+
+        <div class="form-group col-xl-4">
+            <input 
+                class="form-control" 
+                type="tel" 
+                name="contact[phone]" 
+                id="ContactFormPhone" 
+                value="{{ customer.phone }}" 
+                placeholder="{{ 'general.contact.phone' | t }}" 
+                aria-label="{{ 'general.contact.phone' | t }}" 
+                pattern="[0-9\-]*">
+        </div>
+    </div>
+
+    <!-- Textarea -->
+    <div class="form-group">
+        <textarea 
+            class="form-control" 
+            rows="8" 
+            name="contact[body]" 
+            id="ContactFormMessage" 
+            placeholder="{{ 'general.contact.message' | t }}" 
+            aria-label="{{ 'general.contact.message' | t }}" 
+            required>{% if form.body %}{{ form.body }}{% endif %}</textarea><!-- Do not use spaces here -->
+    </div>
+
+    <!-- Submit btn -->
+    <input 
+        type="submit" 
+        class="btn btn-outline-primary btn-block" 
+        value="{{ 'general.contact.send' | t }}">
+{% endform %}

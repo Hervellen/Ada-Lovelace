@@ -1,0 +1,16 @@
+<script>
+    window.onload = function () {
+        function OrbeAliHunterBlock() {
+            var All = document.getElementsByTagName('div');
+            for (var i = 0; i < All.length; i++) {
+                if (All[i].getAttribute('style') && All[i].getAttribute('style').includes('var(--ah-zIndex-backdrop)')) {
+                    All[i - 2].style.display = "none";
+                    return;
+                }
+            }
+        }
+
+        //ConverteX por orbeecom.com
+        OrbeAliHunterBlock()
+    }
+</script>

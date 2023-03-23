@@ -1,0 +1,188 @@
+<div
+    class="modal fade"
+    id="search-modal"
+    tabindex="-1"
+    aria-labelledby="search-modal-label"
+    aria-hidden="true">
+    <div
+        class="modal-dialog modal-dialog-scrollable animate__animated"
+        data-animate-enter="{{ settings.modal_animation_enter }}"
+        data-animate-exit="{{ settings.modal_animation_exit }}"
+        data-animate-speed="{{ settings.modal_animation_speed }}">
+        <div class="modal-content">
+
+            <div class="modal-header py-3">
+                <h5 class="modal-title" id="search-modal-label">{{ 'search.modal_title' | t }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'general.close' | t }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form
+                    action="/search"
+                    method="get"
+                    class="{% if settings.predictive_search_enable %}predictive-search{% endif %}"
+                    role="search">
+                    <div class="d-flex">
+                        <input
+                            type="search"
+                            name="q"
+                            class="form-control mr-2"
+                            value="{{ search.terms | escape }}"
+                            placeholder="{{ 'search.placeholder' | t }}"
+                            aria-label="{{ 'search.label' | t }}"
+                            size="26">
+                        <button type="submit" class="btn btn-primary flex-shrink-0">
+                            {{ 'search.go' | t }}
+                        </button>
+                    </div>
+
+                    <!-- Predictive search -->
+                    {% if settings.predictive_search_enable %}
+                        <ul
+                            class="nav nav-tabs mt-4 mb-4"
+                            id="search-modal-tabs-list"
+                            role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a
+                                    class="nav-link active px-2 px-sm-4"
+                                    id="search-modal-tabs-list-products"
+                                    data-toggle="tab"
+                                    href="#search-modal-tabs-content-products"
+                                    role="tab"
+                                    aria-controls="search-modal-tabs-content-products"
+                                    aria-selected="true">
+                                    {{ 'search.predictive.tabs.products' | t }}
+                                </a>
+                            </li>
+                            {% if settings.search_collection %}
+                                <li class="nav-item" role="presentation">
+                                    <a
+                                        class="nav-link px-2 px-sm-4"
+                                        id="search-modal-tabs-list-collections"
+                                        data-toggle="tab"
+                                        href="#search-modal-tabs-content-collections"
+                                        role="tab"
+                                        aria-controls="search-modal-tabs-content-collections"
+                                        aria-selected="false">
+                                        {{ 'search.predictive.tabs.collections' | t }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if settings.search_article %}
+                                <li class="nav-item" role="presentation">
+                                    <a
+                                        class="nav-link px-2 px-sm-4"
+                                        id="search-modal-tabs-list-articles"
+                                        data-toggle="tab"
+                                        href="#search-modal-tabs-content-articles"
+                                        role="tab"
+                                        aria-controls="search-modal-tabs-content-articles"
+                                        aria-selected="false">
+                                        {{ 'search.predictive.tabs.articles' | t }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if settings.search_page %}
+                                <li class="nav-item" role="presentation">
+                                    <a
+                                        class="nav-link px-2 px-sm-4"
+                                        id="search-modal-tabs-list-pages"
+                                        data-toggle="tab"
+                                        href="#search-modal-tabs-content-pages"
+                                        role="tab"
+                                        aria-controls="search-modal-tabs-content-pages"
+                                        aria-selected="false">
+                                        {{ 'search.predictive.tabs.pages' | t }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        <div class="tab-content" id="search-modal-tabs-content">
+                            <div
+                                class="tab-pane fade show active"
+                                id="search-modal-tabs-content-products"
+                                role="tabpanel"
+                                aria-labelledby="search-modal-tabs-list-products">
+                                <p
+                                    class="predictive-search-no-results alert alert-warning mb-0 py-2 px-3 text-center"
+                                    style="display: none;">
+                                    {{ 'search.no_results' | t }}
+                                </p>
+                                <div class="predictive-search-results" style="display: none;">
+                                    <!-- Content will be injected via AJAX -->
+                                </div>
+                            </div>
+
+                            {% if settings.search_collection %}
+                                <div
+                                    class="tab-pane fade"
+                                    id="search-modal-tabs-content-collections"
+                                    role="tabpanel"
+                                    aria-labelledby="search-modal-tabs-list-collections">
+                                    <p
+                                        class="predictive-search-no-results alert alert-warning mb-0 py-2 px-3 text-center"
+                                        style="display: none;">
+                                        {{ 'search.no_results' | t }}
+                                    </p>
+                                    <div class="predictive-search-results" style="display: none;">
+                                        <!-- Content will be injected via AJAX -->
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if settings.search_article %}
+                                <div
+                                    class="tab-pane fade"
+                                    id="search-modal-tabs-content-articles"
+                                    role="tabpanel"
+                                    aria-labelledby="search-modal-tabs-list-articles">
+                                    <p
+                                        class="predictive-search-no-results alert alert-warning mb-0 py-2 px-3 text-center"
+                                        style="display: none;">
+                                        {{ 'search.no_results' | t }}
+                                    </p>
+                                    <div class="predictive-search-results" style="display: none;">
+                                        <!-- Content will be injected via AJAX -->
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if settings.search_page %}
+                                <div
+                                    class="tab-pane fade"
+                                    id="search-modal-tabs-content-pages"
+                                    role="tabpanel"
+                                    aria-labelledby="search-modal-tabs-list-pages">
+                                    <p
+                                        class="predictive-search-no-results alert alert-warning mb-0 py-2 px-3 text-center"
+                                        style="display: none;">
+                                        {{ 'search.no_results' | t }}
+                                    </p>
+                                    <div class="predictive-search-results" style="display: none;">
+                                        <!-- Content will be injected via AJAX -->
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Empty state -->
+                        <p
+                            id="predictive-search-empty"
+                            class="alert alert-info mb-0 py-2 px-3 text-center animate__animated"
+                            data-animate="animate__headShake">
+                            {{ 'search.predictive.empty' | t }}
+                        </p>
+
+                        <!-- Loading -->
+                        <div id="predictive-search-loading" class="py-3 text-center" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">{{ 'general.loading' | t }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

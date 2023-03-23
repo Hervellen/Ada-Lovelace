@@ -1,0 +1,348 @@
+<article>
+
+    <!-- Header -->
+    <header
+        id="page-header"
+        class="page-header text-center mb-7">
+        <div class="container">
+
+            <h3 class="">
+                {{ page.title }}
+            </h3>
+
+            {% unless section.settings.description == blank %}
+                <div class="rte lead text-muted">
+                    {{ section.settings.description }}
+                </div>
+            {% endunless %}
+
+        </div>
+    </header>
+
+    <!-- Main image -->
+    {% unless section.settings.main_image == blank %}
+        <div class="container">
+            {% assign image_size = section.settings.main_image_width | append: 'x' | append: section.settings.main_image_height %}
+            <img
+                class="img-fluid mb-6 {% if section.settings.main_image_img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                data-src="{{ section.settings.main_image | img_url: image_size, crop: 'center' }}"
+                loading="lazy"
+                alt="{{ section.settings.main_image.alt }}"
+                width="{{ section.settings.main_image_width }}"
+                height="{{ section.settings.main_image_height }}">
+        </div>
+    {% endunless %}
+
+    <!-- Page content -->
+    <div class="about-page-content mb-9">
+        <div class="container" style="{% unless section.settings.page_max_width == blank %}max-width: {{ section.settings.page_max_width }}px;{% endunless %}">
+            {{ page.content }}
+        </div>
+    </div>
+
+    <!-- Team blocks -->
+    {% if section.settings.enable_team_blocks %}
+        <div class="mb-9 {% if section.settings.team_bg_light %}bg-light pt-8 pb-6 {% else %} {% endif %}">
+            <div class="container">
+                <h2 class="{{ section.settings.team_title_alignment }}">
+                    {{ section.settings.team_title }}
+                </h2>
+                {% if section.settings.description != blank %}
+                    <div class="rte text-muted mb-4 {{ section.settings.team_title_alignment }}">
+                        {{ section.settings.team_description }}
+                    </div>
+                {% endif %}
+                <ul class="team-list list-unstyled mb-0 row row-cols-{{ section.settings.team_row_mobile }} row-cols-md-{{ section.settings.team_row_tablet }} row-cols-lg-{{ section.settings.team_row_desktop }}">
+                    {% for block in section.blocks %}
+                        {% if block.type == 'team' %}
+                            <li class="team px-2 py-4 text-center">
+                                {% assign image_size = section.settings.team_image_width | append: 'x' | append: section.settings.team_image_height %}
+                                <img
+                                    class="img-fluid mb-3 {% if section.settings.team_image_img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                                    data-src="{{ block.settings.team_image | img_url: image_size, crop: 'center' }}"
+                                    loading="lazy"
+                                    alt="{{ block.settings.team_image.alt }}"
+                                    width="{{ section.settings.team_image_width }}"
+                                    height="{{ section.settings.team_image_height }}">
+                                <h3 class="h5 mb-1">
+                                    {{ block.settings.team_name | escape }}
+                                </h3>
+                                {% unless block.settings.team_description == blank %}
+                                    <div class="rte text-muted">
+                                        {{ block.settings.team_description }}
+                                    </div>
+                                {% endunless %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Text Blocks -->
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 justify-content-center mb-8">
+
+            {% for block in section.blocks %}
+                {% if block.type == 'text' %}
+                    <div class="my-2 text-center">
+                        <h3 class="h5">
+                            {{ block.settings.title | escape }}
+                        </h3>
+                        <div class="rte">
+                            {{ block.settings.description }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <!-- Bottom notice -->
+    {% unless section.settings.bottom_notice == blank %}
+        <div class="container">
+            <div class="rte alert {{ section.settings.bottom_notice_alert_style }}">
+                {{ section.settings.bottom_notice | replace: '<p>', '<p class="mb-0">' }}
+            </div>
+        </div>
+    {% endunless %}
+
+</article>
+
+{% schema %}
+{
+    "name": "Sobre",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Descrição",
+            "default": "<p>Inspirado pela simplicidade, impulsionado pelo desempenho.</p>",
+            "info": "Deixe em branco para desativar"
+        },
+        {
+            "type": "text",
+            "id": "page_max_width",
+            "label": "Largura máxima da página (px)",
+            "info": "Deixe em branco para desativar",
+            "default": "767"
+        },
+        {
+            "type": "header",
+            "content": "Main image"
+        },
+        {
+            "type": "image_picker",
+            "id": "main_image",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "main_image_width",
+            "label": "Largura da imagem (px)",
+            "default": "1200"
+        },
+        {
+            "type": "text",
+            "id": "main_image_height",
+            "label": "Altura da imagem (px)",
+            "default": "600"
+        },
+        {
+            "type": "checkbox",
+            "id": "main_image_img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Equipe"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_team_blocks",
+            "label": "Habilitar bloqueios de equipe",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "team_title",
+            "label": "Título",
+            "default": "Conheça o time"
+        },
+        {
+            "type": "richtext",
+            "id": "team_description",
+            "label": "Descrição",
+            "default": "<p>Somos apaixonados por fornecer-lhe o máximo..</p>"
+        },
+        {
+            "type": "checkbox",
+            "id": "team_bg_light",
+            "label": "Fundo claro",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "team_title_alignment",
+            "label": "Alinhamento do título",
+            "default": "text-center",
+            "options": [
+                { "value": "text-left", "label": "Esquerda" },
+                { "value": "text-center", "label": "Centro" },
+                { "value": "text-right", "label": "Direita" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "team_image_width",
+            "label": "Largura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "text",
+            "id": "team_image_height",
+            "label": "Altura da imagem (px)",
+            "default": "480"
+        },
+        {
+            "type": "checkbox",
+            "id": "team_image_img_thumbnail",
+            "label": "Borda da imagem",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "team_row_mobile",
+            "label": "Equipe por linha / Mobile",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "team_row_tablet",
+            "label": "Equipe por linha / Tablet",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "team_row_desktop",
+            "label": "Equipe por linha / Desktop",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Aviso inferior"
+        },
+        {
+            "type": "richtext",
+            "id": "bottom_notice",
+            "label": "Botão do aviso",
+            "default": "<p>Dúvidas? <a href=\"/pages/contato\">Fale conosco</a></p>"
+        },
+        {
+            "type": "select",
+            "id": "bottom_notice_alert_style",
+            "label": "Estilo do aviso inferior",
+            "default": "alert-info",
+            "options": [
+                { "value": "alert-light", "label": "Light" },
+                { "value": "alert-dark", "label": "Dark" },
+                { "value": "alert-info", "label": "Info" },
+                { "value": "alert-success", "label": "Success" },
+                { "value": "alert-warning", "label": "Warning" },
+                { "value": "alert-danger", "label": "Danger" },
+                { "value": "alert-primary", "label": "Primary" },
+                { "value": "alert-secondary", "label": "Secondary" }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "team",
+            "name": "Equipe",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "team_image",
+                    "label": "Imagem"
+                },
+                {
+                    "type": "text",
+                    "id": "team_name",
+                    "label": "Nome"
+                },
+                {
+                    "type": "richtext",
+                    "id": "team_description",
+                    "label": "Descrição"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "name": "Texto",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Título"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Descrição"
+                }
+            ]
+        }
+    ],
+    "default": {
+        "settings": {
+        },
+        "blocks": [
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Dias úteis",
+                    "description": "<p>Segunda-feira sexta-feira</p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Jornada de trabalho",
+                    "description": "<p>09:00 - 16:00</p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Prefere ligar?",
+                    "description": "<p><a href=\"tel:63 9 0000-0000\" title=\"tel:63 9 0000-0000\">+639 0000-0000</a></p>"
+                }
+            },
+            {
+                "type": "text",
+                "settings": {
+                    "title": "Outro Bloco",
+                    "description": "<p>Escreva algo importante</p>"
+                }
+            }
+        ]
+    }
+}
+{% endschema %}

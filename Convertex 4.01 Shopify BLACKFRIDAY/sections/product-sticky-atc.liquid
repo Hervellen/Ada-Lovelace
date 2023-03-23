@@ -1,0 +1,295 @@
+{% if section.settings.enable_section %}
+    {% assign current_variant = product.selected_or_first_available_variant %}
+    {% assign current_image = current_variant.image %}
+
+    {% unless current_image %}
+        {% assign current_image = product.featured_image %}
+    {% endunless %}
+
+    <div
+        id="product-sticky-atc-wrapper"
+        class="toast-wrapper {{ section.settings.position }}">
+        <div
+            id="product-sticky-atc"
+            class="toast hide animate__animated"
+            data-autohide="false"
+            data-product-id="{{ product.id }}"
+            data-animate-enter="{{ section.settings.animation_enter }}"
+            data-animate-exit="{{ section.settings.animation_exit }}"
+            data-animate-speed="{{ section.settings.animation_speed }}">
+
+            <div class="toast-header py-2">
+                <div class="mr-auto">
+                    {% if section.settings.show_title %}
+                    <strong class="line-height-normal">
+                        {{ product.title }}
+                    </strong>
+                    {% endif %}
+                    {% if section.settings.show_rating %}
+                        <div class="mt-1 mb-0 small">
+                            {% if product.metafields.spr.reviews %}
+                                <span
+                                    class="shopify-product-reviews-badge"
+                                    data-id="{{ product.id }}">
+                                </span>
+                            {% endif %}
+                            {% if product.metafields.loox.num_reviews %}
+                                <span
+                                    class="loox-rating"
+                                    data-id="{{ product.id }}"
+                                    data-rating="{{ product.metafields.loox.avg_rating }}"
+                                    data-raters="{{ product.metafields.loox.num_reviews }}">
+                                </span>
+                            {% endif %}
+                            {% if product.metafields.ryviu.product_reviews_info %}
+                                <div class="review-widget">
+                                    <ryviu-widget-total
+
+                                            reviews_data="{{product.metafields.ryviu.product_reviews_info | escape }}"
+
+                                            product_id="{{product.id}}" handle="{{product.handle}}">
+
+                                    </ryviu-widget-total>
+                                </div>
+                            {% endif %}
+                            {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', jm_style: '', concierge_install: false, product: product %}
+                        </div>
+                    {% endif %}
+                </div>
+                <button
+                    type="button"
+                    class="ml-2 mb-1 close"
+                    aria-label="{{ 'general.accessibility.close' | t }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="toast-body">
+                <div class="d-flex align-items-center mb-0">
+                    {% if section.settings.show_image %}
+                    {% assign img_size = section.settings.img_width | append: 'x' | append: section.settings.img_height %}
+                    <img
+                        class="product-img img-fluid mr-2 {% if section.settings.img_thumbnail %}img-thumbnail{% else %}rounded{% endif %}"
+                        src="{{ current_image | img_url: img_size, crop: 'center' }}"
+                        alt="{{ current_image.alt | escape }}"
+                        width="{{ section.settings.img_width }}"
+                        height="{{ section.settings.img_height }}">
+                    {% endif %}
+                        <div class="flex-grow-1">
+                            {% if product.has_only_default_variant %}
+                                <p class="product-price mb-2">
+                                    {% if current_variant.compare_at_price > current_variant.price %}
+                                        <s class="price-compare">
+                                            <span class="sr-only">
+                                                {{ 'product.old_price' | t }}
+                                            </span>
+                                            {{ current_variant.compare_at_price | money }}
+                                        </s>
+                                    {% endif %}
+                                    <span class="price">
+                                        {{ current_variant.price | money }}
+                                    </span>
+                                </p>
+                            {% endif %}
+                            {% if section.settings.show_variables %}
+                            <div class="form-group mb-2 {% if product.has_only_default_variant %}d-none{% endif %}">
+                                <select
+                                    name="id"
+                                    class="custom-select custom-select-sm">
+                                    {% for variant in product.variants %}
+                                        <option
+                                            data-options="{{ variant.options | join: '-' }}"
+                                            data-variant-image="{{ variant.image | img_url: 'master'}}"
+                                            data-price={{ variant.price }}
+                                            value="{{ variant.id }}"
+                                            {% if variant == current_variant %}selected{% endif %}
+                                            {% unless variant.available %}disabled{% endunless %}>
+                                            {{ variant.title }} - {{ variant.price | money }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endif %}
+
+                            <button
+                                class="add-to-cart-btn btn btn-sm button-buy btn-block d-flex align-items-center justify-content-center {% if section.settings.add_to_cart_btn_animation != blank and current_variant.available %}animate__animated{% endif %}"
+                                data-animate-class="{{ section.settings.add_to_cart_btn_animation | escape }}"
+                                {% unless current_variant.available %}disabled{% endunless %} style="padding-top: 5px; padding-bottom: 5px;">
+
+                                <span
+                                    class="add-to-cart-btn-icon"
+                                    style="display: flex;">
+                                    {% render 'icon-cart' size: 21, class: 'mr-2' %}
+                                </span>
+
+                                <span
+                                    class="add-to-cart-btn-spinner spinner-border spinner-border-sm mr-2"
+                                    role="status"
+                                    aria-hidden="true"
+                                    style="display: none;">
+                                </span>
+
+                                <span
+                                    class="add-to-cart-btn-text-add add-to-cart-btn-text">
+                                    {{ 'product.buy_now' | t }}
+                                </span>
+
+                                <span
+                                    class="add-to-cart-btn-text-loading add-to-cart-btn-text"
+                                    style="display: none;">
+                                    {{ 'general.loading' | t }}...
+                                </span>
+
+                                <span
+                                    class="add-to-cart-btn-text-added-to-cart add-to-cart-btn-text"
+                                    style="display: none;">
+                                    {{ 'product.added_to_cart' | t }}
+                                </span>
+
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% schema %}
+{
+    "name": "Sticky comprar agora",
+    "settings": [
+        {
+            "type": "paragraph",
+            "content": "Irá mostrar um formulário simples de adicionar ao carrinho quando o usuário rolar abaixo do formulário padrão adicionar ao carrinho. É comprovado que aumenta as compras."
+        },
+        {
+            "type": "header",
+            "content": "Configurações gerais"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_section",
+            "label": "Ativar seção",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "position",
+            "label": "Position",
+            "default": "bottom-center",
+            "options": [
+                {
+                    "value": "bottom-left",
+                    "label": "Bottom left"
+                },
+                {
+                    "value": "bottom-center",
+                    "label": "Bottom center"
+                },
+                {
+                    "value": "bottom-right",
+                    "label": "Bottom right"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Animation"
+        },
+        {
+            "type": "text",
+            "id":  "animation_enter",
+            "label": "Animação Entrar",
+            "info": "Copie e cole o nome da animação (entrada) do site Animate.style. Deixe em branco para desativar e usar as transições. [Saber mais](https://animate.style)",
+            "default": "animate__fadeInUp"
+        },
+        {
+            "type": "text",
+            "id":  "animation_exit",
+            "label": "Saída de animação",
+            "info": "Copie e cole o nome da animação (saída) do site Animate.style. Deixe em branco para desativar e usar as transições padrão. [Saber mais](https://animate.style)",
+            "default": "animate__fadeOutDown"
+        },
+        {
+            "type": "select",
+            "id":  "animation_speed",
+            "label": "Velocidade da animação",
+            "default": "animate__normal",
+            "options": [
+                { "value": "animate__slower", "label": "Slower" },
+                { "value": "animate__slow", "label": "Slow" },
+                { "value": "animate__normal", "label": "Normal" },
+                { "value": "animate__fast", "label": "Fast" },
+                { "value": "animate__faster",  "label": "Faster" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Configurações do produto"
+        },
+        {
+            "type": "text",
+            "id": "img_width",
+            "label": "Largura da imagem (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "img_height",
+            "label": "Altura da imagem (px)",
+            "default": "60"
+        },
+        {
+            "type": "checkbox",
+            "id": "img_thumbnail",
+            "label": "Borda da imagem",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "show_rating",
+            "label": "Mostrar avaliação",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "add_to_cart_btn_animation",
+            "label": "Adicionar animação do botão do carrinho",
+            "info": "Aumente a conscientização dos compradores, chamando sua atenção. Será executado a cada 5 segundos. [Saber mais](https://animate.style/)",
+            "default": "animate__pulse",
+            "options": [
+                { "value": "", "label": "No Animation" },
+                { "value": "animate__bounce", "label": "Bounce" },
+                { "value": "animate__flash", "label": "Flash" },
+                { "value": "animate__pulse", "label": "Pulse" },
+                { "value": "animate__rubberBand", "label": "rubberBand" },
+                { "value": "animate__shakeX", "label": "ShakeX" },
+                { "value": "animate__shakeY", "label": "ShakeY" },
+                { "value": "animate__headShake", "label": "headShake" },
+                { "value": "animate__swing", "label": "Swing" },
+                { "value": "animate__tada", "label": "Tada" },
+                { "value": "animate__wobble", "label": "Wobble" },
+                { "value": "animate__jello", "label": "Jello" },
+                { "value": "animate__heartBeat", "label": "heartBeat" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_image",
+            "label": "Mostrar Imagem",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_variables",
+            "label": "Mostrar Variantes",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_title",
+            "label": "Mostrar Titulo",
+            "default": true
+        }
+    ]
+}
+{% endschema %}

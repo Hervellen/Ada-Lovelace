@@ -1,0 +1,31 @@
+<article class="container text-center pb-7">
+    <img
+        id="404-image"
+        class="img-fluid animate__animated animate__bounce"
+        data-animate-class="animate__bounce"
+        data-src="{{ '404.png' | asset_img_url: 'large' }}"
+        loading="lazy"
+        width="480"
+        height="254">
+    <h1>
+        {{ 'general.404.title' | t }}
+    </h1>
+    <p class="mb-6">
+        {{ 'general.404.text' | t }}
+    </p>
+    <a href="/" class="btn btn-primary">
+        {{ 'general.404.go_homepage' | t }} »
+    </a>
+</article>
+
+<script>
+const element = document.getElementById('404-image');
+
+element.addEventListener('animationend', () => {
+    element.classList.remove(element.dataset.animateClass);
+
+    setTimeout(function() {
+        element.classList.add(element.dataset.animateClass)
+    }, 3000);
+})
+</script>

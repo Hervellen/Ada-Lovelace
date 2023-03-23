@@ -1,0 +1,170 @@
+<style>
+  .of {
+      color: rgb(116, 218, 34) !important;
+    }
+    .est {margin-bottom: 10px;
+        font-weight: 100 !important;
+        font-size: 16px !important;
+    }
+    .fixed {
+        position: fixed;
+        border-radius: 0rem !important;
+        z-index: 8;
+        width: 100%;
+        bottom: 0;
+    }
+
+    .bg3 {
+        color: #fff;
+        background-image: linear-gradient(180deg, #060f35 33%, #00B5E2 100%);
+        padding-top: 55px;
+        margin-top: 30px;
+    }
+
+    @media (max-width: 600px) {
+        .bg3 {
+            background-image: linear-gradient(180deg, #060f35 33%, #00B5E2 100%);
+            border-radius: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding-bottom: 5px;
+            color: #fff;
+        }
+    }
+</style>
+
+
+<section id="comprar" class="content-section bg3">
+    <div class="container">
+        <div class="single-col-max mx-auto">
+            <h2 class="section-heading text-center mb-5">{% if section.settings.title %}{{ section.settings.title }} {% endif %}</h2>
+            <span class="text-center mb-5 bg3" style="mb-5 font: normal 20px/30px Montserrat, sans-serif; ">
+            {% if section.settings.title %}{{ section.settings.subt }} {% endif %}
+                 </span>
+            <div class="row">
+                <div class="col-12 col-md-6 mb-5">
+                    <div class="key-points mb-4 text-center">
+                        <ul class="key-points-list list-unstyled mb-4 mx-auto d-inline-block text-left">
+                            <h3 style="margin-top: 30px">Feito para clientes exigentes</h3>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Parcelamento + Taxa (editável)
+                            </li>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Tempo de carregamento extremamente rápido (~ 700 ms)
+                            </li>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Personalize do seu jeito
+                            </li>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Entrega estimada (editável)
+                            </li>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Landing page direto no tema
+                            </li>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Chega de quebrar cabeça com códigos
+                            </li>
+                            <li class="est">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="of" width="20" height="20" fill="currentColor"
+                                     class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Suporte que realmente ajuda
+                            </li>
+
+                        </ul>
+                        <!-- Price -->
+                        <div id="product-price-" style="margin-left: 10px">
+                            <br class="product-price lead">
+                            <s class="price">
+                                R$ 869,00
+                            </s>
+                            <br>
+                            <span style=" color: rgb(156, 211, 5) !important;  font-size: 28px;    font-weight: 800 !important;">
+                            12x de 18,87
+                         </span> <br>
+                            <span style=" color: #fff;  font-size: 14px;    font-weight: 200 !important;">
+                           Ou R$ 187,90  à vista<br>
+                          Pagamento único + 1 ano de atualizações
+                        </span>
+
+                        </div>
+
+                        <br>
+                        <a href="https://pay.kiwify.com.br/pSFmgd0">
+                            <button type="button" class="btn button-buy btn-lg"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="" fill="currentColor" viewBox="0 0 45 31.5">
+                                <path id="Icon_awesome-cloud-download-alt" data-name="Icon awesome-cloud-download-alt" d="M37.8,15.933A6.758,6.758,0,0,0,31.5,6.75a6.716,6.716,0,0,0-3.748,1.139,11.251,11.251,0,0,0-21,5.611c0,.19.007.38.014.57a10.128,10.128,0,0,0,3.361,19.68H36a9,9,0,0,0,1.8-17.817ZM28.455,22.17,21.045,29.58a1.129,1.129,0,0,1-1.589,0L12.045,22.17a1.124,1.124,0,0,1,.795-1.92h4.6V12.375a1.128,1.128,0,0,1,1.125-1.125h3.375a1.128,1.128,0,0,1,1.125,1.125V20.25h4.6a1.124,1.124,0,0,1,.795,1.92Z" transform="translate(0 -2.25)"/>
+                              </svg>
+                              BAIXAR TEMA AGORA</button>
+                        </a><br>
+                        <span style=" color: #fff;  font-size: 10px;    ">
+
+                        </span>
+
+                    </div><!--//key-points-->
+
+                </div><!--//col-12-->
+                <div class="col-12 col-md-6">
+                    <div class="figure-holder mb-5">
+                        <img class="img-fluid"
+                             data-src="https://orbeecom.com/wp-content/uploads/2021/11/aumento-conversoes-1.png"
+                             loading="lazy"
+                             alt="image">
+                    </div><!--//figure-holder-->
+                </div><!--//col-->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "OrbeEcom - ConverteX",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Título",
+            "default": "Muito mais conversão! "
+        },
+        {
+            "type": "richtext",
+            "id": "subt",
+            "label": "Descrição",
+            "default": "<p>Esse tema conta com diversas funções importantes que irão te ajudar na sua jornada.</p>"
+        }
+    ],
+    "presets": [
+        {
+            "name": "OrbeEcom - ConverteX",
+            "category": "home"
+        }
+    ]
+}
+{% endschema %}
